@@ -26,17 +26,6 @@ _bundled = {
 "version": 3
 }
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pr2p4"]
-radius = 12.0
-height = 42.0
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_iskh7"]
-radius = 362.01242
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ny2m7"]
-radius = 20.0
-height = 52.0
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_ps718"]
 atlas = ExtResource("8_03f4h")
 region = Rect2(0, 0, 64, 64)
@@ -400,6 +389,20 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pr2p4"]
+radius = 12.0
+height = 42.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ny2m7"]
+radius = 20.0
+height = 52.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_iskh7"]
+radius = 362.01242
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_23y3x"]
+size = Vector2(300, 275)
+
 [node name="Crawler" type="CharacterBody2D" unique_id=442968874 groups=["Enemy"]]
 collision_layer = 4
 collision_mask = 7
@@ -410,35 +413,16 @@ melee_attack_distance = 25
 lifetime = 0.1
 damage = 1.0
 
+[node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=7471093]
+sprite_frames = SubResource("SpriteFrames_vlhhy")
+animation = &"idle_down"
+offset = Vector2(0, -32)
+
 [node name="Collision" type="CollisionShape2D" parent="." unique_id=859264384]
 position = Vector2(0, -11)
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_pr2p4")
 debug_color = Color(0.6802632, 0.31803465, 0.9999998, 0.41960785)
-
-[node name="DetectionArea" type="Area2D" parent="." unique_id=36156171]
-collision_layer = 4
-collision_mask = 2
-script = ExtResource("2_et6g1")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea" unique_id=2085672107]
-position = Vector2(0, -31)
-shape = SubResource("CircleShape2D_iskh7")
-debug_color = Color(0, 0.85882354, 0, 0.41960785)
-
-[node name="PatrolPoints" type="Node2D" parent="." unique_id=211102925]
-
-[node name="PatrolPoint1" type="Marker2D" parent="PatrolPoints" unique_id=1168484184]
-position = Vector2(-86, 38)
-
-[node name="PatrolPoint2" type="Marker2D" parent="PatrolPoints" unique_id=960229180]
-position = Vector2(135, 50)
-
-[node name="PatrolPoint3" type="Marker2D" parent="PatrolPoints" unique_id=245281955]
-position = Vector2(3, -120)
-
-[node name="HealthComponent" type="Node" parent="." unique_id=1478561858]
-script = ExtResource("6_7sbrd")
 
 [node name="Hurtbox" type="Area2D" parent="." unique_id=2006968954 node_paths=PackedStringArray("health")]
 collision_layer = 32
@@ -452,7 +436,21 @@ rotation = -1.5707964
 shape = SubResource("CapsuleShape2D_ny2m7")
 debug_color = Color(0, 0.45588005, 0.8697051, 0.41960785)
 
-[node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=7471093]
-sprite_frames = SubResource("SpriteFrames_vlhhy")
-animation = &"idle_down"
-offset = Vector2(0, -32)
+[node name="DetectionArea" type="Area2D" parent="." unique_id=36156171]
+collision_layer = 4
+collision_mask = 2
+script = ExtResource("2_et6g1")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea" unique_id=2085672107]
+position = Vector2(0, -31)
+shape = SubResource("CircleShape2D_iskh7")
+debug_color = Color(0, 0.85882354, 0, 0.41960785)
+
+[node name="PatrolZone" type="Area2D" parent="." unique_id=215373219]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PatrolZone" unique_id=1245973108]
+position = Vector2(0, -12)
+shape = SubResource("RectangleShape2D_23y3x")
+
+[node name="HealthComponent" type="Node" parent="." unique_id=1478561858]
+script = ExtResource("6_7sbrd")
