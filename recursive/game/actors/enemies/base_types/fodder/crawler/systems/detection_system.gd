@@ -9,10 +9,8 @@ var data: EnemyFodderData
 #defaults player ref to null(empty)
 var player: CharacterBody2D = null
 
-#attack range tuning
-
 #attacks when player enters range "max_range"
-var max_range:= 20
+var max_range:= 40
 
 func initialize(data_ref: EnemyFodderData) -> void:
 	data = data_ref
