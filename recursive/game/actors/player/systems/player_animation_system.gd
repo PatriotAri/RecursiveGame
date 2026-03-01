@@ -24,7 +24,7 @@ func _resolve_animation(data: PlayerData) -> String:
 	
 	match data.current_state:
 		PlayerData.State.HURT:
-			return "hurt"
+			return "hurt_" + dir
 		PlayerData.State.WALK:
 			if data.is_running:
 				return "run_" + dir

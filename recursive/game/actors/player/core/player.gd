@@ -41,7 +41,7 @@ func on_hurt() -> void:
 	data.is_hurt = true
 	
 func on_animation_finished() -> void:
-	if sprite.animation == "hurt":
+	if sprite.animation.begins_with("hurt"):
 		data.is_hurt = false
 
 func on_died() -> void:
