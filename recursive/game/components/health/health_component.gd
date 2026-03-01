@@ -17,7 +17,6 @@ func _ready() -> void:
 func apply_damage(damage: float) -> void:
 	#subtracts amount of damage from health, sets health to 0 if current health becomes negative
 	current_health = max(current_health - damage, 0)
-	print("Health is now: ", current_health)
 	
 	#when health reaches 0, emit signal "died"
 	if current_health == 0:

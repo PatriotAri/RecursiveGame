@@ -1,11 +1,30 @@
 [gd_scene format=3 uid="uid://bmonh3sf35441"]
 
 [ext_resource type="Script" uid="uid://bex0jclbed1so" path="res://game/actors/enemies/base_types/fodder/crawler/core/crawler.gd" id="1_iskh7"]
+[ext_resource type="Script" uid="uid://bxj3wbuhdfrpc" path="res://game/components/health/hitboxes/melee_attack_hitbox.gd" id="2_03f4h"]
 [ext_resource type="Script" uid="uid://b78qrelon2r6a" path="res://game/actors/enemies/base_types/fodder/crawler/systems/crawler_detection_system.gd" id="2_et6g1"]
 [ext_resource type="Script" uid="uid://bibq1qof2523h" path="res://game/components/health/health_component.gd" id="6_7sbrd"]
 [ext_resource type="Script" uid="uid://bp8ie2pwt8578" path="res://game/components/health/hurtbox_component.gd" id="7_wwd7i"]
 [ext_resource type="Texture2D" uid="uid://8fraly8w6dfe" path="res://game/actors/enemies/base_types/fodder/crawler/assets/Slime_IDLE.png" id="8_03f4h"]
 [ext_resource type="Texture2D" uid="uid://cfp7knntoir16" path="res://game/actors/enemies/base_types/fodder/crawler/assets/Slime_WALK.png" id="9_oftu5"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_tax37"]
+radius = 43.046486
+
+[sub_resource type="PackedScene" id="PackedScene_oftu5"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [],
+"names": PackedStringArray("MeleeAttackHitBox", "collision_layer", "collision_mask", "script", "Area2D", "CollisionShape2D", "shape"),
+"node_count": 2,
+"node_ids": PackedInt32Array(452791861, 1270215967),
+"node_paths": [],
+"nodes": PackedInt32Array(-1, -1, 4, 0, -1, 3, 1, 0, 2, 0, 3, 1, 0, 0, 0, 5, 5, -1, 1, 6, 2, 0),
+"variants": [0, ExtResource("2_03f4h"), SubResource("CircleShape2D_tax37")],
+"version": 3
+}
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ps718"]
 atlas = ExtResource("8_03f4h")
@@ -371,12 +390,12 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pr2p4"]
-radius = 14.0
-height = 31.999998
+radius = 12.0
+height = 42.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ny2m7"]
-radius = 15.0
-height = 34.0
+radius = 20.0
+height = 52.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_iskh7"]
 radius = 362.01242
@@ -389,6 +408,7 @@ collision_layer = 4
 collision_mask = 7
 platform_floor_layers = 0
 script = ExtResource("1_iskh7")
+melee_hitbox_scene = SubResource("PackedScene_oftu5")
 melee_attack_distance = 25
 lifetime = 0.1
 damage = 1.0
@@ -399,7 +419,7 @@ animation = &"idle_down"
 offset = Vector2(0, -32)
 
 [node name="Collision" type="CollisionShape2D" parent="." unique_id=859264384]
-position = Vector2(0, -12)
+position = Vector2(0, -11)
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_pr2p4")
 debug_color = Color(0.6802632, 0.31803465, 0.9999998, 0.41960785)
@@ -411,7 +431,7 @@ script = ExtResource("7_wwd7i")
 health = NodePath("../HealthComponent")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=1043765262]
-position = Vector2(0, -12)
+position = Vector2(0, -15)
 rotation = -1.5707964
 shape = SubResource("CapsuleShape2D_ny2m7")
 debug_color = Color(0, 0.45588005, 0.8697051, 0.41960785)

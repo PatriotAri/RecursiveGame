@@ -1,4 +1,4 @@
-class_name EnemyStateMachine
+class_name CrawlerStateMachine
 
 enum State {
 	IDLE,
@@ -11,7 +11,7 @@ enum State {
 var attack_cooldown_timer := 0.0
 var attack_cooldown_duration := 1.5
 
-func update(data: EnemyFodderData, delta: float) -> void:
+func update(data: EnemyData, delta: float) -> void:
 	var new_state := _resolve_state(data, delta)
 
 	if new_state != data.current_state:
@@ -21,7 +21,7 @@ func update(data: EnemyFodderData, delta: float) -> void:
 	else:
 		data.state_just_changed = false
 
-func _resolve_state(data: EnemyFodderData, delta: float) -> State:
+func _resolve_state(data: EnemyData, delta: float) -> State:
 	# If currently attacking and the swing landed, enter cooldown
 	if data.current_state == State.ATTACK and data.attack_finished:
 		data.attack_finished = false

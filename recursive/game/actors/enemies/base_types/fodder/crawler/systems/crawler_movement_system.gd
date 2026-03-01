@@ -1,8 +1,8 @@
-class_name EnemyMovementSystem
+class_name CrawlerMovementSystem
 
 #references
 var body: CharacterBody2D
-var data: EnemyFodderData
+var data: EnemyData
 
 #patrol variables
 var patrol_wait_time:= 3.5
@@ -13,7 +13,7 @@ var patrol_target:= Vector2.ZERO
 var attack_performed:= false
 var attack_timer:= 0.0
 
-func _init(body_ref: CharacterBody2D, data_ref: EnemyFodderData) -> void:
+func _init(body_ref: CharacterBody2D, data_ref: EnemyData) -> void:
 	body = body_ref
 	data = data_ref
 
@@ -23,13 +23,13 @@ func update(delta: float) -> void:
 		_on_state_changed(data.previous_state, data.current_state)
 
 	match data.current_state:
-		EnemyStateMachine.State.PATROL:
+		CrawlerStateMachine.State.PATROL:
 			patrol(delta)
-		EnemyStateMachine.State.CHASE:
+		CrawlerStateMachine.State.CHASE:
 			chase(delta)
-		EnemyStateMachine.State.ATTACK:
+		CrawlerStateMachine.State.ATTACK:
 			attack(delta)
-		EnemyStateMachine.State.ATTACK_COOLDOWN:
+		CrawlerStateMachine.State.ATTACK_COOLDOWN:
 			attack_cooldown(delta)
 		_:
 			idle(delta)
@@ -85,10 +85,10 @@ func attack(delta: float) -> void:
 func attack_cooldown(delta: float) -> void:
 	idle(delta)
 
-func _on_state_changed(from: EnemyStateMachine.State, to: EnemyStateMachine.State) -> void:
-	if to == EnemyStateMachine.State.ATTACK:
+func _on_state_changed(from: CrawlerStateMachine.State, to: CrawlerStateMachine.State) -> void:
+	if to == CrawlerStateMachine.State.ATTACK:
 		attack_performed = false
 		attack_timer = 0.0
-	if to == EnemyStateMachine.State.PATROL:
+	if to == CrawlerStateMachine.State.PATROL:
 		patrol_timer = 0.0
 		pick_patrol_target()

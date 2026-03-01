@@ -1,4 +1,4 @@
-class_name EnemyFodderData
+class_name EnemyData
 
 #read/written by DetectionSystem
 var player_detected:= false
@@ -6,8 +6,8 @@ var in_attack_range:= false
 var player_pos:= Vector2.ZERO
 
 #read/written by state machine
-var current_state: EnemyStateMachine.State = EnemyStateMachine.State.IDLE
-var previous_state: EnemyStateMachine.State = EnemyStateMachine.State.IDLE
+var current_state: CrawlerStateMachine.State = CrawlerStateMachine.State.IDLE
+var previous_state: CrawlerStateMachine.State = CrawlerStateMachine.State.IDLE
 var state_just_changed:= false
 var attack_finished:= false
 

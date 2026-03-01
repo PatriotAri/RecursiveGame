@@ -1,11 +1,11 @@
 extends CharacterBody2D
 
 #type casts DetectionArea as DetectionSystem, allows script to send signals
-@onready var detection_system: DetectionSystem = $DetectionArea as DetectionSystem
+@onready var crawler_detection_system: CrawlerDetectionSystem = $DetectionArea as CrawlerDetectionSystem
 @onready var sprite: AnimatedSprite2D = $Sprite
-var enemy_state_machine: EnemyStateMachine
-var movement_system: EnemyMovementSystem
-var animation_system: EnemyAnimationSystem
+var crawler_state_machine: CrawlerStateMachine
+var crawler_movement_system: CrawlerMovementSystem
+var crawler_animation_system: CrawlerAnimationSystem
 
 #health and damage components
 @onready var health = $HealthComponent
@@ -13,7 +13,7 @@ var animation_system: EnemyAnimationSystem
 #hitbox variables
 @export_group("Hitbox Variables")
 @export_subgroup("Hitbox Type")
-@export var melee_hitbox_scene = GlobalPackedScenes.melee_attack_hitbox
+@export var crawler_melee_scene = GlobalPackedScenes.crawler_melee_hitbox
 @export_subgroup("Attack Tuning")
 @export var melee_attack_distance:= 20
 @export var windup_time:= 0.5   # Enemy windup
@@ -23,32 +23,32 @@ var animation_system: EnemyAnimationSystem
 #patrol variables
 @export_group("Patrol Tuning")
 
-var data: EnemyFodderData
+var data: EnemyData
 
 func _ready() -> void:
 	#listens for the signal "died" emitting from HealthComponent, 
 	#then connects the _on_died method to run when it does emit.
 	health.died.connect(_on_died)
-	data = EnemyFodderData.new()
+	data = EnemyData.new()
 	
 	#injects shared data
-	detection_system.initialize(data)
+	crawler_detection_system.initialize(data)
 	
-	enemy_state_machine = EnemyStateMachine.new()
-	movement_system = EnemyMovementSystem.new(self, data)
-	animation_system = EnemyAnimationSystem.new(sprite, data)
+	crawler_state_machine = CrawlerStateMachine.new()
+	crawler_movement_system = CrawlerMovementSystem.new(self, data)
+	crawler_animation_system = CrawlerAnimationSystem.new(sprite, data)
 
 func _physics_process(delta: float) -> void:
-	detection_system.update()
-	enemy_state_machine.update(data, delta)
-	movement_system.update(delta)
-	animation_system.update()
+	crawler_detection_system.update()
+	crawler_state_machine.update(data, delta)
+	crawler_movement_system.update(delta)
+	crawler_animation_system.update()
 
 #instance melee hitbox
 func perform_melee_attack():
 	print("Enemy attacking!")
 	#instances hitbox scene
-	var hitbox = melee_hitbox_scene.instantiate()
+	var hitbox = crawler_melee_scene.instantiate()
 	
 	# NEW: Configure hitbox to hit player (layer 5 = bit value 16)
 	hitbox.target_layer = 16
@@ -67,5 +67,6 @@ func perform_melee_attack():
 
 #kills the character
 func _on_died():
+	print("Enemy killed.")
 	#queues node to be deleted at end of frame
 	queue_free()

@@ -25,7 +25,7 @@ func _ready() -> void:
 	player_movement_system = PlayerMovementSystem.new(self)
 	player_animation_system = PlayerAnimationSystem.new(sprite)
 	
-	health.died.connect(_on_died)
+	health.died.connect(on_died)
 
 func _physics_process(delta: float) -> void:
 	player_input_system.update(data)
@@ -34,6 +34,7 @@ func _physics_process(delta: float) -> void:
 	player_movement_system.update(data, delta)
 	player_animation_system.update(data)
 
-func _on_died() -> void:
-	print("Player died!")
-	queue_free()  # Remove player from scene
+func on_died() -> void:
+	print("You died.")
+	#removes player from scene
+	queue_free()

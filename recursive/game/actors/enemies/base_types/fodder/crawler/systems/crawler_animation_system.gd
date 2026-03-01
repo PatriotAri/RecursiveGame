@@ -1,9 +1,9 @@
-class_name EnemyAnimationSystem
+class_name CrawlerAnimationSystem
 
 var sprite: AnimatedSprite2D
-var data: EnemyFodderData
+var data: EnemyData
 
-func _init(sprite_ref: AnimatedSprite2D, data_ref: EnemyFodderData) -> void:
+func _init(sprite_ref: AnimatedSprite2D, data_ref: EnemyData) -> void:
 	sprite = sprite_ref
 	data = data_ref
 	
@@ -15,7 +15,7 @@ func update() -> void:
 func resolve_animation() -> StringName:
 	var prefix: String
 	match data.current_state:
-		EnemyStateMachine.State.CHASE, EnemyStateMachine.State.PATROL:
+		CrawlerStateMachine.State.CHASE, CrawlerStateMachine.State.PATROL:
 			prefix = "walk"
 		_:
 			prefix = "idle"

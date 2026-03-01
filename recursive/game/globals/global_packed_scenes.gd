@@ -11,8 +11,12 @@ static var player_scene = preload(
 	)
 
 # Hitboxes
-static var melee_attack_hitbox = preload(
-	"res://game/components/health/hitboxes/MeleeAttackHitBox.tscn"
+static var crawler_melee_hitbox = preload(
+	"res://game/actors/enemies/base_types/fodder/crawler/hitboxes/CrawlerMeleeHitbox.tscn"
+	)
+
+static var player_unarmed_hitbox = preload(
+	"res://game/actors/player/hitboxes/PlayerUnarmedHitbox.tscn"
 	)
 
 # Spawners
@@ -21,3 +25,6 @@ static var slime_spawner = preload(
 	)
 
 # Levels
+static var test_level_01 = preload(
+	"res://game/maps/test_map/levels/test_level_01/test_level_01.tscn"
+	)

@@ -1,10 +1,10 @@
-class_name DetectionSystem
+class_name CrawlerDetectionSystem
 
 extends Area2D
 
 #data injected from crawler.gd _ready(), 
 #so data can be called without writing as a parameter in functions
-var data: EnemyFodderData
+var data: EnemyData
 
 #defaults player ref to null(empty)
 var player: CharacterBody2D = null
@@ -12,7 +12,7 @@ var player: CharacterBody2D = null
 #attacks when player enters range "max_range"
 var max_range:= 40
 
-func initialize(data_ref: EnemyFodderData) -> void:
+func initialize(data_ref: EnemyData) -> void:
 	data = data_ref
 
 func _ready() -> void:
@@ -50,4 +50,7 @@ func update_attack_range() -> void:
 	data.in_attack_range = global_position.distance_squared_to(get_player_position()) <= max_range * max_range
 
 func get_player_position() -> Vector2:
-	return player.global_position if player else Vector2.ZERO
+	if player:
+		return player.global_position
+	else:
+		return Vector2.ZERO
