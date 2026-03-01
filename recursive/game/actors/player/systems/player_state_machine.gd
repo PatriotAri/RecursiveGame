@@ -7,7 +7,11 @@ func update(data: PlayerData) -> void:
 
 #reads move_vector from PlayerData
 func _resolve_state(data: PlayerData) -> void:
-	if data.is_attacking:
+	if data.is_dead:
+		data.current_state = PlayerData.State.DIED
+	elif data.is_hurt:
+		data.current_state = PlayerData.State.HURT
+	elif data.is_attacking:
 		data.current_state = PlayerData.State.ATTACK
 	elif data.move_vector == Vector2.ZERO:
 		data.current_state = PlayerData.State.IDLE

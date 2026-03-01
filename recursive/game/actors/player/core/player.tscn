@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://dydoo8w4uhpis" path="res://game/actors/player/core/player.gd" id="1_oul6g"]
 [ext_resource type="Texture2D" uid="uid://darsd330e83eg" path="res://game/actors/player/assets/player_attack.png" id="2_1bu0b"]
 [ext_resource type="Texture2D" uid="uid://ymy8x3l8ml8d" path="res://game/actors/player/assets/player_idle.png" id="2_g1dw6"]
+[ext_resource type="Texture2D" uid="uid://cp0r4v0cabs4l" path="res://game/actors/player/assets/player_died.png" id="3_4ve6c"]
+[ext_resource type="Texture2D" uid="uid://gstykpkfl3p7" path="res://game/actors/player/assets/player_hurt.png" id="3_7suon"]
 [ext_resource type="Texture2D" uid="uid://dgn63i64mxi2" path="res://game/actors/player/assets/player_walk.png" id="3_yw30f"]
 [ext_resource type="Script" uid="uid://bibq1qof2523h" path="res://game/components/health/health_component.gd" id="4_1bu0b"]
 [ext_resource type="Script" uid="uid://bp8ie2pwt8578" path="res://game/components/health/hurtbox_component.gd" id="5_7suon"]
@@ -40,6 +42,42 @@ region = Rect2(0, 192, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jgits"]
 atlas = ExtResource("2_1bu0b")
+region = Rect2(0, 320, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4ujmi"]
+atlas = ExtResource("3_4ve6c")
+region = Rect2(0, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_14upk"]
+atlas = ExtResource("3_7suon")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bsm6e"]
+atlas = ExtResource("3_7suon")
+region = Rect2(0, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_khio1"]
+atlas = ExtResource("3_7suon")
+region = Rect2(0, 448, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xaeec"]
+atlas = ExtResource("3_7suon")
+region = Rect2(0, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gka5s"]
+atlas = ExtResource("3_7suon")
+region = Rect2(0, 384, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u4ces"]
+atlas = ExtResource("3_7suon")
+region = Rect2(0, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oaj0w"]
+atlas = ExtResource("3_7suon")
+region = Rect2(0, 192, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ycnxm"]
+atlas = ExtResource("3_7suon")
 region = Rect2(0, 320, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qjkh3"]
@@ -428,43 +466,75 @@ animations = [{
 "name": &"attack_up_right",
 "speed": 5.0
 }, {
-"frames": [],
-"loop": true,
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4ujmi")
+}],
+"loop": false,
+"name": &"died",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_14upk")
+}],
+"loop": false,
 "name": &"hurt_down",
 "speed": 5.0
 }, {
-"frames": [],
-"loop": true,
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bsm6e")
+}],
+"loop": false,
 "name": &"hurt_down_left",
 "speed": 5.0
 }, {
-"frames": [],
-"loop": true,
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_khio1")
+}],
+"loop": false,
 "name": &"hurt_down_right",
 "speed": 5.0
 }, {
-"frames": [],
-"loop": true,
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xaeec")
+}],
+"loop": false,
 "name": &"hurt_left",
 "speed": 5.0
 }, {
-"frames": [],
-"loop": true,
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gka5s")
+}],
+"loop": false,
 "name": &"hurt_right",
 "speed": 5.0
 }, {
-"frames": [],
-"loop": true,
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u4ces")
+}],
+"loop": false,
 "name": &"hurt_up",
 "speed": 5.0
 }, {
-"frames": [],
-"loop": true,
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oaj0w")
+}],
+"loop": false,
 "name": &"hurt_up_left",
 "speed": 5.0
 }, {
-"frames": [],
-"loop": true,
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ycnxm")
+}],
+"loop": false,
 "name": &"hurt_up_right",
 "speed": 5.0
 }, {
@@ -851,7 +921,7 @@ zoom = Vector2(2, 2)
 [node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=1921922611]
 position = Vector2(0, -32)
 sprite_frames = SubResource("SpriteFrames_jfgyi")
-animation = &"attack_up_right"
+animation = &"died"
 
 [node name="Hurtbox" type="Area2D" parent="." unique_id=387818382 node_paths=PackedStringArray("health")]
 collision_layer = 16

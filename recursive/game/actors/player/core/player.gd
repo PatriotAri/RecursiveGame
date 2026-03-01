@@ -26,15 +26,32 @@ func _ready() -> void:
 	player_animation_system = PlayerAnimationSystem.new(sprite)
 	
 	health.died.connect(on_died)
+	health.hurt.connect(on_hurt)
+	sprite.animation_finished.connect(on_animation_finished)
 
 func _physics_process(delta: float) -> void:
+	if data.is_dead:
+		return
 	player_input_system.update(data)
 	player_state_machine.update(data)
 	player_attack_system.update(data, delta)
 	player_movement_system.update(data, delta)
 	player_animation_system.update(data)
 
+func on_hurt() -> void:
+	data.is_attacking = false
+	data.is_hurt = true
+	
+func on_animation_finished() -> void:
+	if sprite.animation.begins_with("hurt"):
+		data.is_hurt = false
+
 func on_died() -> void:
+	data.is_dead = true
 	print("You died.")
+	sprite.play("died")
+	await sprite.animation_finished
+	await get_tree().create_timer(1.0).timeout
+	
 	#removes player from scene
 	queue_free()
