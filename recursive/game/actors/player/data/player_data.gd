@@ -5,9 +5,11 @@ enum State {
 	WALK,
 	ATTACK,
 	HURT,
+	DIED,
 }
 
 var is_hurt:= false
+var is_dead:= false
 
 #read/written by InputSystem (player intent)
 var move_vector:= Vector2.ZERO

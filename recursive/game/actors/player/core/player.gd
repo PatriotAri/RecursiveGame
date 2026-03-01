@@ -30,6 +30,8 @@ func _ready() -> void:
 	sprite.animation_finished.connect(on_animation_finished)
 
 func _physics_process(delta: float) -> void:
+	if data.is_dead:
+		return
 	player_input_system.update(data)
 	player_state_machine.update(data)
 	player_attack_system.update(data, delta)
@@ -45,6 +47,11 @@ func on_animation_finished() -> void:
 		data.is_hurt = false
 
 func on_died() -> void:
+	data.is_dead = true
 	print("You died.")
+	sprite.play("died")
+	await sprite.animation_finished
+	await get_tree().create_timer(1.0).timeout
+	
 	#removes player from scene
 	queue_free()
