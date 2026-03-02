@@ -9,6 +9,7 @@ var patrol_wait_time:= 3.5
 var patrol_timer:= 0.0
 var patrol_target:= Vector2.ZERO
 var min_patrol_distance:= 40.0
+var max_attempts:= 10
 
 func _init(body_ref: CharacterBody2D, data_ref: EnemyData) -> void:
 	body = body_ref
@@ -44,32 +45,30 @@ func patrol(delta: float) -> void:
 			patrol_timer = 0.0
 			pick_patrol_target()
 	else:
-		data.last_facing = direction.normalized()
-		body.velocity = direction.normalized() * data.patrol_speed
+		var dir_norm:= direction.normalized()
+		data.last_facing = dir_norm
+		body.velocity = dir_norm * data.patrol_speed
 		body.move_and_slide()
 
 func pick_patrol_target() -> void:
-	if body.has_node("PatrolZone"):
-		var zone:= body.get_node("PatrolZone")
-		var shape:= zone.get_node("CollisionShape2D").shape as RectangleShape2D
-		var half:= shape.size / 2.0
-		
-		var candidate:= patrol_target
-		var attempts:= 0
-		
-		#sets the amount of times it looks for a valid patrol point
-		while attempts < 10:
-			candidate = body.global_position + Vector2(
-				randf_range(-half.x, half.x),
-				randf_range(-half.y, half.y)
-			)
-			if body.global_position.distance_to(candidate) >= min_patrol_distance:
-				break
-			attempts += 1
-			
-		patrol_target = candidate
-	else:
+	if not body.has_node("PatrolZone"):
 		patrol_target = body.global_position
+		return
+		
+	var zone:= body.get_node("PatrolZone")
+	var shape:= zone.get_node("CollisionShape2D").shape as RectangleShape2D
+	var half:= shape.size / 2.0
+	
+	for attempts in max_attempts:
+		var candidate:= body.global_position + Vector2(
+			randf_range(-half.x, half.x),
+			randf_range(-half.y, half.y)
+		)
+		if body.global_position.distance_to(candidate) >= min_patrol_distance:
+			patrol_target = candidate
+			return
+			
+	patrol_target = body.global_position
 
 func chase(delta: float) -> void:
 	if not data.player_detected:

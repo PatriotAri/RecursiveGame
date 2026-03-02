@@ -23,8 +23,6 @@ func _resolve_animation(data: PlayerData) -> String:
 	var dir := FacingHelper.facing_to_string(data.facing_dir)
 	
 	match data.current_state:
-		PlayerData.State.DIED:
-			return "died"
 		PlayerData.State.HURT:
 			return "hurt_" + dir
 		PlayerData.State.WALK:

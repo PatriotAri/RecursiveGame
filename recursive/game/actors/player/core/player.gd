@@ -13,7 +13,7 @@ var player_animation_system: PlayerAnimationSystem
 
 @export_group("Attack Tuning")
 @export var windup_time:= 0.1
-@export var lifetime:= 0.3
+@export var lifetime:= 0.1
 @export var damage:= 10.0
 
 func _ready() -> void:

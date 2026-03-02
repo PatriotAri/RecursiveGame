@@ -1,10 +1,7 @@
 class_name PlayerAttackSystem
 
-#import packed global scenes
-var global_packed_scenes:= GlobalPackedScenes
-
 #packed scenes
-var player_unarmed_hitbox = global_packed_scenes.player_unarmed_hitbox
+var player_unarmed_hitbox = GlobalPackedScenes.player_unarmed_hitbox
 
 var player: CharacterBody2D
 
@@ -32,7 +29,6 @@ const HITBOX_OFFSETS := {
 
 func _init(player_ref: CharacterBody2D) -> void:
 	player = player_ref
-	
 	windup_time = player.windup_time
 	lifetime = player.lifetime
 	damage = player.damage
@@ -41,7 +37,7 @@ func update(data: PlayerData, delta: float) -> void:
 	# Update attack timer
 	if data.is_attacking:
 		attack_timer -= delta
-		if attack_timer <= 0:
+		if attack_timer <= 0.0:
 			data.is_attacking = false
 	
 	# Start new attack if input received and not currently attacking
@@ -52,13 +48,11 @@ func update(data: PlayerData, delta: float) -> void:
 		pending_spawn = true
 
 func post_update(data: PlayerData) -> void:
+	var dir:= FacingHelper.facing_to_string(data.facing_dir)
 	if pending_spawn:
 		pending_spawn = false
-		var dir:= FacingHelper.facing_to_string(data.facing_dir)
 		active_hitbox = spawn_hitbox(dir)
-		
-	if is_instance_valid(active_hitbox):
-		var dir:= FacingHelper.facing_to_string(data.facing_dir)
+	elif is_instance_valid(active_hitbox):
 		active_hitbox.position = HITBOX_OFFSETS.get(dir, Vector2.ZERO)
 		
 func spawn_hitbox(direction: String) -> Area2D:
@@ -66,12 +60,11 @@ func spawn_hitbox(direction: String) -> Area2D:
 		push_error("Player: Melee hitbox scene not loaded!")
 		return null
 	
-	var hitbox = player_unarmed_hitbox.instantiate()
+	var hitbox: Area2D = player_unarmed_hitbox.instantiate()
 	hitbox.target_layer = 32
 	hitbox.windup_time = windup_time
 	hitbox.lifetime = lifetime
 	hitbox.damage = damage
-	player.add_child(hitbox)
 	hitbox.position = HITBOX_OFFSETS.get(direction, Vector2.ZERO)
-	
+	player.add_child(hitbox)
 	return hitbox

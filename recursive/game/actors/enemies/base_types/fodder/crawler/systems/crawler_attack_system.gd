@@ -32,21 +32,20 @@ func _init(crawler_ref: CharacterBody2D) -> void:
 	
 func update(data: EnemyData, delta: float) -> void:
 	#resets state whenever attack begins
-	if data.state_just_changed and data.current_state == CrawlerStateMachine.State.ATTACK:
+	if data.current_state != CrawlerStateMachine.State.ATTACK:
+		return
+	
+	if data.state_just_changed:
 		attack_performed = false
 		attack_timer = 0.0
-		
-		if data.current_state != CrawlerStateMachine.State.ATTACK:
-			return
-		
-		if not attack_performed:
-			execute_attack(data)
-			attack_performed = true
-		else:
-			attack_timer += delta
-			if attack_timer >= windup_time + lifetime:
-				data.attack_finished = true
-				
+		execute_attack(data)
+		attack_performed = true
+		return
+
+	attack_timer += delta
+	if attack_timer >= windup_time + lifetime:
+		data.attack_finished = true
+
 func execute_attack(data: EnemyData) -> void:
 	var facing:= data.last_facing if data.last_facing != Vector2.ZERO else Vector2.DOWN
 	var dir:= FacingHelper.facing_to_string(facing)

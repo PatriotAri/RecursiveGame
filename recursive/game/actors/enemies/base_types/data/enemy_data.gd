@@ -6,8 +6,8 @@ var in_attack_range:= false
 var player_pos:= Vector2.ZERO
 
 #read/written by state machine
-var current_state: CrawlerStateMachine.State = CrawlerStateMachine.State.IDLE
-var previous_state: CrawlerStateMachine.State = CrawlerStateMachine.State.IDLE
+var current_state: int = 0
+var previous_state: int = 0
 var state_just_changed:= false
 var attack_finished:= false
 

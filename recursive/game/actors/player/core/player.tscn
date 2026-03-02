@@ -907,7 +907,6 @@ collision_layer = 2
 collision_mask = 5
 script = ExtResource("1_oul6g")
 windup_time = 0.2
-lifetime = 0.1
 damage = 7.0
 
 [node name="Collision" type="CollisionShape2D" parent="." unique_id=1079167882]

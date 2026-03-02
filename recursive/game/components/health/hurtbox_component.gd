@@ -1,7 +1,7 @@
 extends Area2D
 
 #health component node can be selected in editor now
-@export var health: Node
+@export var health: HealthComponent
 
 #gets damage received from opposition hitbox, passes it to the HealthComponent
 func receive_damage(damage: float, attacker: Area2D) -> void:

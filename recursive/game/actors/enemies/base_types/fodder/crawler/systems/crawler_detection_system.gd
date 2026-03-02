@@ -11,9 +11,11 @@ var player: CharacterBody2D = null
 
 #attacks when player enters range "max_range"
 var max_range:= 40
+var max_range_sq: float
 
 func initialize(data_ref: EnemyData) -> void:
 	data = data_ref
+	max_range_sq = max_range * max_range
 
 func _ready() -> void:
 	#connects _on_body_entered func to body_entered Area2D func
@@ -47,10 +49,4 @@ func has_player() -> bool:
 	return player != null
 
 func update_attack_range() -> void:
-	data.in_attack_range = global_position.distance_squared_to(get_player_position()) <= max_range * max_range
-
-func get_player_position() -> Vector2:
-	if player:
-		return player.global_position
-	else:
-		return Vector2.ZERO
+	data.in_attack_range = global_position.distance_squared_to(data.player_pos) <= max_range_sq
