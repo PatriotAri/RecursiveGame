@@ -8,10 +8,7 @@ var data: EnemyData
 var patrol_wait_time:= 3.5
 var patrol_timer:= 0.0
 var patrol_target:= Vector2.ZERO
-
-#attack variables
-var attack_performed:= false
-var attack_timer:= 0.0
+var min_patrol_distance:= 40.0
 
 func _init(body_ref: CharacterBody2D, data_ref: EnemyData) -> void:
 	body = body_ref
@@ -56,10 +53,21 @@ func pick_patrol_target() -> void:
 		var zone:= body.get_node("PatrolZone")
 		var shape:= zone.get_node("CollisionShape2D").shape as RectangleShape2D
 		var half:= shape.size / 2.0
-		patrol_target = body.global_position + Vector2(
-			randf_range(-half.x, half.x),
-			randf_range(-half.y, half.y)
-		)
+		
+		var candidate:= patrol_target
+		var attempts:= 0
+		
+		#sets the amount of times it looks for a valid patrol point
+		while attempts < 10:
+			candidate = body.global_position + Vector2(
+				randf_range(-half.x, half.x),
+				randf_range(-half.y, half.y)
+			)
+			if body.global_position.distance_to(candidate) >= min_patrol_distance:
+				break
+			attempts += 1
+			
+		patrol_target = candidate
 	else:
 		patrol_target = body.global_position
 
@@ -73,22 +81,13 @@ func chase(delta: float) -> void:
 	body.move_and_slide()
 
 func attack(delta: float) -> void:
-	idle(delta)
-	if not attack_performed:
-		body.perform_melee_attack()
-		attack_performed = true
-	else:
-		attack_timer += delta
-		if attack_timer >= body.windup_time + body.lifetime:
-			data.attack_finished = true
+	idle(delta) #stands still, attack system spawns hitbox and does timing
+
 
 func attack_cooldown(delta: float) -> void:
 	idle(delta)
 
 func _on_state_changed(from: CrawlerStateMachine.State, to: CrawlerStateMachine.State) -> void:
-	if to == CrawlerStateMachine.State.ATTACK:
-		attack_performed = false
-		attack_timer = 0.0
 	if to == CrawlerStateMachine.State.PATROL:
 		patrol_timer = 0.0
 		pick_patrol_target()

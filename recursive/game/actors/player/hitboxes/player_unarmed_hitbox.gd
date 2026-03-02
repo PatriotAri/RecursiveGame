@@ -24,7 +24,7 @@ func attack_delay() -> void:
 	monitorable = false
 	
 	# Wait for windup
-	await get_tree().create_timer(windup_time).timeout
+	await get_tree().create_timer(windup_time, false, true).timeout
 	
 	# Now activate
 	monitoring = true
@@ -33,7 +33,7 @@ func attack_delay() -> void:
 	attack_lifetime()
 
 func attack_lifetime() -> void:
-	await get_tree().create_timer(lifetime).timeout
+	await get_tree().create_timer(lifetime, false, true).timeout
 	queue_free()
 
 func on_area_entered(area: Area2D) -> void:

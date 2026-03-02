@@ -33,8 +33,9 @@ func _physics_process(delta: float) -> void:
 	if data.is_dead:
 		return
 	player_input_system.update(data)
-	player_state_machine.update(data)
 	player_attack_system.update(data, delta)
+	player_state_machine.update(data)
+	player_attack_system.post_update(data)
 	player_movement_system.update(data, delta)
 	player_animation_system.update(data)
 

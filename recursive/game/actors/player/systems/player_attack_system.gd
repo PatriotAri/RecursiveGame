@@ -15,6 +15,9 @@ var windup_time: float
 var lifetime: float
 var damage: float
 
+var pending_spawn:= false
+var active_hitbox: Area2D = null
+
 # Hitbox positioning offsets based on facing direction
 const HITBOX_OFFSETS := {
 	"right": Vector2(5, -20),
@@ -44,29 +47,31 @@ func update(data: PlayerData, delta: float) -> void:
 	# Start new attack if input received and not currently attacking
 	if data.attack_requested and not data.is_attacking:
 		data.attack_requested = false
-		execute_attack(data)
+		data.is_attacking = true
+		attack_timer = windup_time + lifetime
+		pending_spawn = true
 
-func execute_attack(data: PlayerData) -> void:
-	data.is_attacking = true
-	attack_timer = windup_time + lifetime
-	
-	var dir:= FacingHelper.facing_to_string(data.facing_dir)
-	spawn_hitbox(dir)
-
-func spawn_hitbox(direction: String) -> void:
+func post_update(data: PlayerData) -> void:
+	if pending_spawn:
+		pending_spawn = false
+		var dir:= FacingHelper.facing_to_string(data.facing_dir)
+		active_hitbox = spawn_hitbox(dir)
+		
+	if is_instance_valid(active_hitbox):
+		var dir:= FacingHelper.facing_to_string(data.facing_dir)
+		active_hitbox.position = HITBOX_OFFSETS.get(dir, Vector2.ZERO)
+		
+func spawn_hitbox(direction: String) -> Area2D:
 	if player_unarmed_hitbox == null:
 		push_error("Player: Melee hitbox scene not loaded!")
-		return
+		return null
 	
 	var hitbox = player_unarmed_hitbox.instantiate()
-	
-	# Configure hitbox to hit enemies (layer 6 = bit value 32)
 	hitbox.target_layer = 32
 	hitbox.windup_time = windup_time
 	hitbox.lifetime = lifetime
 	hitbox.damage = damage
-	
-	var offset = HITBOX_OFFSETS.get(direction, Vector2.ZERO)
-	
 	player.add_child(hitbox)
-	hitbox.position = offset
+	hitbox.position = HITBOX_OFFSETS.get(direction, Vector2.ZERO)
+	
+	return hitbox
