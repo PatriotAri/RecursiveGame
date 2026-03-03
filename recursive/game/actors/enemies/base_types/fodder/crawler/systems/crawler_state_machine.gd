@@ -6,6 +6,8 @@ enum State {
 	PATROL,
 	ATTACK,
 	ATTACK_COOLDOWN,
+	HURT,
+	DIED,
 }
 
 var attack_cooldown_timer := 0.0
@@ -22,6 +24,15 @@ func update(data: EnemyData, delta: float) -> void:
 		data.state_just_changed = false
 
 func _resolve_state(data: EnemyData, delta: float) -> State:
+	if data.current_state == State.DIED:
+		return State.DIED
+	
+	if data.is_dead:
+		return State.DIED
+		
+	if data.is_hurt:
+		data.attack_finished = false
+		return State.HURT
 	# If currently attacking and the swing landed, enter cooldown
 	if data.current_state == State.ATTACK and data.attack_finished:
 		data.attack_finished = false

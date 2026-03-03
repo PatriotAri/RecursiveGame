@@ -935,3 +935,4 @@ debug_color = Color(0, 0.45588005, 0.8697051, 0.41960785)
 
 [node name="HealthComponent" type="Node" parent="." unique_id=1426199482]
 script = ExtResource("4_1bu0b")
+max_health = 1000.0

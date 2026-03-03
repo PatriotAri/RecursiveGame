@@ -10,6 +10,8 @@ var current_state: int = 0
 var previous_state: int = 0
 var state_just_changed:= false
 var attack_finished:= false
+var is_hurt:= false
+var is_dead:= false
 
 #read/written by movement system
 var patrol_speed:= 50.0

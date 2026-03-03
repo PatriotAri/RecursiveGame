@@ -12,16 +12,15 @@ var attack_timer := 0.0
 
 # Hitbox positioning offsets based on 8-directional facing.
 # Crawler origin is at body center (capsule), so Y=0 is mid-body,
-# negative Y is up, positive Y is down. Tune these per sprite.
 const HITBOX_OFFSETS := {
-	"right":      Vector2(25,   0),
-	"down_right": Vector2(18,  10),
-	"down":       Vector2( 0,  16),
-	"down_left":  Vector2(-18, 10),
-	"left":       Vector2(-25,  0),
-	"up_left":    Vector2(-18, -10),
-	"up":         Vector2( 0,  -16),
-	"up_right":   Vector2(18,  -10)
+	"right": Vector2(10, -10),
+	"down_right": Vector2(10, -5),
+	"down": Vector2( 0, 0),
+	"down_left": Vector2(-10, -5),
+	"left": Vector2(-10, -10),
+	"up_left": Vector2(-5, -20),
+	"up": Vector2( 0, -20),
+	"up_right": Vector2(5, -20)
 }
 
 func _init(crawler_ref: CharacterBody2D) -> void:

@@ -6,6 +6,7 @@ var data: EnemyData
 func _init(sprite_ref: AnimatedSprite2D, data_ref: EnemyData) -> void:
 	sprite = sprite_ref
 	data = data_ref
+	sprite.animation_finished.connect(_on_animation_finished)
 	
 func update() -> void:
 	var animation_name:= resolve_animation()
@@ -13,12 +14,21 @@ func update() -> void:
 		sprite.play(animation_name)
 		
 func resolve_animation() -> StringName:
-	var prefix: String
-	match data.current_state:
-		CrawlerStateMachine.State.CHASE, CrawlerStateMachine.State.PATROL:
-			prefix = "walk"
-		_:
-			prefix = "idle"
-	
 	var dir:= data.last_facing if data.last_facing != Vector2.ZERO else Vector2.DOWN
-	return prefix + "_" + FacingHelper.facing_to_string(dir)
+	var dir_str:= FacingHelper.facing_to_string(dir)
+	
+	match data.current_state:
+		CrawlerStateMachine.State.DIED:
+			return "died_" + dir_str
+		CrawlerStateMachine.State.HURT:
+			return "hurt_" + dir_str
+		CrawlerStateMachine.State.ATTACK:
+			return "attack_" + dir_str
+		CrawlerStateMachine.State.CHASE, CrawlerStateMachine.State.PATROL:
+			return "walk_" + dir_str
+		_:
+			return "idle_" + dir_str
+
+func _on_animation_finished() -> void:
+	if sprite.animation.begins_with("hurt"):
+		data.is_hurt = false

@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://bxj3wbuhdfrpc" path="res://game/actors/enemies/base_types/fodder/crawler/hitboxes/crawler_melee_hitbox.gd" id="1_45sjp"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_tax37"]
-radius = 30.0
 
 [node name="MeleeAttackHitbox" type="Area2D" unique_id=452791861]
 collision_layer = 0

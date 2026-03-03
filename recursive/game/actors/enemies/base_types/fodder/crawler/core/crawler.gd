@@ -29,6 +29,7 @@ func _ready() -> void:
 	#listens for the signal "died" emitting from HealthComponent, 
 	#then connects the _on_died method to run when it does emit.
 	health.died.connect(_on_died)
+	health.hurt.connect(_on_hurt)
 	data = EnemyData.new()
 	
 	#injects shared data
@@ -46,8 +47,14 @@ func _physics_process(delta: float) -> void:
 	crawler_attack_system.update(data, delta)
 	crawler_animation_system.update()
 
+func _on_hurt():
+	data.is_hurt = true
+
 #kills the character
 func _on_died():
-	print("Enemy killed.")
-	#queues node to be deleted at end of frame
+	set_physics_process(false)
+	data.is_dead = true
+	sprite.play("died")
+	await sprite.animation_finished
+	await get_tree().create_timer(0.5).timeout
 	queue_free()
