@@ -19,6 +19,7 @@ var attack_requested:= false
 #read/written by StateMachine 
 var current_state: State = State.IDLE
 var facing_dir:= Vector2.DOWN
+var facing_string: String = "down"
 
 #read/written by ModifierSystem
 var base_walk_speed:= 100.0

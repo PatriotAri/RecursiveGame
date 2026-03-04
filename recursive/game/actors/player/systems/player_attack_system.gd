@@ -48,12 +48,16 @@ func update(data: PlayerData, delta: float) -> void:
 		pending_spawn = true
 
 func post_update(data: PlayerData) -> void:
-	var dir:= FacingHelper.facing_to_string(data.facing_dir)
+	if not data.is_attacking:
+		pending_spawn = false
+		active_hitbox = null
+		return
+	
 	if pending_spawn:
 		pending_spawn = false
-		active_hitbox = spawn_hitbox(dir)
+		active_hitbox = spawn_hitbox(data.facing_string)
 	elif is_instance_valid(active_hitbox):
-		active_hitbox.position = HITBOX_OFFSETS.get(dir, Vector2.ZERO)
+		active_hitbox.position = HITBOX_OFFSETS.get(data.facing_string, Vector2.ZERO)
 		
 func spawn_hitbox(direction: String) -> Area2D:
 	if player_unarmed_hitbox == null:

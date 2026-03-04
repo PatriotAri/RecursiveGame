@@ -32,7 +32,13 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if data.is_dead:
 		return
+		
 	player_input_system.update(data)
+	
+	var to_cursor:= get_global_mouse_position() - global_position
+	if to_cursor != Vector2.ZERO:
+		data.facing_dir = to_cursor
+
 	player_attack_system.update(data, delta)
 	player_state_machine.update(data)
 	player_attack_system.post_update(data)
@@ -50,7 +56,8 @@ func on_animation_finished() -> void:
 func on_died() -> void:
 	data.is_dead = true
 	print("You died.")
-	sprite.play("died")
+	player_state_machine.update(data)
+	player_animation_system.update(data)
 	await sprite.animation_finished
 	await get_tree().create_timer(1.0).timeout
 	
