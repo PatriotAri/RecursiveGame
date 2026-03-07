@@ -1,4 +1,4 @@
-extends Control
+extends CanvasLayer
 
 @onready var background: ColorRect = $Background
 
@@ -7,15 +7,13 @@ func _ready() -> void:
 	#starts the pause menu hidden
 	visible = false
 	#processes the node even when paused
-	process_mode = Node.PROCESS_MODE_WHEN_PAUSED
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	$Background/VBoxContainer/Resume.pressed.connect(_on_resume_button_pressed)
 	$Background/VBoxContainer/MainMenu.pressed.connect(_on_main_menu_button_pressed)
 	$Background/VBoxContainer/Quit.pressed.connect(_on_quit_button_pressed)
 
 func _input(event: InputEvent) -> void:
-	print("input receieve: ", event)
 	if event.is_action_pressed("pause"):
-		print("Pause pressed.")
 		if get_tree().paused:
 			resume()
 		else:
