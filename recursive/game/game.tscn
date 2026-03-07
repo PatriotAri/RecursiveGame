@@ -1,10 +1,7 @@
 [gd_scene format=3 uid="uid://cu6rchybghk4"]
 
 [ext_resource type="PackedScene" uid="uid://dgc0csf67dgqr" path="res://game/maps/test_map/levels/test_level_01/test_level_01.tscn" id="1_vasa2"]
-[ext_resource type="PackedScene" uid="uid://dbwno0nl0ynp4" path="res://game/ui/pause_menu/pause_menu.tscn" id="2_vasa2"]
 
 [node name="Game" type="Node" unique_id=905991356]
 
 [node name="Test01" parent="." unique_id=1225456205 instance=ExtResource("1_vasa2")]
-
-[node name="PauseMenu" parent="." unique_id=1670530463 instance=ExtResource("2_vasa2")]
