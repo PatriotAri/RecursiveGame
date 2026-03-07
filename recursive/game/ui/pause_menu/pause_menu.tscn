@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://dbwno0nl0ynp4"]
+
+[ext_resource type="Script" uid="uid://brwqgd33tc81m" path="res://game/ui/pause_menu/pause_menu.gd" id="1_8byh7"]
+
+[node name="PauseMenu" type="CanvasLayer" unique_id=1670530463]
+process_mode = 2
+layer = 10
+
+[node name="Background" type="ColorRect" parent="." unique_id=1924671549]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_8byh7")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Background" unique_id=345659154]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+alignment = 1
+
+[node name="Label" type="Label" parent="Background/VBoxContainer" unique_id=1247740339]
+layout_mode = 2
+text = "PAUSED"
+
+[node name="Resume" type="Button" parent="Background/VBoxContainer" unique_id=1814038329]
+layout_mode = 2
+
+[node name="MainMenu" type="Button" parent="Background/VBoxContainer" unique_id=1964641709]
+layout_mode = 2
+
+[node name="Quit" type="Button" parent="Background/VBoxContainer" unique_id=916747216]
+layout_mode = 2
