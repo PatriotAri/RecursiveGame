@@ -1,6 +1,11 @@
 #global packed scene class, will probably be expanded into multiple classes later
 class_name GlobalPackedScenes
 
+# UI
+static var pause_menu = preload(
+	"res://game/ui/pause_menu/pause_menu.tscn"
+	)
+
 # Actors
 static var enemy_scene = preload(
 	"res://game/actors/enemies/base_types/fodder/crawler/core/crawler.tscn"
