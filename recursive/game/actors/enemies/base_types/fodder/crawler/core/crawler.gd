@@ -14,14 +14,18 @@ var crawler_animation_system: CrawlerAnimationSystem
 #hitbox variables
 @export_group("Hitbox Variables")
 @export_subgroup("Hitbox Type")
-@export var crawler_melee_scene = GlobalPackedScenes.crawler_melee_hitbox
+@export var crawler_hitbox: PackedScene
 @export_subgroup("Attack Tuning")
-@export var windup_time:= 0.5   # Enemy windup
-@export var lifetime:= 0.3       # How long hitbox stays active
-@export var damage:= 10.0    # Damage done by enemy
+@export var windup_time = 0.5   # Enemy windup
+@export var lifetime = 0.3       # How long hitbox stays active
+@export var damage = 10.0    # Damage done by enemy
+@export var attack_detection_range = 30.0
 
 #patrol variables
 @export_group("Patrol Tuning")
+@export var patrol_wait_time:= 3.5
+@export var patrol_timer:= 0.0
+@export var min_patrol_distance:= 40.0
 
 var data: EnemyData
 
@@ -33,7 +37,7 @@ func _ready() -> void:
 	data = EnemyData.new()
 	
 	#injects shared data
-	crawler_detection_system.initialize(data)
+	crawler_detection_system.initialize(data, self)
 	
 	crawler_state_machine = CrawlerStateMachine.new()
 	crawler_movement_system = CrawlerMovementSystem.new(self, data)

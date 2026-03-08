@@ -55,7 +55,6 @@ func on_animation_finished() -> void:
 
 func on_died() -> void:
 	data.is_dead = true
-	print("You died.")
 	player_state_machine.update(data)
 	player_animation_system.update(data)
 	await sprite.animation_finished

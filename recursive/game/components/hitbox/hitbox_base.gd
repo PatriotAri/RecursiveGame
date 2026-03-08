@@ -2,9 +2,9 @@ class_name HitboxBase
 
 extends Area2D
 
-var damage:= 5.0
-var windup_time:= 0.1
-var lifetime:= 0.2
+var damage:= 0.0
+var windup_time:= 0.0
+var lifetime:= 0.0
 var target_layer:= 0
 
 func _ready() -> void:

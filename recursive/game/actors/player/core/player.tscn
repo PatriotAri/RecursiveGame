@@ -443,7 +443,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"attack_down",
-"speed": 2.0
+"speed": 6.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -454,7 +454,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"attack_down_left",
-"speed": 2.0
+"speed": 6.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -465,7 +465,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"attack_down_right",
-"speed": 2.0
+"speed": 6.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -476,7 +476,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"attack_left",
-"speed": 2.0
+"speed": 6.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -487,7 +487,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"attack_right",
-"speed": 2.0
+"speed": 6.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -498,7 +498,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"attack_up",
-"speed": 2.0
+"speed": 6.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -509,7 +509,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"attack_up_left",
-"speed": 2.0
+"speed": 6.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -520,7 +520,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"attack_up_right",
-"speed": 2.0
+"speed": 6.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -976,7 +976,7 @@ zoom = Vector2(2, 2)
 [node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=1921922611]
 position = Vector2(0, -32)
 sprite_frames = SubResource("SpriteFrames_jfgyi")
-animation = &"attack_up_right"
+animation = &"idle_down"
 
 [node name="Hurtbox" type="Area2D" parent="." unique_id=387818382 node_paths=PackedStringArray("health")]
 collision_layer = 16
