@@ -37,7 +37,7 @@ func _ready() -> void:
 	data = EnemyData.new()
 	
 	#injects shared data
-	crawler_detection_system = CrawlerDetectionSystem.new(data)
+	crawler_detection_system.initialize(data, self)
 	
 	crawler_state_machine = CrawlerStateMachine.new()
 	crawler_movement_system = CrawlerMovementSystem.new(self, data)

@@ -14,8 +14,9 @@ var player: CharacterBody2D = null
 var attack_detection_range: float
 var max_range_sq: float
 
-func _init(data_ref: EnemyData) -> void:
+func initialize(data_ref: EnemyData, body_ref: CharacterBody2D) -> void:
 	data = data_ref
+	body = body_ref
 	
 	attack_detection_range = body.attack_detection_range
 	
