@@ -580,7 +580,6 @@ animations = [{
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pr2p4"]
 radius = 14.0
-height = 31.999998
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ny2m7"]
 radius = 15.0
@@ -607,7 +606,6 @@ animation = &"idle_down"
 offset = Vector2(0, -32)
 
 [node name="Collision" type="CollisionShape2D" parent="." unique_id=859264384]
-visible = false
 position = Vector2(0, -12)
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_pr2p4")

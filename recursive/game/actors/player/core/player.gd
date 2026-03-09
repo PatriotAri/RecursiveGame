@@ -25,9 +25,9 @@ func _ready() -> void:
 	player_movement_system = PlayerMovementSystem.new(self)
 	player_animation_system = PlayerAnimationSystem.new(sprite)
 	
-	health.died.connect(on_died)
-	health.hurt.connect(on_hurt)
-	sprite.animation_finished.connect(on_animation_finished)
+	health.died.connect(_on_died)
+	health.hurt.connect(_on_hurt)
+	sprite.animation_finished.connect(_on_animation_finished)
 
 func _physics_process(delta: float) -> void:
 	if data.is_dead:
@@ -45,15 +45,15 @@ func _physics_process(delta: float) -> void:
 	player_movement_system.update(data, delta)
 	player_animation_system.update(data)
 
-func on_hurt() -> void:
+func _on_hurt() -> void:
 	data.is_attacking = false
 	data.is_hurt = true
 	
-func on_animation_finished() -> void:
+func _on_animation_finished() -> void:
 	if sprite.animation.begins_with("hurt"):
 		data.is_hurt = false
 
-func on_died() -> void:
+func _on_died() -> void:
 	data.is_dead = true
 	player_state_machine.update(data)
 	player_animation_system.update(data)

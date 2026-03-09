@@ -19,7 +19,7 @@ var crawler_animation_system: CrawlerAnimationSystem
 @export var windup_time = 0.5   # Enemy windup
 @export var lifetime = 0.3       # How long hitbox stays active
 @export var damage = 10.0    # Damage done by enemy
-@export var attack_detection_range = 30.0
+@export var attack_detection_range = 32.0 #must be 32 minimum to properly detect player
 
 #patrol variables
 @export_group("Patrol Tuning")

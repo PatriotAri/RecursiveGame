@@ -8,6 +8,10 @@ var lifetime:= 0.0
 var target_layer:= 0
 
 func _ready() -> void:
+	if damage <= 0.0:
+		push_warning("%s: damage is %.1f - was it set?" % [name, damage])
+	if lifetime <= 0.0:
+		push_warning("%s: lifetime is %.1f — was it set?" % [name, lifetime])
 	get_target_layer()
 	area_entered.connect(_on_area_entered)
 	begin_attack()

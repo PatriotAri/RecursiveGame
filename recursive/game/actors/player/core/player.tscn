@@ -966,7 +966,6 @@ windup_time = 0.2
 damage = 7.0
 
 [node name="Collision" type="CollisionShape2D" parent="." unique_id=1079167882]
-visible = false
 position = Vector2(0, -10)
 shape = SubResource("RectangleShape2D_g1dw6")
 

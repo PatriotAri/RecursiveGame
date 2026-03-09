@@ -19,6 +19,8 @@ func _init(body_ref: CharacterBody2D, data_ref: EnemyData) -> void:
 	patrol_wait_time = body.patrol_wait_time
 	patrol_timer = body.patrol_timer
 	min_patrol_distance = body.min_patrol_distance
+	
+	pick_patrol_target() #sets patrol point on crawler spawn
 
 func update(delta: float) -> void:
 	#reads the flag set by state machine

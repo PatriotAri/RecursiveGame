@@ -3,14 +3,12 @@ class_name CrawlerDetectionSystem
 extends Area2D
 
 #data injected from crawler.gd _ready(), 
-#so data can be called without writing as a parameter in functions
 var data: EnemyData
 var body: CharacterBody2D
 
 #defaults player ref to null(empty)
 var player: CharacterBody2D = null
 
-#attacks when player enters range "max_range"
 var attack_detection_range: float
 var max_range_sq: float
 
@@ -39,7 +37,6 @@ func update() -> void:
 func _on_body_entered(body: Node) -> void:
 	#if player enters detection area then
 	if body.is_in_group("Player"):
-		#recasts body as CharacterBody2D
 		player = body as CharacterBody2D
 		data.player_detected = true
 
