@@ -2,7 +2,7 @@ class_name CrawlerAttackSystem
 
 var crawler_melee_hitbox = GlobalPackedScenes.crawler_melee_hitbox
 
-var crawler: CharacterBody2D
+var body: CharacterBody2D
 var windup_time: float
 var lifetime: float
 var damage: float
@@ -23,11 +23,11 @@ const HITBOX_OFFSETS := {
 	"up_right": Vector2(5, -20)
 }
 
-func _init(crawler_ref: CharacterBody2D) -> void:
-	crawler = crawler_ref
-	windup_time = crawler.windup_time
-	lifetime = crawler.lifetime
-	damage = crawler.damage
+func _init(body_ref: CharacterBody2D) -> void:
+	body = body_ref
+	windup_time = body.windup_time
+	lifetime = body.lifetime
+	damage = body.damage
 	
 func update(data: EnemyData, delta: float) -> void:
 	#resets state whenever attack begins
@@ -56,11 +56,11 @@ func spawn_hitbox(direction: String) -> void:
 		return
 
 	var hitbox = crawler_melee_hitbox.instantiate()
-	hitbox.target_layer = 16  # hits player hurtbox (layer 5)
+	hitbox.target_layer = 16  # hits player hurtbox (physics layer 5)
 	hitbox.windup_time = windup_time
 	hitbox.lifetime = lifetime
 	hitbox.damage = damage
 
 	var offset = HITBOX_OFFSETS.get(direction, Vector2.ZERO)
-	crawler.add_child(hitbox)
+	body.add_child(hitbox)
 	hitbox.position = offset

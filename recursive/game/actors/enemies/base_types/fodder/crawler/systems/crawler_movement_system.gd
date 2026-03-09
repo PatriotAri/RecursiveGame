@@ -5,15 +5,22 @@ var body: CharacterBody2D
 var data: EnemyData
 
 #patrol variables
-var patrol_wait_time:= 3.5
-var patrol_timer:= 0.0
+var patrol_wait_time: float
+var patrol_timer: float
 var patrol_target:= Vector2.ZERO
-var min_patrol_distance:= 40.0
+var min_patrol_distance: float
 var max_attempts:= 10
+var arrival_threshold:= 5.0
 
 func _init(body_ref: CharacterBody2D, data_ref: EnemyData) -> void:
 	body = body_ref
 	data = data_ref
+	
+	patrol_wait_time = body.patrol_wait_time
+	patrol_timer = body.patrol_timer
+	min_patrol_distance = body.min_patrol_distance
+	
+	pick_patrol_target() #sets patrol point on crawler spawn
 
 func update(delta: float) -> void:
 	#reads the flag set by state machine
@@ -38,7 +45,10 @@ func idle(delta: float) -> void:
 
 func patrol(delta: float) -> void:
 	var direction:= patrol_target - body.global_position
-	if direction.length() < 5.0:
+	#the "arrival_threshold" tells the enemy when its within the range,
+	#act like it's reached the patrol point. This prevents the enemy from 
+	#jittering on the patrol point or not being able to find the patrol point all together.
+	if direction.length() < arrival_threshold:
 		idle(delta)
 		patrol_timer += delta
 		if patrol_timer >= patrol_wait_time:

@@ -2,12 +2,16 @@ class_name HitboxBase
 
 extends Area2D
 
-var damage:= 5.0
-var windup_time:= 0.1
-var lifetime:= 0.2
+var damage:= 0.0
+var windup_time:= 0.0
+var lifetime:= 0.0
 var target_layer:= 0
 
 func _ready() -> void:
+	if damage <= 0.0:
+		push_warning("%s: damage is %.1f - was it set?" % [name, damage])
+	if lifetime <= 0.0:
+		push_warning("%s: lifetime is %.1f — was it set?" % [name, lifetime])
 	get_target_layer()
 	area_entered.connect(_on_area_entered)
 	begin_attack()
