@@ -26,7 +26,7 @@ static var player_unarmed_hitbox = preload(
 
 # Spawners
 static var slime_spawner = preload(
-	"res://game/components/spawner/slime_spawner.tscn"
+	"res://game/components/spawners/slime_spawner.tscn"
 	)
 
 # Levels

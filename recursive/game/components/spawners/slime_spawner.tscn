@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://jh204tj32k6j"]
 
-[ext_resource type="Script" uid="uid://cs0o687hvf8gq" path="res://game/components/spawner/slime_spawner.gd" id="1_15j63"]
+[ext_resource type="Script" uid="uid://cs0o687hvf8gq" path="res://game/components/spawners/slime_spawner.gd" id="1_15j63"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_galcf"]
 size = Vector2(64, 64)

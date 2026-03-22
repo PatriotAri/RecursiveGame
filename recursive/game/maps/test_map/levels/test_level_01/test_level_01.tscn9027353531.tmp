@@ -32,4 +32,5 @@ script = ExtResource("4_wvw0b")
 enemy_scene = ExtResource("5_2ju8b")
 spawn_count = 3
 waves_on = true
+wave_interval = 5.0
 max_enemies = 12
