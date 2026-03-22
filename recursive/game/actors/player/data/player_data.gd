@@ -10,12 +10,12 @@ enum State {
 
 var is_hurt:= false
 var is_dead:= false
+var facing_turn_speed:= 35.0
 
 #read/written by InputSystem (player intent)
 var move_vector:= Vector2.ZERO
 var is_running:= false
 var attack_requested:= false
-var facing_turn_speed:= 45.0
 
 #read/written by StateMachine 
 var current_state: State = State.IDLE

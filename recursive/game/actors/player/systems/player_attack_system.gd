@@ -69,7 +69,7 @@ func spawn_hitbox(direction: String, facing: Vector2) -> Area2D:
 	hitbox.windup_time = windup_time
 	hitbox.lifetime = lifetime
 	hitbox.damage = damage
-	hitbox.knockback_strength = 50.0
+	hitbox.knockback_strength = 70.0
 	hitbox.knockback_direction = facing
 	hitbox.position = HITBOX_OFFSETS.get(direction, Vector2.ZERO)
 	player.add_child(hitbox)

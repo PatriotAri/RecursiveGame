@@ -39,5 +39,4 @@ func update(data: PlayerData, delta: float) -> void:
 	#layer impulse modifiers on top (knockback, recoil)
 	player.velocity += data.modifiers.get_impulse_sum()
 	
-	#Moves "player"(characterBody2D) using its velocity and resolves collisions by sliding.
 	player.move_and_slide()
