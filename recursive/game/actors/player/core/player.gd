@@ -52,9 +52,6 @@ func _physics_process(delta: float) -> void:
 		var new_angle := lerp_angle(current_angle, target_angle, data.facing_turn_speed * delta)
 		data.facing_dir = Vector2.from_angle(new_angle) * to_cursor.length()
 		
-		if data.move_vector != Vector2.ZERO:
-			data.move_vector = data.move_vector.rotated(target_angle + PI / 2.0)
-		
 	player_attack_system.update(data, delta)
 	player_state_machine.update(data)
 	player_attack_system.post_update(data)
