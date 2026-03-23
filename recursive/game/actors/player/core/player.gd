@@ -8,6 +8,8 @@ var player_attack_system: PlayerAttackSystem
 var player_movement_system: PlayerMovementSystem
 var player_animation_system: PlayerAnimationSystem
 
+var player_hitbox_manager: PlayerHitboxManager
+
 @onready var sprite: AnimatedSprite2D = $Sprite
 @onready var health: PlayerHealthComponent = $HealthComponent
 
@@ -26,9 +28,12 @@ var player_animation_system: PlayerAnimationSystem
 func _ready() -> void:
 	data = PlayerData.new()
 	
+	player_hitbox_manager = PlayerHitboxManager.new(self, data)
+	player_hitbox_manager.register_hitbox(&"unarmed", GlobalPackedScenes.player_unarmed_hitbox)
+	
 	player_input_system = PlayerInputSystem.new()
 	player_state_machine = PlayerStateMachine.new()
-	player_attack_system = PlayerAttackSystem.new(self)
+	player_attack_system = PlayerAttackSystem.new(self, player_hitbox_manager)
 	player_movement_system = PlayerMovementSystem.new(self)
 	player_animation_system = PlayerAnimationSystem.new(sprite)
 	

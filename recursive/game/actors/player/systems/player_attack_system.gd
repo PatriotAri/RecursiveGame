@@ -1,9 +1,7 @@
 class_name PlayerAttackSystem
 
-#packed scenes
-var player_unarmed_hitbox = GlobalPackedScenes.player_unarmed_hitbox
-
 var player: CharacterBody2D
+var player_hitbox_manager: PlayerHitboxManager
 
 var attack_timer:= 0.0
 
@@ -13,22 +11,10 @@ var lifetime: float
 var damage: float
 
 var pending_spawn:= false
-var active_hitbox: Area2D = null
 
-# Hitbox positioning offsets based on facing direction
-const HITBOX_OFFSETS := {
-	"right": Vector2(5, -20),
-	"down_right": Vector2(5, -10),
-	"down": Vector2(0, -10),
-	"down_left": Vector2(-5, -10),
-	"left": Vector2(-5, -20),
-	"up_left": Vector2(-5, -48),
-	"up": Vector2(0, -50),
-	"up_right": Vector2(5, -48)
-}
-
-func _init(player_ref: CharacterBody2D) -> void:
+func _init(player_ref: CharacterBody2D, hb_ref: PlayerHitboxManager) -> void:
 	player = player_ref
+	player_hitbox_manager = hb_ref
 	windup_time = player.windup_time
 	lifetime = player.lifetime
 	damage = player.damage
@@ -50,27 +36,9 @@ func update(data: PlayerData, delta: float) -> void:
 func post_update(data: PlayerData) -> void:
 	if not data.is_attacking:
 		pending_spawn = false
-		active_hitbox = null
 		return
 	
 	if pending_spawn:
 		pending_spawn = false
-		active_hitbox = spawn_hitbox(data.facing_string, data.facing_dir)
-	elif is_instance_valid(active_hitbox):
-		active_hitbox.position = HITBOX_OFFSETS.get(data.facing_string, Vector2.ZERO)
+		player_hitbox_manager.spawn_hitbox(&"unarmed")
 		
-func spawn_hitbox(direction: String, facing: Vector2) -> Area2D:
-	if player_unarmed_hitbox == null:
-		push_error("Player: Melee hitbox scene not loaded!")
-		return null
-	
-	var hitbox: Area2D = player_unarmed_hitbox.instantiate()
-	hitbox.target_layer = 32
-	hitbox.windup_time = windup_time
-	hitbox.lifetime = lifetime
-	hitbox.damage = damage
-	hitbox.knockback_strength = 70.0
-	hitbox.knockback_direction = facing
-	hitbox.position = HITBOX_OFFSETS.get(direction, Vector2.ZERO)
-	player.add_child(hitbox)
-	return hitbox
