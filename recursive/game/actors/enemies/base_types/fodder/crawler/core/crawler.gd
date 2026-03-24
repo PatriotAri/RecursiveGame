@@ -7,14 +7,17 @@ var crawler_state_machine: CrawlerStateMachine
 var crawler_movement_system: CrawlerMovementSystem
 var crawler_attack_system: CrawlerAttackSystem
 var crawler_animation_system: CrawlerAnimationSystem
+var crawler_hitbox_manager: CrawlerHitboxManager
 
-#health and damage components
+#health component
 @onready var health: EnemyHealthComponent = $HealthComponent
 
 #hitbox variables
 @export_group("Hitbox Variables")
 @export_subgroup("Hitbox Type")
 @export var crawler_hitbox: PackedScene
+@export var crawler_melee_offsets: HitboxOffsetData
+
 @export_subgroup("Attack Tuning")
 @export var windup_time = 0.5   # Enemy windup
 @export var lifetime = 0.3       # How long hitbox stays active
@@ -33,6 +36,9 @@ func _ready() -> void:
 	
 	data = EnemyData.new()
 	
+	crawler_hitbox_manager = CrawlerHitboxManager.new(self, data)
+	crawler_hitbox_manager.register_hitbox(&"melee", crawler_hitbox, crawler_melee_offsets)
+	
 	health.initialize(data)
 	
 	$Hurtbox.knockback_received.connect(_on_knockback_received)
@@ -44,7 +50,7 @@ func _ready() -> void:
 	
 	crawler_state_machine = CrawlerStateMachine.new()
 	crawler_movement_system = CrawlerMovementSystem.new(self, data)
-	crawler_attack_system = CrawlerAttackSystem.new(self)
+	crawler_attack_system = CrawlerAttackSystem.new(self, crawler_hitbox_manager)
 	crawler_animation_system = CrawlerAnimationSystem.new(sprite, data)
 
 func _physics_process(delta: float) -> void:
