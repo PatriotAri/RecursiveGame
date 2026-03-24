@@ -1,6 +1,8 @@
 extends CanvasLayer
 
 @onready var background: ColorRect = $Background
+@onready var controls_panel: Control = $Background/ControlsPanel
+@onready var menu_container: VBoxContainer = $Background/VBoxContainer
 
 func _ready() -> void:
 	set_process_input(true)
@@ -11,7 +13,10 @@ func _ready() -> void:
 	$Background/VBoxContainer/Resume.pressed.connect(_on_resume_button_pressed)
 	$Background/VBoxContainer/MainMenu.pressed.connect(_on_main_menu_button_pressed)
 	$Background/VBoxContainer/Quit.pressed.connect(_on_quit_button_pressed)
-
+	$Background/VBoxContainer/Controls.pressed.connect(_on_controls_button_pressed)
+	$Background/ControlsPanel/VBoxContainer/BackButton.pressed.connect(_on_controls_back_pressed)
+	controls_panel.visible = false
+	
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause"):
 		if get_tree().paused:
@@ -26,6 +31,8 @@ func pause() -> void:
 	get_tree().paused = true
 
 func resume() -> void:
+	controls_panel.visible = false
+	menu_container.visible = true
 	visible = false
 	get_tree().paused = false
 	
@@ -38,3 +45,11 @@ func _on_main_menu_button_pressed() -> void:
 	
 func _on_quit_button_pressed() -> void:
 	get_tree().quit()
+
+func _on_controls_button_pressed() -> void:
+	menu_container.visible = false
+	controls_panel.visible = true
+
+func _on_controls_back_pressed() -> void:
+	controls_panel.visible = false
+	menu_container.visible = true
