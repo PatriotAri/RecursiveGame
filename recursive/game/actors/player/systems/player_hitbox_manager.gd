@@ -13,20 +13,27 @@ func _init(player_ref: CharacterBody2D,data_ref: PlayerData) -> void:
 	player = player_ref
 	data = data_ref
 
-func register_hitbox(attack_name: StringName, scene: PackedScene) -> void:
-	hitbox_registry[attack_name] = scene
+func register_hitbox(attack_name: StringName, scene: PackedScene, offsets: HitboxOffsetData) -> void:
+	hitbox_registry[attack_name] = {"scene": scene, "offsets": offsets}
 
-func spawn_hitbox(attack_name: StringName) -> HitboxBase:
-	var scene: PackedScene = hitbox_registry.get(attack_name)
-	if scene == null:
+func spawn_hitbox(attack_name: StringName, damage: float, windup_time: float, lifetime: float) -> HitboxBase:
+	var entry = hitbox_registry.get(attack_name)
+	if entry == null:
 		push_warning("No hitbox registered for: %s" % attack_name)
 		return null
+		
+	var scene: PackedScene = entry.scene
 		
 	var hitbox: HitboxBase = scene.instantiate()
 	var offset = get_directional_offset(attack_name)
 	
 	hitbox.position = offset
 	hitbox.knockback_direction = data.facing_dir
+	hitbox.damage = damage
+	hitbox.target_layer = 32
+	hitbox.windup_time = windup_time
+	hitbox.lifetime = lifetime
+	
 	player.add_child(hitbox)
 	hitbox.begin_attack()
 	
@@ -54,16 +61,8 @@ func on_hitbox_removed(hitbox: HitboxBase) -> void:
 	active_hitboxes.erase(hitbox)
 
 func get_directional_offset(attack_name: StringName) -> Vector2:
+	var entry = hitbox_registry.get(attack_name)
+	if entry == null or entry.offsets == null:
+		return Vector2.ZERO
 	var dir_str:= FacingHelper.facing_to_string(data.facing_dir)
-	var offset_distance:= 20.0
-	
-	match dir_str:
-		"right": return Vector2(offset_distance, offset_distance)
-		"left": return Vector2(-offset_distance, offset_distance)
-		"up": return Vector2(offset_distance, -offset_distance)
-		"down": return Vector2(offset_distance, offset_distance)
-		"up_right": return Vector2(offset_distance, -offset_distance) * 0.707
-		"up_left": return Vector2(-offset_distance, -offset_distance) * 0.707
-		"down_right": return Vector2(offset_distance, offset_distance) * 0.707
-		"down_left": return Vector2(-offset_distance, offset_distance) * 0.707
-		_: return Vector2.ZERO
+	return entry.offsets.get_offset(dir_str)

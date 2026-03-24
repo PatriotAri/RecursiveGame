@@ -17,6 +17,7 @@ var player_hitbox_manager: PlayerHitboxManager
 @export var windup_time:= 0.1
 @export var lifetime:= 0.1
 @export var damage:= 10.0
+@export var unarmed_offsets: HitboxOffsetData
 
 @export_group("Movement Tuning")
 @export var base_walk_speed:= 100.0
@@ -29,7 +30,7 @@ func _ready() -> void:
 	data = PlayerData.new()
 	
 	player_hitbox_manager = PlayerHitboxManager.new(self, data)
-	player_hitbox_manager.register_hitbox(&"unarmed", GlobalPackedScenes.player_unarmed_hitbox)
+	player_hitbox_manager.register_hitbox(&"unarmed", GlobalPackedScenes.player_unarmed_hitbox, unarmed_offsets)
 	
 	player_input_system = PlayerInputSystem.new()
 	player_state_machine = PlayerStateMachine.new()
