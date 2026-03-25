@@ -65,7 +65,7 @@ func patrol(delta: float) -> void:
 			pick_patrol_target()
 	else:
 		var dir_norm:= direction.normalized()
-		data.last_facing = dir_norm
+		data.facing_dir = dir_norm
 		var speed:= data.patrol_speed * data.modifiers.get_speed_scale()
 		var target_velocity:= dir_norm * speed
 		body.velocity = body.velocity.move_toward(target_velocity, data.acceleration * delta)
@@ -97,7 +97,7 @@ func chase(delta: float) -> void:
 		idle(delta)
 		return
 	var direction := (data.player_pos - body.global_position).normalized()
-	data.last_facing = direction
+	data.facing_dir = direction
 	var speed:= data.walk_speed * data.modifiers.get_speed_scale()
 	var target_velocity:= direction * speed
 	body.velocity = body.velocity.move_toward(target_velocity, data.acceleration * delta)

@@ -1,8 +1,7 @@
 class_name CrawlerAttackSystem
 
-var crawler_melee_hitbox = GlobalPackedScenes.crawler_melee_hitbox
-
 var body: CharacterBody2D
+var hitbox_manager: CrawlerHitboxManager
 var windup_time: float
 var lifetime: float
 var damage: float
@@ -12,6 +11,7 @@ var attack_timer := 0.0
 
 func _init(body_ref: CharacterBody2D, hb_ref: CrawlerHitboxManager) -> void:
 	body = body_ref
+	hitbox_manager = hb_ref
 	windup_time = body.windup_time
 	lifetime = body.lifetime
 	damage = body.damage
@@ -33,6 +33,6 @@ func update(data: EnemyData, delta: float) -> void:
 		data.attack_finished = true
 
 func execute_attack(data: EnemyData) -> void:
-	var facing:= data.last_facing if data.last_facing != Vector2.ZERO else Vector2.DOWN
+	var facing:= data.facing_dir if data.facing_dir != Vector2.ZERO else Vector2.DOWN
 	var dir:= FacingHelper.facing_to_string(facing)
 	

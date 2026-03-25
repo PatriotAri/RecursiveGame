@@ -18,7 +18,6 @@ func _ready() -> void:
 		push_warning("%s: lifetime is %.1f — was it set?" % [name, lifetime])
 	get_target_layer()
 	area_entered.connect(_on_area_entered)
-	begin_attack()
 
 func get_target_layer() -> void:
 	#set collision mask if target_layer is specified

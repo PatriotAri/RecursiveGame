@@ -25,7 +25,7 @@ func spawn_hitbox(attack_name: StringName, damage: float, windup_time: float, li
 	var offset = get_directional_offset(attack_name)
 	
 	hitbox.position = offset
-	hitbox.knockback_direction = data.facing_dir
+	hitbox.knockback_direction = data.last_facing
 	hitbox.damage = damage
 	hitbox.target_layer = 16
 	hitbox.windup_time = windup_time
@@ -61,5 +61,5 @@ func get_directional_offset(attack_name: StringName) -> Vector2:
 	var entry = hitbox_registry.get(attack_name)
 	if entry == null or entry.offsets == null:
 		return Vector2.ZERO
-	var dir_str:= FacingHelper.facing_to_string(data.facing_dir)
+	var dir_str:= FacingHelper.facing_to_string(data.last_facing)
 	return entry.offsets.get_offset(dir_str)

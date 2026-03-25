@@ -23,14 +23,14 @@ var facing_dir:= Vector2.DOWN
 var facing_string: String = "down"
 
 #read/written by ModifierSystem
-var base_walk_speed:= 100.0
-var base_run_speed:= 140.0
+var walk_speed: float
+var run_speed: float
 
 #acceleration/deceleration
-var acceleration:= 600.0 #px/s^2
-var friction:= 800.0 #px/s^2
+var acceleration: float
+var friction: float
 
-var backpedal_penalty:= 0.35
+var backpedal_penalty: float
 
 #movement modifiers (knockback, slows, dashes, etc.)
 var modifiers:= MovementModifierStack.new()

@@ -16,7 +16,7 @@ func update() -> void:
 		sprite.play(animation_name)
 		
 func _resolve_animation() -> StringName:
-	var dir:= data.last_facing if data.last_facing != Vector2.ZERO else Vector2.DOWN
+	var dir:= data.facing_dir if data.facing_dir != Vector2.ZERO else Vector2.DOWN
 	var dir_str:= FacingHelper.facing_to_string(dir)
 	
 	match data.current_state:

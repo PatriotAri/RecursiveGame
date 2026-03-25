@@ -35,7 +35,7 @@ func get_impulse_sum() -> Vector2:
 func get_speed_scale() -> float:
 	var total:= 1.0
 	for mod in modifiers:
-		if mod.type ==MovementModifier.Type.SPEED_SCALE:
+		if mod.type == MovementModifier.Type.SPEED_SCALE:
 			total *= mod.speed_scale
 	return total
 
