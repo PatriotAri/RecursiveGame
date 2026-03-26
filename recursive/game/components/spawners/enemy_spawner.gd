@@ -20,7 +20,7 @@ extends Node2D
 @export var max_enemies:= 0
 
 var enemies_alive: Array[Node] = []
-var wave_timer:= 0.0
+var wave_timer:= wave_intervals
 
 func _ready() -> void:
 	if enemy_scene == null:

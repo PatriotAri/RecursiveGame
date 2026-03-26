@@ -24,7 +24,7 @@ func update(data: EnemyData, delta: float) -> void:
 	if data.state_just_changed:
 		attack_performed = false
 		attack_timer = 0.0
-		execute_attack(data)
+		execute_attack()
 		attack_performed = true
 		return
 
@@ -32,7 +32,6 @@ func update(data: EnemyData, delta: float) -> void:
 	if attack_timer >= windup_time + lifetime:
 		data.attack_finished = true
 
-func execute_attack(data: EnemyData) -> void:
-	var facing:= data.facing_dir if data.facing_dir != Vector2.ZERO else Vector2.DOWN
-	var dir:= FacingHelper.facing_to_string(facing)
+func execute_attack() -> void:
+	hitbox_manager.spawn_hitbox(&"melee", damage, windup_time, lifetime)
 	
