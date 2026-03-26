@@ -105,6 +105,8 @@ func chase(delta: float) -> void:
 	body.move_and_slide()
 
 func attack(delta: float) -> void:
+	if data.player_detected:
+		data.facing_dir = (data.player_pos - body.global_position).normalized()
 	idle(delta) #stands still, attack system spawns hitbox and does timing
 
 func attack_cooldown(delta: float) -> void:

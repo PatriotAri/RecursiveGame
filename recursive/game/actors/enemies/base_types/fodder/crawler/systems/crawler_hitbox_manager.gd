@@ -9,4 +9,4 @@ func _init(body_ref: CharacterBody2D, data_ref: EnemyData) -> void:
 	data = data_ref
 
 func get_facing() -> Vector2:
-	return data.last_facing
+	return data.facing_dir

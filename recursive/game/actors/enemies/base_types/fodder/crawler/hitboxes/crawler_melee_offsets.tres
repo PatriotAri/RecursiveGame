@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="HitboxOffsetData" format=3 uid="uid://b3r4taoidcymg"]
+
+[ext_resource type="Script" uid="uid://cds4ae0je1k06" path="res://game/components/hitbox/hitbox_offset_data.gd" id="1_2jab4"]
+
+[resource]
+script = ExtResource("1_2jab4")
+right_y = 5.5
+metadata/_custom_type_script = "uid://cds4ae0je1k06"

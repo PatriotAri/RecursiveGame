@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dydoo8w4uhpis" path="res://game/actors/player/core/player.gd" id="1_oul6g"]
 [ext_resource type="Texture2D" uid="uid://digfavgddia4a" path="res://game/actors/player/assets/player_UNARMED_ATTACK.png" id="2_4ve6c"]
 [ext_resource type="Texture2D" uid="uid://ymy8x3l8ml8d" path="res://game/actors/player/assets/player_idle.png" id="2_g1dw6"]
+[ext_resource type="Resource" uid="uid://st2de7v0al8h" path="res://game/actors/player/hitboxes/player_unarmed_offsets.tres" id="2_iwgb0"]
 [ext_resource type="Texture2D" uid="uid://cp0r4v0cabs4l" path="res://game/actors/player/assets/player_died.png" id="3_4ve6c"]
 [ext_resource type="Texture2D" uid="uid://gstykpkfl3p7" path="res://game/actors/player/assets/player_hurt.png" id="3_7suon"]
 [ext_resource type="Texture2D" uid="uid://dgn63i64mxi2" path="res://game/actors/player/assets/player_walk.png" id="3_yw30f"]
@@ -964,6 +965,7 @@ collision_mask = 5
 script = ExtResource("1_oul6g")
 windup_time = 0.2
 damage = 7.0
+unarmed_offsets = ExtResource("2_iwgb0")
 
 [node name="Collision" type="CollisionShape2D" parent="." unique_id=1079167882]
 position = Vector2(0, -10)
