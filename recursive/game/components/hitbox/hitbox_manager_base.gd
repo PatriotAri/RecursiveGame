@@ -19,7 +19,7 @@ func get_facing() -> Vector2:
 func register_hitbox(attack_name: StringName, scene: PackedScene, offsets: HitboxOffsetData) -> void:
 	hitbox_registry[attack_name] = {"scene": scene, "offsets": offsets}
 
-func spawn_hitbox(attack_name: StringName, damage: float, windup_time: float, lifetime: float) -> HitboxBase:
+func spawn_hitbox(attack_name: StringName, damage: float, knockback_strength: float, windup_time: float, lifetime: float) -> HitboxBase:
 	var entry = hitbox_registry.get(attack_name)
 	if entry == null:
 		push_warning("No hitbox registered for: %s" % attack_name)
@@ -32,6 +32,7 @@ func spawn_hitbox(attack_name: StringName, damage: float, windup_time: float, li
 
 	hitbox.position = offset
 	hitbox.knockback_direction = facing
+	hitbox.knockback_strength = knockback_strength
 	hitbox.damage = damage
 	hitbox.target_layer = target_layer
 	hitbox.windup_time = windup_time

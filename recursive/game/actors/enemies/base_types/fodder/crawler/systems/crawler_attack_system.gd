@@ -33,5 +33,5 @@ func update(data: EnemyData, delta: float) -> void:
 		data.attack_finished = true
 
 func execute_attack() -> void:
-	hitbox_manager.spawn_hitbox(&"melee", damage, windup_time, lifetime)
+	hitbox_manager.spawn_hitbox(&"melee", damage, 40.0, windup_time, lifetime)
 	
