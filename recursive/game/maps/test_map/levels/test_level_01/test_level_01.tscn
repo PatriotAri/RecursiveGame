@@ -28,6 +28,7 @@ script = ExtResource("3_6rspa")
 
 [node name="EnemySpawner" parent="Y-sorted" unique_id=843157830 instance=ExtResource("3_hek21")]
 enemy_scene = ExtResource("5_2ju8b")
+spawn_count = 5
 waves_on = true
 wave_intervals = 4.0
 max_enemies = 12

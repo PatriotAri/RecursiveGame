@@ -4,5 +4,18 @@
 
 [resource]
 script = ExtResource("1_2jab4")
-right_y = 5.5
+right_x = 8.0
+right_y = -12.0
+left_x = -8.0
+left_y = -12.0
+up_y = -26.0
+down_y = -6.0
+up_right_x = 8.0
+up_right_y = -24.0
+up_left_x = -8.0
+up_left_y = -24.0
+down_right_x = 8.0
+down_right_y = -6.0
+down_left_x = -8.0
+down_left_y = -6.0
 metadata/_custom_type_script = "uid://cds4ae0je1k06"
