@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="HitboxOffsetData" format=3 uid="uid://b3r4taoidcymg"]
+
+[ext_resource type="Script" uid="uid://cds4ae0je1k06" path="res://game/components/hitbox/hitbox_offset_data.gd" id="1_2jab4"]
+
+[resource]
+script = ExtResource("1_2jab4")
+right_x = 8.0
+right_y = -12.0
+left_x = -8.0
+left_y = -12.0
+up_y = -26.0
+down_y = -6.0
+up_right_x = 8.0
+up_right_y = -24.0
+up_left_x = -8.0
+up_left_y = -24.0
+down_right_x = 8.0
+down_right_y = -6.0
+down_left_x = -8.0
+down_left_y = -6.0
+metadata/_custom_type_script = "uid://cds4ae0je1k06"

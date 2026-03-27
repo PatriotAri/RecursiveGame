@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://b78qrelon2r6a" path="res://game/actors/enemies/base_types/fodder/crawler/systems/crawler_detection_system.gd" id="2_et6g1"]
 [ext_resource type="PackedScene" uid="uid://dr8dgg3mtr20a" path="res://game/actors/enemies/base_types/fodder/crawler/hitboxes/CrawlerMeleeHitbox.tscn" id="2_k1huj"]
 [ext_resource type="Texture2D" uid="uid://d2xia3iwmytx8" path="res://game/actors/enemies/base_types/fodder/crawler/assets/slime_ATTACK.png" id="2_oftu5"]
+[ext_resource type="Resource" uid="uid://b3r4taoidcymg" path="res://game/actors/enemies/base_types/fodder/crawler/hitboxes/crawler_melee_offsets.tres" id="3_0pbox"]
 [ext_resource type="Texture2D" uid="uid://t6rs20w7omup" path="res://game/actors/enemies/base_types/fodder/crawler/assets/slime_DIED.png" id="3_k1huj"]
 [ext_resource type="Texture2D" uid="uid://b7yontipibenc" path="res://game/actors/enemies/base_types/fodder/crawler/assets/slime_HURT.png" id="4_0pbox"]
 [ext_resource type="Script" uid="uid://bp8ie2pwt8578" path="res://game/components/hurtbox/hurtbox_component.gd" id="7_wwd7i"]
@@ -579,7 +580,8 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pr2p4"]
-radius = 14.0
+radius = 12.0
+height = 28.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ny2m7"]
 radius = 15.0
@@ -597,6 +599,7 @@ collision_mask = 7
 platform_floor_layers = 0
 script = ExtResource("1_iskh7")
 crawler_hitbox = ExtResource("2_k1huj")
+crawler_melee_offsets = ExtResource("3_0pbox")
 lifetime = 0.1
 damage = 1.0
 
@@ -644,3 +647,4 @@ shape = SubResource("RectangleShape2D_23y3x")
 
 [node name="HealthComponent" type="Node" parent="." unique_id=1478561858]
 script = ExtResource("10_k1huj")
+max_health = 15.0

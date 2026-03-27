@@ -10,21 +10,21 @@ extends Node2D
 @export var spawn_count:= 1
 @export var spawn_radius:= 60.0
 #minimum distance between spawned enemies
-@export var spawn_seperation:= 40.0
+@export var spawn_separation:= 40.0
 
 @export_group("Wave Tuning")
 @export var waves_on:= false
 #seconds between waves
-@export var wave_interval:= 10.0
-#max enemies allowed to spawn from spawner
+@export var wave_intervals:= 10.0
+#max enemies allowed to spawn
 @export var max_enemies:= 0
 
 var enemies_alive: Array[Node] = []
-var wave_timer:= 0.0
+var wave_timer:= wave_intervals
 
 func _ready() -> void:
 	if enemy_scene == null:
-		enemy_scene = GlobalPackedScenes.enemy_scene
+		enemy_scene = GlobalPackedScenes.crawler_scene
 	await get_tree().process_frame
 	spawn_wave()
 
@@ -34,7 +34,7 @@ func _process(delta:float) -> void:
 		return
 	wave_timer -= delta
 	if wave_timer <= 0.0:
-		wave_timer = wave_interval
+		wave_timer = wave_intervals
 		spawn_wave()
 
 func spawn_wave() -> void:
@@ -65,7 +65,7 @@ func pick_position(existing: Array[Vector2]) -> Vector2:
 		
 		var too_close:= false
 		for other in existing:
-			if candidate.distance_to(other) < spawn_seperation:
+			if candidate.distance_to(other) < spawn_separation:
 				too_close = true
 				break
 		if not too_close:

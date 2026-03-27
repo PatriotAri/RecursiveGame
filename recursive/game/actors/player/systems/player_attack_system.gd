@@ -40,4 +40,4 @@ func post_update(data: PlayerData) -> void:
 	
 	if pending_spawn:
 		pending_spawn = false
-		player_hitbox_manager.spawn_hitbox(&"unarmed", damage, windup_time, lifetime)
+		player_hitbox_manager.spawn_hitbox(&"unarmed", damage, 50.0, windup_time, lifetime)

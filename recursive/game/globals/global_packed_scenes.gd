@@ -1,4 +1,3 @@
-#global packed scene class, will probably be expanded into multiple classes later
 class_name GlobalPackedScenes
 
 # UI
@@ -7,7 +6,7 @@ static var pause_menu = preload(
 	)
 
 # Actors
-static var enemy_scene = preload(
+static var crawler_scene = preload(
 	"res://game/actors/enemies/base_types/fodder/crawler/core/crawler.tscn"
 	)
 	
@@ -26,7 +25,7 @@ static var player_unarmed_hitbox = preload(
 
 # Spawners
 static var slime_spawner = preload(
-	"res://game/components/spawners/slime_spawner.tscn"
+	"res://game/components/spawners/enemy_spawner.tscn"
 	)
 
 # Levels

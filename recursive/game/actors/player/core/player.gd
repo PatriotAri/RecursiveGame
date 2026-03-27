@@ -20,14 +20,20 @@ var player_hitbox_manager: PlayerHitboxManager
 @export var unarmed_offsets: HitboxOffsetData
 
 @export_group("Movement Tuning")
-@export var base_walk_speed:= 100.0
-@export var base_run_speed:= 140.0
+@export var walk_speed:= 100.0
+@export var run_speed:= 140.0
 @export var acceleration:= 600.0
 @export var friction:= 800.0
 @export var backpedal_penalty:= 0.35
 
 func _ready() -> void:
 	data = PlayerData.new()
+	
+	data.walk_speed = walk_speed
+	data.run_speed = run_speed
+	data.acceleration = acceleration
+	data.friction = friction
+	data.backpedal_penalty = backpedal_penalty
 	
 	player_hitbox_manager = PlayerHitboxManager.new(self, data)
 	player_hitbox_manager.register_hitbox(&"unarmed", GlobalPackedScenes.player_unarmed_hitbox, unarmed_offsets)

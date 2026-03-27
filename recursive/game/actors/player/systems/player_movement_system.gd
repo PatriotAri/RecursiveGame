@@ -14,7 +14,7 @@ func update(data: PlayerData, delta: float) -> void:
 		player.move_and_slide()
 		return
 	
-	var speed := data.base_run_speed if data.is_running else data.base_walk_speed
+	var speed := data.run_speed if data.is_running else data.walk_speed
 	#direction facing speed penalty logic
 	if data.move_vector.length() > 0.0 and data.facing_dir.length() > 0.0:
 		#dot = 1.0 when moving toward cursor, -1.0 when backpedaling

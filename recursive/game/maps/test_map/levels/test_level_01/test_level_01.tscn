@@ -3,7 +3,6 @@
 [ext_resource type="Texture2D" uid="uid://c1qyftfnjbg0" path="res://game/maps/test_map/assets/textures/ground/test ground.png" id="1_jgaso"]
 [ext_resource type="Script" uid="uid://d2q8bpv5tpbp0" path="res://game/maps/scripts/ysort_instancer.gd" id="3_6rspa"]
 [ext_resource type="PackedScene" uid="uid://rrde2fa2vrkd" path="res://game/components/spawners/enemy_spawner.tscn" id="3_hek21"]
-[ext_resource type="Script" uid="uid://cmgvp3v0rknuq" path="res://game/components/spawners/enemy_spawner.gd" id="4_wvw0b"]
 [ext_resource type="PackedScene" uid="uid://bmonh3sf35441" path="res://game/actors/enemies/base_types/fodder/crawler/core/crawler.tscn" id="5_2ju8b"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rcbyt"]
@@ -28,8 +27,8 @@ y_sort_enabled = true
 script = ExtResource("3_6rspa")
 
 [node name="EnemySpawner" parent="Y-sorted" unique_id=843157830 instance=ExtResource("3_hek21")]
-script = ExtResource("4_wvw0b")
 enemy_scene = ExtResource("5_2ju8b")
-spawn_count = 3
+spawn_count = 5
 waves_on = true
+wave_intervals = 4.0
 max_enemies = 12

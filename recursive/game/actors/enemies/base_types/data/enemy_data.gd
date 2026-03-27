@@ -28,7 +28,7 @@ var attack_finished:= false
 var patrol_speed:= 50.0
 var walk_speed:= 65.0
 var run_speed:= 130.0
-var last_facing:= Vector2.ZERO
+var facing_dir:= Vector2.ZERO
 var acceleration:= 500.0 #px/s^2
 var friction:= 600.0 #px/s^2
 

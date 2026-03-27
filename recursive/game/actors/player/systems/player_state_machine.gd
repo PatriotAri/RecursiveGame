@@ -3,7 +3,7 @@ class_name PlayerStateMachine
 #writes updated state and facing direction to PlayerData
 func update(data: PlayerData) -> void:
 	_resolve_state(data)
-
+	cache_facing(data)
 #reads move_vector from PlayerData
 func _resolve_state(data: PlayerData) -> void:
 	if data.is_dead:
