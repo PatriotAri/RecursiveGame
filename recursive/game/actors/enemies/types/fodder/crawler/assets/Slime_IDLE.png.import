@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://t6rs20w7omup"
-path="res://.godot/imported/slime_DIED.png-25e4808559663c3f67241b5d013f477e.ctex"
+uid="uid://8fraly8w6dfe"
+path="res://.godot/imported/Slime_IDLE.png-149fbf65b310cbb0d743089270247eb6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://game/actors/enemies/base_types/fodder/crawler/assets/slime_DIED.png"
-dest_files=["res://.godot/imported/slime_DIED.png-25e4808559663c3f67241b5d013f477e.ctex"]
+source_file="res://game/actors/enemies/types/fodder/crawler/assets/Slime_IDLE.png"
+dest_files=["res://.godot/imported/Slime_IDLE.png-149fbf65b310cbb0d743089270247eb6.ctex"]
 
 [params]
 

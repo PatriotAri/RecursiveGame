@@ -1,0 +1,3 @@
+[gd_scene format=3 uid="uid://dxpc5mmj7dbmp"]
+
+[node name="HealthBar" type="MarginContainer" unique_id=739649621]

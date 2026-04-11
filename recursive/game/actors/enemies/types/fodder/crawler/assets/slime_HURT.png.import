@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cfp7knntoir16"
-path="res://.godot/imported/Slime_WALK.png-d04cf5b966f38be4f13952b766251130.ctex"
+uid="uid://b7yontipibenc"
+path="res://.godot/imported/slime_HURT.png-bfaec078ffccb21b9e59d118e56d6237.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://game/actors/enemies/base_types/fodder/crawler/assets/Slime_WALK.png"
-dest_files=["res://.godot/imported/Slime_WALK.png-d04cf5b966f38be4f13952b766251130.ctex"]
+source_file="res://game/actors/enemies/types/fodder/crawler/assets/slime_HURT.png"
+dest_files=["res://.godot/imported/slime_HURT.png-bfaec078ffccb21b9e59d118e56d6237.ctex"]
 
 [params]
 
