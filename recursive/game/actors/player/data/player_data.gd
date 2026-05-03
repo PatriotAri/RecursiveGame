@@ -41,8 +41,8 @@ var is_attacking:= false
 
 #read/written by HealthUtility
 var health_regen_points: int = 2
-var current_health: int = max_health
 var max_health: int = 20
+var current_health: int = max_health
 
 #read/written by StaminaUtility
 var stamina_regen_points: int = 2

@@ -10,7 +10,8 @@ var crawler_animation_system: CrawlerAnimationSystem
 var crawler_hitbox_manager: CrawlerHitboxManager
 
 #health component
-@onready var health: EnemyHealthComponent = $HealthComponent
+var health_utility: HealthUtility
+var death_handled := false
 
 #hitbox variables
 @export_group("Hitbox Variables")
@@ -36,14 +37,12 @@ func _ready() -> void:
 	
 	data = EnemyData.new()
 	
+	health_utility = HealthUtility.new(data)
+	
 	crawler_hitbox_manager = CrawlerHitboxManager.new(self, data)
 	crawler_hitbox_manager.register_hitbox(&"melee", crawler_hitbox, crawler_melee_offsets)
 	
-	health.initialize(data)
-	
 	$Hurtbox.knockback_received.connect(_on_knockback_received)
-	
-	health.died.connect(_on_died)
 	
 	#injects data
 	crawler_detection_system.initialize(data, self)
@@ -54,17 +53,27 @@ func _ready() -> void:
 	crawler_animation_system = CrawlerAnimationSystem.new(sprite, data)
 
 func _physics_process(delta: float) -> void:
+	if data.is_dead:
+		if not death_handled:
+			death_handled = true
+			_handle_death()
+			return
+	
 	crawler_detection_system.update()
 	crawler_state_machine.update(data, delta)
 	crawler_movement_system.update(delta)
 	crawler_attack_system.update(data, delta)
 	crawler_animation_system.update()
 
+func _on_damaged_received(direction: Vector2, strength: float, decay: float) -> void:
+	var knockback := MovementModifier.create_impulse(&"knockback", direction, strength, decay)
+	data.modifiers.add(knockback)
+	
 func _on_knockback_received(direction: Vector2, strength: float, decay: float) -> void:
 	var knockback := MovementModifier.create_impulse(&"knockback", direction, strength, decay)
 	data.modifiers.add(knockback)
 
-func _on_died():
+func _handle_death() -> void:
 	set_physics_process(false)
 	sprite.play("died")
 	await sprite.animation_finished

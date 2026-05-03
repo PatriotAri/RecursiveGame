@@ -19,14 +19,6 @@ func add_stamina(amount: int) -> void:
 	else:
 		data.current_stamina += amount
 
-func remove_stamina(amount: int) -> void:
-	if stamina_empty():
-		data.current_stamina = 0
-	elif data.current_stamina - amount <= 0:
-		data.current_stamina = 0
-	else:
-		data.current_stamina -= amount
-
 func regen_stamina(amount: int) -> void:
 	if stamina_full():
 		return
@@ -35,9 +27,44 @@ func regen_stamina(amount: int) -> void:
 	else:
 		data.current_stamina += amount
 
-func regen_max_stamina() -> void:
+func regen_to_max_stamina() -> void:
 	if stamina_full():
 		return
 	else:
 		regen_stamina(data.stamina_regen_points)
-		regen_max_stamina()
+		regen_to_max_stamina()
+
+func fill_stamina() -> void:
+	if stamina_full():
+		return
+	else:
+		data.current_stamina = data.max_stamina
+
+func remove_stamina(amount: int) -> void:
+	if stamina_empty():
+		data.current_stamina = 0
+	elif data.current_stamina - amount <= 0:
+		data.current_stamina = 0
+	else:
+		data.current_stamina -= amount
+
+func degen_stamina(amount: int) -> void:
+	if stamina_empty():
+		return
+	elif data.current_stamina - amount <= 0:
+		data.current_stamina = 0
+	else:
+		data.current_stamina -= amount
+
+func degen_to_min_stamina(amount) -> void:
+	if stamina_empty():
+		return
+	else:
+		degen_stamina(amount)
+		degen_to_min_stamina(amount)
+
+func empty_stamina() -> void:
+	if stamina_empty():
+		return
+	else:
+		data.current_stamina = 0

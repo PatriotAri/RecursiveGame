@@ -8,7 +8,6 @@
 [ext_resource type="Texture2D" uid="uid://gstykpkfl3p7" path="res://game/actors/player/assets/player_hurt.png" id="3_7suon"]
 [ext_resource type="Texture2D" uid="uid://dgn63i64mxi2" path="res://game/actors/player/assets/player_walk.png" id="3_yw30f"]
 [ext_resource type="Script" uid="uid://bp8ie2pwt8578" path="res://game/components/hurtbox/hurtbox_component.gd" id="5_7suon"]
-[ext_resource type="Script" uid="uid://crj327t7jxi6x" path="res://game/components/health/player_health_component.gd" id="8_4ve6c"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_iwgb0"]
 radius = 6.0
@@ -981,18 +980,13 @@ position = Vector2(0, -32)
 sprite_frames = SubResource("SpriteFrames_jfgyi")
 animation = &"idle_down"
 
-[node name="Hurtbox" type="Area2D" parent="." unique_id=387818382 node_paths=PackedStringArray("health")]
+[node name="Hurtbox" type="Area2D" parent="." unique_id=387818382]
 visible = false
 collision_layer = 16
 collision_mask = 0
 script = ExtResource("5_7suon")
-health = NodePath("../HealthComponent")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=2039719988]
 position = Vector2(0, -30)
 shape = SubResource("RectangleShape2D_1yoff")
 debug_color = Color(0, 0.45588005, 0.8697051, 0.41960785)
-
-[node name="HealthComponent" type="Node" parent="." unique_id=1426199482]
-script = ExtResource("8_4ve6c")
-max_health = 15.0
