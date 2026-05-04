@@ -26,7 +26,6 @@ var death_handled := false
 @export var run_speed:= 140.0
 @export var acceleration:= 600.0
 @export var friction:= 800.0
-@export var backpedal_penalty:= 0.35
 
 func _ready() -> void:
 	data = PlayerData.new()
@@ -35,7 +34,6 @@ func _ready() -> void:
 	data.run_speed = run_speed
 	data.acceleration = acceleration
 	data.friction = friction
-	data.backpedal_penalty = backpedal_penalty
 	
 	health_utility = HealthUtility.new(data)
 	
@@ -48,7 +46,7 @@ func _ready() -> void:
 	player_movement_system = PlayerMovementSystem.new(self)
 	player_animation_system = PlayerAnimationSystem.new(sprite)
 	
-	$Hurtbox.on_damage_received = _on_damage_received
+	$Hurtbox._on_damage_received = _on_damage_received
 	$Hurtbox.knockback_received.connect(_on_knockback_received)
 	
 	sprite.animation_finished.connect(_on_animation_finished)
@@ -58,17 +56,16 @@ func _physics_process(delta: float) -> void:
 		if not death_handled:
 			death_handled = true
 			_handle_death()
-			return
+		return
 		
 	player_input_system.update(data)
 	
-	var to_cursor:= get_global_mouse_position() - global_position
-	if to_cursor != Vector2.ZERO:
+	if data.move_vector != Vector2.ZERO:
 		var current_angle := data.facing_dir.angle()
-		var target_angle := to_cursor.angle()
+		var target_angle := data.move_vector.angle()
 		var new_angle := lerp_angle(current_angle, target_angle, data.facing_turn_speed * delta)
-		data.facing_dir = Vector2.from_angle(new_angle) * to_cursor.length()
-		
+		data.facing_dir = Vector2.from_angle(new_angle)
+	
 	player_attack_system.update(data, delta)
 	player_state_machine.update(data)
 	player_attack_system.post_update(data)

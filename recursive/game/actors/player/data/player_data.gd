@@ -31,8 +31,6 @@ var run_speed: float
 var acceleration: float
 var friction: float
 
-var backpedal_penalty: float
-
 #movement modifiers (knockback, slows, dashes, etc.)
 var modifiers:= MovementModifierStack.new()
 

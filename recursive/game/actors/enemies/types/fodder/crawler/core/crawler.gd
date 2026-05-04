@@ -42,6 +42,7 @@ func _ready() -> void:
 	crawler_hitbox_manager = CrawlerHitboxManager.new(self, data)
 	crawler_hitbox_manager.register_hitbox(&"melee", crawler_hitbox, crawler_melee_offsets)
 	
+	$Hurtbox._on_damage_received = _on_damage_received
 	$Hurtbox.knockback_received.connect(_on_knockback_received)
 	
 	#injects data
@@ -65,10 +66,13 @@ func _physics_process(delta: float) -> void:
 	crawler_attack_system.update(data, delta)
 	crawler_animation_system.update()
 
-func _on_damaged_received(direction: Vector2, strength: float, decay: float) -> void:
-	var knockback := MovementModifier.create_impulse(&"knockback", direction, strength, decay)
-	data.modifiers.add(knockback)
-	
+func _on_damage_received(damage_amount: int) -> void:
+	health_utility.remove_health(damage_amount)
+	if health_utility.health_empty():
+		data.is_dead = true
+	else:
+		data.is_hurt = true
+		
 func _on_knockback_received(direction: Vector2, strength: float, decay: float) -> void:
 	var knockback := MovementModifier.create_impulse(&"knockback", direction, strength, decay)
 	data.modifiers.add(knockback)
