@@ -1,11 +1,14 @@
-extends Node
+extends Control
 
+var data: PlayerData
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
+@onready var fill: ColorRect = $Fill
 
+func bind(player_data: PlayerData) -> void:
+	data = player_data
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+func _process(_delta: float) -> void:
+	if data == null: return
+	var ratio: float = float(data.current_health) / float(data.max_health)
+	fill.anchor_top = 1.0 - ratio
+	fill.color = Color(1, 0, 0).lerp(Color(0, 1, 0), ratio)

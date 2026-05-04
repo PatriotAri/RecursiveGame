@@ -1,3 +1,20 @@
 [gd_scene format=3 uid="uid://dxpc5mmj7dbmp"]
 
 [node name="HealthBar" type="MarginContainer" unique_id=739649621]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -168.0
+offset_right = 40.0
+offset_bottom = -12.0
+grow_vertical = 0
+size_flags_horizontal = 0
+size_flags_vertical = 8
+
+[node name="Background" type="ColorRect" parent="." unique_id=218777739]
+layout_mode = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Fill" type="ColorRect" parent="." unique_id=1698637719]
+layout_mode = 2

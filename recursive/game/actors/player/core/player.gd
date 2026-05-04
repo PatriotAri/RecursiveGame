@@ -30,6 +30,8 @@ var death_handled := false
 func _ready() -> void:
 	data = PlayerData.new()
 	
+	add_to_group(&"player")
+	
 	data.walk_speed = walk_speed
 	data.run_speed = run_speed
 	data.acceleration = acceleration
