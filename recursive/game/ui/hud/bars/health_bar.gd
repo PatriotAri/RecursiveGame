@@ -11,4 +11,3 @@ func _process(_delta: float) -> void:
 	if data == null: return
 	var ratio: float = float(data.current_health) / float(data.max_health)
 	fill.anchor_top = 1.0 - ratio
-	fill.color = Color(1, 0, 0).lerp(Color(0, 1, 0), ratio)
