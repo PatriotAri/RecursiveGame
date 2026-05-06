@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://bm1tv8pb1rpyp"]
+
+[ext_resource type="PackedScene" uid="uid://dxpc5mmj7dbmp" path="res://game/ui/hud/bars/health_bar.tscn" id="1_d4vpa"]
+[ext_resource type="Script" uid="uid://djuhmglky86bu" path="res://game/ui/hud/hud.gd" id="1_l7e5k"]
+
+[node name="Hud" type="CanvasLayer" unique_id=792852820]
+layer = 5
+script = ExtResource("1_l7e5k")
+
+[node name="HealthBar" parent="." unique_id=739649621 instance=ExtResource("1_d4vpa")]

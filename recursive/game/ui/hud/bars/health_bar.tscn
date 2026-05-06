@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://dxpc5mmj7dbmp"]
+
+[ext_resource type="Script" uid="uid://dts46p802c1d8" path="res://game/ui/hud/bars/health_bar.gd" id="1_jpren"]
+
+[node name="HealthBar" type="Control" unique_id=240099235]
+layout_mode = 3
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -168.0
+offset_right = 40.0
+offset_bottom = -12.0
+grow_vertical = 0
+size_flags_horizontal = 0
+size_flags_vertical = 8
+script = ExtResource("1_jpren")
+
+[node name="Background" type="ColorRect" parent="." unique_id=218777739]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Fill" type="ColorRect" parent="." unique_id=1698637719]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.95, 0.00949999, 0.00949999, 1)

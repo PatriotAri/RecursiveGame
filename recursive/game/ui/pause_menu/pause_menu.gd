@@ -5,6 +5,7 @@ extends CanvasLayer
 @onready var menu_container: VBoxContainer = $Background/VBoxContainer
 
 func _ready() -> void:
+	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED_HIDDEN)
 	set_process_input(true)
 	#starts the pause menu hidden
 	visible = false
@@ -27,10 +28,12 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		
 func pause() -> void:
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	visible = true
 	get_tree().paused = true
 
 func resume() -> void:
+	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED_HIDDEN)
 	controls_panel.visible = false
 	menu_container.visible = true
 	visible = false

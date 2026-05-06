@@ -1,6 +1,10 @@
 [gd_scene format=3 uid="uid://rrde2fa2vrkd"]
 
 [ext_resource type="Script" uid="uid://cmgvp3v0rknuq" path="res://game/components/spawners/enemy_spawner.gd" id="1_e07ay"]
+[ext_resource type="Texture2D" uid="uid://byuobjgottfsm" path="res://game/components/spawners/tempspawnpoint.png" id="2_5ncg7"]
 
-[node name="EnemySpawner" type="Node2D" unique_id=843157830]
+[node name="EnemySpawner" type="Marker2D" unique_id=2063884726]
 script = ExtResource("1_e07ay")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=271770237]
+texture = ExtResource("2_5ncg7")

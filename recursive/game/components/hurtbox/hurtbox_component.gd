@@ -1,15 +1,13 @@
 extends Area2D
 
-#health component node can be selected in editor now
-@export var health: HealthComponent
+var _on_damage_received: Callable
 
 signal knockback_received(direction: Vector2, strength: float, decay: float)
 
 #gets damage received from opposition hitbox, passes it to the HealthComponent
 func receive_damage(damage: float, attacker: Area2D) -> void:
-	if health:
-		#passes damaged received to apply_damage function in HealthComponent
-		health.apply_damage(damage)
+	if _on_damage_received:
+		_on_damage_received.call(damage)
 	
 	if attacker.has_method("get_knockback_direction"):
 		var direction: Vector2 = attacker.get_knockback_direction()

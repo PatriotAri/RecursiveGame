@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d2xia3iwmytx8"
-path="res://.godot/imported/slime_ATTACK.png-92548a7d66bff9db69462ae59d77e6c8.ctex"
+uid="uid://cfp7knntoir16"
+path="res://.godot/imported/Slime_WALK.png-53be03415382f3a11694f017737bb618.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://game/actors/enemies/base_types/fodder/crawler/assets/slime_ATTACK.png"
-dest_files=["res://.godot/imported/slime_ATTACK.png-92548a7d66bff9db69462ae59d77e6c8.ctex"]
+source_file="res://game/actors/enemies/types/fodder/crawler/assets/Slime_WALK.png"
+dest_files=["res://.godot/imported/Slime_WALK.png-53be03415382f3a11694f017737bb618.ctex"]
 
 [params]
 

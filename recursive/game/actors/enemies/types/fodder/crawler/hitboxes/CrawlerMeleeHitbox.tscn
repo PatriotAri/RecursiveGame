@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dr8dgg3mtr20a"]
 
-[ext_resource type="Script" uid="uid://bxj3wbuhdfrpc" path="res://game/actors/enemies/base_types/fodder/crawler/hitboxes/crawler_melee_hitbox.gd" id="1_45sjp"]
+[ext_resource type="Script" uid="uid://bxj3wbuhdfrpc" path="res://game/actors/enemies/types/fodder/crawler/hitboxes/crawler_melee_hitbox.gd" id="1_45sjp"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_tax37"]
 

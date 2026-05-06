@@ -34,3 +34,8 @@ var friction:= 600.0 #px/s^2
 
 #movement modifiers (knockback, slows, dashes, etc.)
 var modifiers := MovementModifierStack.new()
+
+#health
+var health_regen_points: int = 0
+var max_health: int = 10
+var current_health: int = max_health

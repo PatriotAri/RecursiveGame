@@ -7,7 +7,7 @@ static var pause_menu = preload(
 
 # Actors
 static var crawler_scene = preload(
-	"res://game/actors/enemies/base_types/fodder/crawler/core/crawler.tscn"
+	"res://game/actors/enemies/types/fodder/crawler/core/crawler.tscn"
 	)
 	
 static var player_scene = preload(
@@ -16,7 +16,7 @@ static var player_scene = preload(
 
 # Hitboxes
 static var crawler_melee_hitbox = preload(
-	"res://game/actors/enemies/base_types/fodder/crawler/hitboxes/CrawlerMeleeHitbox.tscn"
+	"res://game/actors/enemies/types/fodder/crawler/hitboxes/CrawlerMeleeHitbox.tscn"
 	)
 
 static var player_unarmed_hitbox = preload(

@@ -1,6 +1,6 @@
 class_name EnemySpawner
 
-extends Node2D
+extends Marker2D
 
 @export var enemy_scene: PackedScene
 
