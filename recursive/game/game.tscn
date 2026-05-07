@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://dgc0csf67dgqr" path="res://game/maps/test_map/levels/test_level_01/test_level_01.tscn" id="1_vasa2"]
 [ext_resource type="PackedScene" uid="uid://dbwno0nl0ynp4" path="res://game/ui/pause_menu/pause_menu.tscn" id="2_vasa2"]
 [ext_resource type="PackedScene" uid="uid://bm1tv8pb1rpyp" path="res://game/ui/hud/hud.tscn" id="3_h7iqs"]
+[ext_resource type="PackedScene" uid="uid://di5p52ar71okx" path="res://game/ui/death_screen/death_screen.tscn" id="4_4fuuu"]
 
 [node name="Game" type="Node" unique_id=905991356]
 
@@ -11,3 +12,5 @@
 [node name="PauseMenu" parent="." unique_id=1670530463 instance=ExtResource("2_vasa2")]
 
 [node name="Hud" parent="." unique_id=792852820 instance=ExtResource("3_h7iqs")]
+
+[node name="DeathScreen" parent="." unique_id=1709738352 instance=ExtResource("4_4fuuu")]

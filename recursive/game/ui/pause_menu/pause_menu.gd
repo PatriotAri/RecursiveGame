@@ -20,6 +20,10 @@ func _ready() -> void:
 	
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause"):
+		var death_screen := get_tree().get_first_node_in_group(&"death_screen")
+		if death_screen and death_screen.visible:
+			get_viewport().set_input_as_handled()
+			return
 		if get_tree().paused:
 			resume()
 		else:

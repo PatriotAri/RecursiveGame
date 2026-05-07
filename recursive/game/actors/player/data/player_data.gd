@@ -51,3 +51,7 @@ var max_stamina: int = 20
 var mana_regen_points: int = 2
 var current_mana: int = max_mana
 var max_mana: int = 10
+
+#currency
+var gold: int = 0
+var souls: int = 0
