@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://sv3gcqxl07q1"]
+
+[ext_resource type="Script" uid="uid://3wuiu73gjnna" path="res://game/ui/hud/counters/soul_counter/soul_counter.gd" id="1_dfdan"]
+[ext_resource type="Texture2D" uid="uid://duasc1k3gyhc4" path="res://game/ui/hud/counters/soul_counter/soul_counter_icon.png" id="2_vrxl0"]
+
+[node name="SoulCounter" type="Control" unique_id=1003963725]
+custom_minimum_size = Vector2(100, 26)
+layout_mode = 3
+offset_left = 1045.0
+offset_top = 45.0
+offset_right = 1145.0
+offset_bottom = 76.0
+script = ExtResource("1_dfdan")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=316737931]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Label" type="Label" parent="." unique_id=186848580]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=704098617]
+position = Vector2(15.999985, 16)
+scale = Vector2(0.99999905, 1)
+texture = ExtResource("2_vrxl0")
