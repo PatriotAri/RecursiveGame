@@ -32,3 +32,7 @@ static var slime_spawner = preload(
 static var test_level_01 = preload(
 	"res://game/maps/test_map/levels/test_level_01/test_level_01.tscn"
 	)
+
+# Items
+static var gold_sack = preload("res://game/items/pickups/gold_sack/gold_sack.tscn")
+static var soul = preload("res://game/items/pickups/soul/soul.tscn")

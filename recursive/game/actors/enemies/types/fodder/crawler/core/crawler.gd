@@ -14,12 +14,11 @@ var health_utility: HealthUtility
 var death_handled := false
 
 #hitbox variables
-@export_group("Hitbox Variables")
-@export_subgroup("Hitbox Type")
+@export_group("Hitbox Type")
 @export var crawler_hitbox: PackedScene
 @export var crawler_melee_offsets: HitboxOffsetData
 
-@export_subgroup("Attack Tuning")
+@export_group("Attack Tuning")
 @export var windup_time:= 0.5   # Enemy windup
 @export var lifetime:= 0.3       # How long hitbox stays active
 @export var damage:= 10.0    # Damage done by enemy
@@ -30,6 +29,13 @@ var death_handled := false
 @export var patrol_wait_time:= 3.5
 @export var patrol_timer:= 0.0
 @export var min_patrol_distance:= 40.0
+
+@export_group("Drop Tuning")
+@export var gold_drop_chance: float = 0.3
+@export var gold_min: int = 1
+@export var gold_max: int = 4
+@export var soul_drop_chance: float = 0.05
+@export var soul_drop_amount: int = 1
 
 var data: EnemyData
 
@@ -80,6 +86,19 @@ func _on_knockback_received(direction: Vector2, strength: float, decay: float) -
 func _handle_death() -> void:
 	set_physics_process(false)
 	sprite.play("died")
+	_try_spawn_drops()
 	await sprite.animation_finished
 	await get_tree().create_timer(0.5).timeout
 	queue_free()
+
+func _try_spawn_drops() -> void:
+	if randf() < gold_drop_chance:
+		var sack := GlobalPackedScenes.gold_sack.instantiate()
+		sack.amount = randi_range(gold_min, gold_max)
+		sack.global_position = global_position
+		get_parent().add_child(sack)
+	if randf() < soul_drop_chance:
+		var soul := GlobalPackedScenes.soul.instantiate()
+		soul.amount = soul_drop_amount
+		soul.global_position = global_position
+		get_parent().add_child(soul)

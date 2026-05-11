@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://d37h8h5ogw2s6"]
+
+[ext_resource type="Script" uid="uid://beck0pac2hewq" path="res://game/items/pickups/soul/soul.gd" id="1_3p2s2"]
+[ext_resource type="Texture2D" uid="uid://d1ca1rh1at187" path="res://game/items/pickups/soul/soul.png" id="1_ktjvi"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_3p2s2"]
+radius = 11.045361
+
+[node name="Soul" type="Area2D" unique_id=106866921]
+collision_layer = 8
+collision_mask = 2
+script = ExtResource("1_3p2s2")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1799957313]
+texture = ExtResource("1_ktjvi")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2036792924]
+shape = SubResource("CircleShape2D_3p2s2")

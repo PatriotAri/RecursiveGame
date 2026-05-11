@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://di5p52ar71okx"]
+
+[ext_resource type="Script" uid="uid://wi46aeis4drq" path="res://game/ui/death_screen/death_screen.gd" id="1_h5hxm"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_h5hxm"]
+font_size = 42
+font_color = Color(1, 0.05882353, 0.05882353, 1)
+
+[node name="DeathScreen" type="CanvasLayer" unique_id=1709738352]
+script = ExtResource("1_h5hxm")
+
+[node name="Background" type="ColorRect" parent="." unique_id=2049858341]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Background" unique_id=30332072]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -156.5
+offset_top = -81.5
+offset_right = 156.5
+offset_bottom = 81.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="Background/VBoxContainer" unique_id=1268114448]
+layout_mode = 2
+text = "YOU ARE DEAD."
+label_settings = SubResource("LabelSettings_h5hxm")
+
+[node name="Respawn" type="Button" parent="Background/VBoxContainer" unique_id=1678549670]
+layout_mode = 2
+text = "Respawn"
+
+[node name="MainMenu" type="Button" parent="Background/VBoxContainer" unique_id=1443744558]
+layout_mode = 2
+text = "Main Menu"
+
+[node name="Quit" type="Button" parent="Background/VBoxContainer" unique_id=1419531264]
+layout_mode = 2
+text = "Quit"

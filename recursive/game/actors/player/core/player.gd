@@ -91,9 +91,10 @@ func _on_animation_finished() -> void:
 		data.is_hurt = false
 
 func _handle_death() -> void:
-	$Collision.set_deferred("disabled", true) #removes body collider on death.
+	$Collision.set_deferred("disabled", true)
 	player_state_machine.update(data)
 	player_animation_system.update(data)
 	await sprite.animation_finished
 	await get_tree().create_timer(1.0).timeout
-	queue_free()
+	var death_screen := get_tree().get_first_node_in_group(&"death_screen")
+	death_screen.show_death()
