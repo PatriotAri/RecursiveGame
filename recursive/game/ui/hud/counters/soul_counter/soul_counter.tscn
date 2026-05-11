@@ -6,10 +6,13 @@
 [node name="SoulCounter" type="Control" unique_id=1003963725]
 custom_minimum_size = Vector2(100, 26)
 layout_mode = 3
-offset_left = 1045.0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -126.0
 offset_top = 45.0
-offset_right = 1145.0
+offset_right = -7.0
 offset_bottom = 76.0
+grow_horizontal = 0
 script = ExtResource("1_dfdan")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=316737931]
@@ -22,9 +25,14 @@ grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
 [node name="Label" type="Label" parent="." unique_id=186848580]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 22
+horizontal_alignment = 2
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=704098617]
 position = Vector2(15.999985, 16)

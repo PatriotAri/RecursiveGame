@@ -12,7 +12,5 @@ script = ExtResource("1_l7e5k")
 [node name="HealthBar" parent="." unique_id=739649621 instance=ExtResource("1_d4vpa")]
 
 [node name="GoldCounter" parent="." unique_id=183642429 instance=ExtResource("3_8mv14")]
-anchors_preset = 1
 
 [node name="SoulCounter" parent="." unique_id=1003963725 instance=ExtResource("4_c644b")]
-anchors_preset = 0

@@ -601,7 +601,6 @@ crawler_hitbox = ExtResource("2_k1huj")
 crawler_melee_offsets = ExtResource("3_0pbox")
 lifetime = 0.1
 damage = 1.0
-soul_drop_chance = 1.0
 
 [node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=7471093]
 sprite_frames = SubResource("SpriteFrames_vlhhy")
