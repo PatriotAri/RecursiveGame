@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://boy2ry2riwkmv"]
+
+[ext_resource type="Script" uid="uid://cu4q6pywaruof" path="res://game/items/general/core/item_pickup.gd" id="1_4jitd"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_x7akt"]
+size = Vector2(44, 42)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_kfrt2"]
+
+[node name="Item" type="Area2D" unique_id=2120133150]
+script = ExtResource("1_4jitd")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1470620110]
+shape = SubResource("RectangleShape2D_x7akt")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2008924576]
+scale = Vector2(40.000004, 37.749996)
+texture = SubResource("PlaceholderTexture2D_kfrt2")

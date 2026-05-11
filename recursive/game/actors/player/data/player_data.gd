@@ -55,3 +55,6 @@ var max_mana: int = 10
 #currency
 var gold: int = 0
 var souls: int = 0
+
+#inventory
+var inventory := Inventory.new()

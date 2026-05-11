@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://d37h8h5ogw2s6"]
 
-[ext_resource type="Script" uid="uid://beck0pac2hewq" path="res://game/items/pickups/soul/soul.gd" id="1_3p2s2"]
-[ext_resource type="Texture2D" uid="uid://d1ca1rh1at187" path="res://game/items/pickups/soul/soul.png" id="1_ktjvi"]
+[ext_resource type="Script" uid="uid://beck0pac2hewq" path="res://game/items/drops/soul/soul.gd" id="1_3p2s2"]
+[ext_resource type="Texture2D" uid="uid://d1ca1rh1at187" path="res://game/items/drops/soul/soul.png" id="1_ktjvi"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_3p2s2"]
 radius = 11.045361

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dcb7nyiu7ojgk"
-path="res://.godot/imported/gold sack.png-711dc28e2905f870cce210b9415995c6.ctex"
+uid="uid://d1ca1rh1at187"
+path="res://.godot/imported/soul.png-fedd6486943b0652af7a463107808eb4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://game/items/pickups/gold_sack/gold sack.png"
-dest_files=["res://.godot/imported/gold sack.png-711dc28e2905f870cce210b9415995c6.ctex"]
+source_file="res://game/items/drops/soul/soul.png"
+dest_files=["res://.godot/imported/soul.png-fedd6486943b0652af7a463107808eb4.ctex"]
 
 [params]
 

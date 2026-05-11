@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cnlm3u842yyw3"]
 
-[ext_resource type="Script" uid="uid://dpmwothbylnh3" path="res://game/items/pickups/gold_sack/gold_sack.gd" id="1_4kdu6"]
-[ext_resource type="Texture2D" uid="uid://dcb7nyiu7ojgk" path="res://game/items/pickups/gold_sack/gold sack.png" id="1_lvfgc"]
+[ext_resource type="Script" uid="uid://dpmwothbylnh3" path="res://game/items/drops/gold_sack/gold_sack.gd" id="1_4kdu6"]
+[ext_resource type="Texture2D" uid="uid://dcb7nyiu7ojgk" path="res://game/items/drops/gold_sack/gold sack.png" id="1_lvfgc"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lvfgc"]
 radius = 8.0
