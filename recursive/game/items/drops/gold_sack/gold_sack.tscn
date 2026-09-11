@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://cnlm3u842yyw3"]
 
-[ext_resource type="Script" uid="uid://dpmwothbylnh3" path="res://game/items/drops/gold_sack/gold_sack.gd" id="1_4kdu6"]
+[ext_resource type="Script" uid="uid://cu4q6pywaruof" path="res://game/items/general/core/item_pickup.gd" id="1_1ic5e"]
 [ext_resource type="Texture2D" uid="uid://dcb7nyiu7ojgk" path="res://game/items/drops/gold_sack/gold sack.png" id="1_lvfgc"]
+[ext_resource type="Resource" uid="uid://pg3ucqn2nstc" path="res://game/items/drops/gold_sack/gold.tres" id="2_cp4nx"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lvfgc"]
 radius = 8.0
@@ -10,7 +11,8 @@ height = 18.0
 [node name="GoldSack" type="Area2D" unique_id=1855851919]
 collision_layer = 8
 collision_mask = 2
-script = ExtResource("1_4kdu6")
+script = ExtResource("1_1ic5e")
+item = ExtResource("2_cp4nx")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1398690312]
 texture = ExtResource("1_lvfgc")

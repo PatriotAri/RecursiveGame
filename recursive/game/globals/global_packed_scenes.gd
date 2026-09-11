@@ -35,4 +35,5 @@ static var test_level_01 = preload(
 
 # Items
 static var gold_sack = preload("res://game/items/drops/gold_sack/gold_sack.tscn")
-static var soul = preload("res://game/items/drops/gold_sack/gold sack.png")
+static var soul = preload("res://game/items/drops/soul/soul.tscn")
+static var item_pickup = preload("res://game/items/general/core/item_pickup.tscn")
