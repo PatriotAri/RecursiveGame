@@ -10,7 +10,7 @@ func _physics_process(_delta: float) -> void:
 			print("[Inventory] +%d %s (total: %d)" % [
 				amount,
 				item.display_name,
-				body.data.inventory.get_count(item.id),
+				body.data.inventory.get_count(item, amount),
 			])
 			queue_free()
 			return

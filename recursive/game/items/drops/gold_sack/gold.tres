@@ -8,4 +8,5 @@ script = ExtResource("1_pni1x")
 id = &"gold"
 display_name = "Gold"
 icon = ExtResource("1_rxuni")
+category = 4
 metadata/_custom_type_script = "uid://bh4it52lgf67d"
