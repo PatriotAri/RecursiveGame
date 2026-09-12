@@ -7,6 +7,7 @@ font_size = 42
 font_color = Color(1, 0.05882353, 0.05882353, 1)
 
 [node name="DeathScreen" type="CanvasLayer" unique_id=1709738352]
+layer = 15
 script = ExtResource("1_h5hxm")
 
 [node name="Background" type="ColorRect" parent="." unique_id=2049858341]

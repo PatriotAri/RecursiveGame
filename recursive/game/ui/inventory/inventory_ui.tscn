@@ -1,0 +1,116 @@
+[gd_scene format=3 uid="uid://brvy4sxjfboda"]
+
+[ext_resource type="Script" uid="uid://xa5av4nmueml" path="res://game/ui/inventory/inventory_ui.gd" id="1_bs1id"]
+[ext_resource type="PackedScene" uid="uid://bjtbcxf7ndhqb" path="res://game/ui/hud/counters/gold_counter/gold_counter.tscn" id="2_85i2r"]
+[ext_resource type="PackedScene" uid="uid://sv3gcqxl07q1" path="res://game/ui/hud/counters/soul_counter/soul_counter.tscn" id="3_ljiqe"]
+
+[node name="InventoryUi" type="CanvasLayer" unique_id=241493269]
+layer = 7
+script = ExtResource("1_bs1id")
+
+[node name="Dim" type="ColorRect" parent="." unique_id=1653272924]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Root" type="MarginContainer" parent="." unique_id=885385817]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Root" unique_id=1891249593]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TopBar" type="HBoxContainer" parent="Root/VBox" unique_id=833366936]
+layout_mode = 2
+
+[node name="Tabs" type="HBoxContainer" parent="Root/VBox/TopBar" unique_id=203659748]
+layout_mode = 2
+
+[node name="TabAll" type="Button" parent="Root/VBox/TopBar/Tabs" unique_id=1156513474]
+layout_mode = 2
+focus_mode = 0
+toggle_mode = true
+button_pressed = true
+
+[node name="TabArmor" type="Button" parent="Root/VBox/TopBar/Tabs" unique_id=244686629]
+layout_mode = 2
+focus_mode = 0
+disabled = true
+
+[node name="TabWeapons" type="Button" parent="Root/VBox/TopBar/Tabs" unique_id=1151337337]
+layout_mode = 2
+focus_mode = 0
+disabled = true
+
+[node name="TabConsumeables" type="Button" parent="Root/VBox/TopBar/Tabs" unique_id=1105497980]
+layout_mode = 2
+focus_mode = 0
+disabled = true
+
+[node name="Spacer" type="Control" parent="Root/VBox/TopBar" unique_id=1973006737]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Currency" type="HBoxContainer" parent="Root/VBox/TopBar" unique_id=869632179]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="GoldCounter" parent="Root/VBox/TopBar/Currency" unique_id=183642429 instance=ExtResource("2_85i2r")]
+custom_minimum_size = Vector2(120, 30)
+layout_mode = 2
+
+[node name="SoulCounter" parent="Root/VBox/TopBar/Currency" unique_id=1003963725 instance=ExtResource("3_ljiqe")]
+custom_minimum_size = Vector2(120, 30)
+layout_mode = 2
+
+[node name="Seperator" type="HSeparator" parent="Root/VBox" unique_id=722759304]
+layout_mode = 2
+
+[node name="Body" type="HBoxContainer" parent="Root/VBox" unique_id=684583865]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="ListScroll" type="ScrollContainer" parent="Root/VBox/Body" unique_id=673148041]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_scroll_mode = 0
+
+[node name="Rows" type="VBoxContainer" parent="Root/VBox/Body/ListScroll" unique_id=1384961625]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Detail" type="PanelContainer" parent="Root/VBox/Body" unique_id=1338645946]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DetailMargin" type="MarginContainer" parent="Root/VBox/Body/Detail" unique_id=1712951725]
+layout_mode = 2
+
+[node name="DetailVBox" type="VBoxContainer" parent="Root/VBox/Body/Detail/DetailMargin" unique_id=559841680]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="DetailName" type="Label" parent="Root/VBox/Body/Detail/DetailMargin/DetailVBox" unique_id=141081618]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="DetailIcon" type="TextureRect" parent="Root/VBox/Body/Detail/DetailMargin/DetailVBox" unique_id=641055168]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+size_flags_vertical = 3
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DetailDesc" type="RichTextLabel" parent="Root/VBox/Body/Detail/DetailMargin/DetailVBox" unique_id=1953289126]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+fit_content = true
+scroll_active = false

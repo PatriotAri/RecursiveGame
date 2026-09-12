@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://d37h8h5ogw2s6"]
 
-[ext_resource type="Script" uid="uid://beck0pac2hewq" path="res://game/items/pickups/soul/soul.gd" id="1_3p2s2"]
-[ext_resource type="Texture2D" uid="uid://d1ca1rh1at187" path="res://game/items/pickups/soul/soul.png" id="1_ktjvi"]
+[ext_resource type="Texture2D" uid="uid://d1ca1rh1at187" path="res://game/items/drops/soul/soul.png" id="1_ktjvi"]
+[ext_resource type="Script" uid="uid://cu4q6pywaruof" path="res://game/items/general/core/item_pickup.gd" id="1_oj5iq"]
+[ext_resource type="Resource" uid="uid://bj2cai01w6qai" path="res://game/items/drops/soul/soul.tres" id="2_2gd4e"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_3p2s2"]
 radius = 11.045361
@@ -9,7 +10,8 @@ radius = 11.045361
 [node name="Soul" type="Area2D" unique_id=106866921]
 collision_layer = 8
 collision_mask = 2
-script = ExtResource("1_3p2s2")
+script = ExtResource("1_oj5iq")
+item = ExtResource("2_2gd4e")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1799957313]
 texture = ExtResource("1_ktjvi")

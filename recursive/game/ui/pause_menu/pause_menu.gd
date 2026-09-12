@@ -24,6 +24,11 @@ func _input(event: InputEvent) -> void:
 		if death_screen and death_screen.visible:
 			get_viewport().set_input_as_handled()
 			return
+		var inventory_ui :=  get_tree().get_first_node_in_group(&"inventory_ui")
+		if inventory_ui and inventory_ui.visible:
+			inventory_ui.close()
+			get_viewport().set_input_as_handled()
+			return
 		if get_tree().paused:
 			resume()
 		else:

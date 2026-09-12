@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://dbwno0nl0ynp4" path="res://game/ui/pause_menu/pause_menu.tscn" id="2_vasa2"]
 [ext_resource type="PackedScene" uid="uid://bm1tv8pb1rpyp" path="res://game/ui/hud/hud.tscn" id="3_h7iqs"]
 [ext_resource type="PackedScene" uid="uid://di5p52ar71okx" path="res://game/ui/death_screen/death_screen.tscn" id="4_4fuuu"]
+[ext_resource type="PackedScene" uid="uid://brvy4sxjfboda" path="res://game/ui/inventory/inventory_ui.tscn" id="5_dxrkv"]
 
 [node name="Game" type="Node" unique_id=905991356]
 
@@ -14,3 +15,5 @@
 [node name="Hud" parent="." unique_id=792852820 instance=ExtResource("3_h7iqs")]
 
 [node name="DeathScreen" parent="." unique_id=1709738352 instance=ExtResource("4_4fuuu")]
+
+[node name="InventoryUi" parent="." unique_id=1053432433 instance=ExtResource("5_dxrkv")]

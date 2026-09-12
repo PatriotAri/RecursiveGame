@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Item" format=3 uid="uid://pg3ucqn2nstc"]
+
+[ext_resource type="Script" uid="uid://bh4it52lgf67d" path="res://game/items/general/core/item.gd" id="1_pni1x"]
+[ext_resource type="Texture2D" uid="uid://dcb7nyiu7ojgk" path="res://game/items/drops/gold_sack/gold sack.png" id="1_rxuni"]
+
+[resource]
+script = ExtResource("1_pni1x")
+id = &"gold"
+display_name = "Gold"
+icon = ExtResource("1_rxuni")
+category = 4
+metadata/_custom_type_script = "uid://bh4it52lgf67d"

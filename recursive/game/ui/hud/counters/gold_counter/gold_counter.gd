@@ -1,12 +1,14 @@
 extends Control
 
-var data: PlayerData
+@export var item: Item
+
+var inventory: Inventory
 
 @onready var label: Label = $Label
 
-func bind(data_ref: PlayerData) -> void:
-	data = data_ref
+func bind(inventory_ref: Inventory) -> void:
+	inventory = inventory_ref
 
 func _process(_delta: float) -> void:
-	if data == null: return
-	label.text = str(data.gold)
+	if inventory == null or item == null: return
+	label.text = str(inventory.get_count(item.id))

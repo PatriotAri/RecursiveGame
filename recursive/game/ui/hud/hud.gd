@@ -8,5 +8,5 @@ func _ready() -> void:
 	var player := get_tree().get_first_node_in_group(&"player")
 	if player and "data" in player:
 		health_bar.bind(player.data)
-		gold_counter.bind(player.data)
-		soul_counter.bind(player.data)
+		gold_counter.bind(player.data.inventory)
+		soul_counter.bind(player.data.inventory)
