@@ -1,20 +1,18 @@
 [gd_scene format=3 uid="uid://dxpc5mmj7dbmp"]
 
-[ext_resource type="Script" uid="uid://dts46p802c1d8" path="res://game/ui/hud/bars/health_bar.gd" id="1_jpren"]
+[ext_resource type="Script" uid="uid://dts46p802c1d8" path="res://game/ui/hud/bars/stat_bar.gd" id="1_6py1a"]
 
-[node name="HealthBar" type="Control" unique_id=240099235]
+[node name="StatBar" type="Control" unique_id=240099235]
+custom_minimum_size = Vector2(160, 16)
 layout_mode = 3
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
+anchors_preset = 0
 offset_left = 8.0
-offset_top = -166.0
-offset_right = 32.0
-offset_bottom = -10.0
-grow_vertical = 0
+offset_top = 8.0
+offset_right = 168.0
+offset_bottom = 24.0
 size_flags_horizontal = 0
 size_flags_vertical = 8
-script = ExtResource("1_jpren")
+script = ExtResource("1_6py1a")
 
 [node name="Background" type="ColorRect" parent="." unique_id=218777739]
 layout_mode = 1

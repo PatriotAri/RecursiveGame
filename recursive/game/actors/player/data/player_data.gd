@@ -37,20 +37,5 @@ var modifiers:= MovementModifierStack.new()
 #read/written by AttackSystem
 var is_attacking:= false
 
-#read/written by HealthUtility
-var health_regen_points: int = 2
-var max_health: int = 20
-var current_health: int = max_health
-
-#read/written by StaminaUtility
-var stamina_regen_points: int = 2
-var current_stamina: int = max_stamina
-var max_stamina: int = 20
-
-#read/written by ManaUtility
-var mana_regen_points: int = 2
-var current_mana: int = max_mana
-var max_mana: int = 10
-
 #inventory
 var inventory := Inventory.new()

@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 var data: PlayerData
-var health_utility: HealthUtility
+var stats: StatSystem
 
 var player_input_system: PlayerInputSystem
 var player_state_machine: PlayerStateMachine
@@ -14,6 +14,17 @@ var player_hitbox_manager: PlayerHitboxManager
 var death_handled := false
 
 @onready var sprite: AnimatedSprite2D = $Sprite
+
+@export_group("Stat Tuning")
+@export var max_health: int = 20
+@export var health_regen_per_second: float = 0.0
+@export var health_regen_delay: float = 3.0
+@export var max_stamina: int = 20
+@export var stamina_regen_per_second: float = 8.0
+@export var stamina_regen_delay: float = 0.5
+@export var max_mana: int = 10
+@export var mana_regen_per_second: float = 1.0
+@export var mana_regen_delay: float = 1.0
 
 @export_group("Attack Tuning")
 @export var windup_time:= 0.1
@@ -37,7 +48,12 @@ func _ready() -> void:
 	data.acceleration = acceleration
 	data.friction = friction
 	
-	health_utility = HealthUtility.new(data)
+	stats = StatSystem.new(
+		Stat.new(max_health, health_regen_per_second, health_regen_delay),
+		Stat.new(max_stamina, stamina_regen_per_second, stamina_regen_delay),
+		Stat.new(max_mana, mana_regen_per_second, mana_regen_delay)
+	)
+	stats.health.emptied.connect(_on_health_emptied)
 	
 	player_hitbox_manager = PlayerHitboxManager.new(self, data)
 	player_hitbox_manager.register_hitbox(&"unarmed", GlobalPackedScenes.player_unarmed_hitbox, unarmed_offsets)
@@ -59,7 +75,7 @@ func _physics_process(delta: float) -> void:
 			death_handled = true
 			_handle_death()
 		return
-		
+	stats.update(delta)
 	player_input_system.update(data)
 	
 	if data.move_vector != Vector2.ZERO:
@@ -74,13 +90,15 @@ func _physics_process(delta: float) -> void:
 	player_movement_system.update(data, delta)
 	player_animation_system.update(data)
 
-func _on_damage_received(damage_amount: int) -> void:
-	health_utility.remove_health(damage_amount)
-	if health_utility.health_empty():
-		data.is_dead = true
-	else:
-		data.is_attacking = false
-		data.is_hurt = true
+func _on_damage_received(damage_amount: float) -> void:
+	stats.health.remove(roundi(damage_amount))
+	if data.is_dead:
+		return
+	data.is_attacking = false
+	data.is_hurt = true
+
+func _on_health_emptied() -> void:
+	data.is_dead = true
 
 func _on_knockback_received(direction: Vector2, strength: float, decay: float) -> void:
 	var knockback := MovementModifier.create_impulse(&"knockback", direction, strength, decay)

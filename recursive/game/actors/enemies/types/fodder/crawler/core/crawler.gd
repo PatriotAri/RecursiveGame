@@ -10,8 +10,11 @@ var crawler_animation_system: CrawlerAnimationSystem
 var crawler_hitbox_manager: CrawlerHitboxManager
 
 #health component
-var health_utility: HealthUtility
+var stats: StatSystem
 var death_handled := false
+
+@export_group("Stat Tuning")
+@export var max_health: int = 10
 
 #hitbox variables
 @export_group("Hitbox Type")
@@ -40,11 +43,11 @@ var death_handled := false
 var data: EnemyData
 
 func _ready() -> void:
+	stats = StatSystem.new(Stat.new(max_health))
+	stats.health.emptied.connect(_on_health_emptied)
 	
 	data = EnemyData.new()
-	
-	health_utility = HealthUtility.new(data)
-	
+		
 	crawler_hitbox_manager = CrawlerHitboxManager.new(self, data)
 	crawler_hitbox_manager.register_hitbox(&"melee", crawler_hitbox, crawler_melee_offsets)
 	
@@ -64,20 +67,23 @@ func _physics_process(delta: float) -> void:
 		if not death_handled:
 			death_handled = true
 			_handle_death()
-			return
+		return
 	
+	stats.update(delta)
 	crawler_detection_system.update()
 	crawler_state_machine.update(data, delta)
 	crawler_movement_system.update(delta)
 	crawler_attack_system.update(data, delta)
 	crawler_animation_system.update()
 
-func _on_damage_received(damage_amount: int) -> void:
-	health_utility.remove_health(damage_amount)
-	if health_utility.health_empty():
-		data.is_dead = true
-	else:
-		data.is_hurt = true
+func _on_damage_received(damage_amount: float) -> void:
+	stats.health.remove(roundi(damage_amount))
+	if data.is_dead:
+		return
+	data.is_hurt = true
+
+func _on_health_emptied() -> void:
+	data.is_dead = true
 		
 func _on_knockback_received(direction: Vector2, strength: float, decay: float) -> void:
 	var knockback := MovementModifier.create_impulse(&"knockback", direction, strength, decay)

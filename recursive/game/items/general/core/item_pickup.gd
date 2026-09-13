@@ -6,11 +6,11 @@ extends Area2D
 func _physics_process(_delta: float) -> void:
 	for body in get_overlapping_bodies():
 		if body.is_in_group(&"player"):
-			body.data.inventory.add(item.id, amount)
+			body.data.inventory.add(item, amount)
 			print("[Inventory] +%d %s (total: %d)" % [
 				amount,
 				item.display_name,
-				body.data.inventory.get_count(item, amount),
+				body.data.inventory.get_count(item.id),
 			])
 			queue_free()
 			return

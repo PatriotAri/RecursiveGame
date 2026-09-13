@@ -3,20 +3,27 @@
 [ext_resource type="Script" uid="uid://d127rtkk00hvw" path="res://game/ui/inventory/inventory_row.gd" id="1_klmx7"]
 
 [node name="Row" type="Button" unique_id=1271814841]
+custom_minimum_size = Vector2(0, 44)
 focus_mode = 0
 toggle_mode = true
 script = ExtResource("1_klmx7")
 
 [node name="Margin" type="MarginContainer" parent="." unique_id=1838181256]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="HBox" type="HBoxContainer" parent="Margin" unique_id=1819818992]
 layout_mode = 2
 
 [node name="ItemName" type="Label" parent="Margin/HBox" unique_id=1831621031]
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 22
 
 [node name="Count" type="Label" parent="Margin/HBox" unique_id=1657468683]
 layout_mode = 2
+theme_override_font_sizes/font_size = 22

@@ -6,7 +6,12 @@ extends CanvasLayer
 
 func _ready() -> void:
 	var player := get_tree().get_first_node_in_group(&"player")
-	if player and "data" in player:
-		health_bar.bind(player.data)
-		gold_counter.bind(player.data.inventory)
-		soul_counter.bind(player.data.inventory)
+	if player == null:
+		await get_tree().process_frame
+		player = get_tree().get_first_node_in_group(&"player")
+	if player == null or not ("stats" in player):
+		push_warning("Hud: no player found to bind to.")
+		return
+	health_bar.bind(player.stats.health)
+	gold_counter.bind(player.data.inventory)
+	soul_counter.bind(player.data.inventory)
