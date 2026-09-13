@@ -37,5 +37,8 @@ var modifiers:= MovementModifierStack.new()
 #read/written by AttackSystem
 var is_attacking:= false
 
+#read/written by StatSystem
+var is_exhausted:= false
+
 #inventory
 var inventory := Inventory.new()

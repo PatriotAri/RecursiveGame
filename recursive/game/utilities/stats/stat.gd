@@ -71,3 +71,20 @@ func _apply(value: int) -> void:
 		emptied.emit()
 	elif current == maximum:
 		filled.emit()
+		
+var _drain_accumulator: float = 0.0   # fractional drain carry
+
+func can_afford(amount: int) -> bool:
+	return current >= amount
+
+# Spends `rate` points per second, carrying the fraction between frames.
+# Re-arms the regen block on every call, so an in-progress drain can never
+# be out-raced by tick() no matter how rate and regen_delay compare.
+func drain(rate: float, delta: float) -> void:
+	if rate <= 0.0: return
+	_blocked_for = regen_delay
+	_drain_accumulator += rate * delta
+	var whole := int(_drain_accumulator)
+	if whole > 0:
+		_drain_accumulator -= float(whole)
+		_apply(current - whole)

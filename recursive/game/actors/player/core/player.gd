@@ -25,6 +25,9 @@ var death_handled := false
 @export var max_mana: int = 10
 @export var mana_regen_per_second: float = 1.0
 @export var mana_regen_delay: float = 1.0
+@export var sprint_stamina_per_second: float = 12.0
+@export var attack_stamina_cost: int = 4
+@export var exhaustion_recovery_ratio: float = 0.25
 
 @export_group("Attack Tuning")
 @export var windup_time:= 0.1
@@ -54,6 +57,7 @@ func _ready() -> void:
 		Stat.new(max_mana, mana_regen_per_second, mana_regen_delay)
 	)
 	stats.health.emptied.connect(_on_health_emptied)
+	stats.stamina.emptied.connect(_on_stamina_emptied)
 	
 	player_hitbox_manager = PlayerHitboxManager.new(self, data)
 	player_hitbox_manager.register_hitbox(&"unarmed", GlobalPackedScenes.player_unarmed_hitbox, unarmed_offsets)
@@ -78,17 +82,43 @@ func _physics_process(delta: float) -> void:
 	stats.update(delta)
 	player_input_system.update(data)
 	
+	_update_stamina(delta)
+	
 	if data.move_vector != Vector2.ZERO:
 		var current_angle := data.facing_dir.angle()
 		var target_angle := data.move_vector.angle()
 		var new_angle := lerp_angle(current_angle, target_angle, data.facing_turn_speed * delta)
 		data.facing_dir = Vector2.from_angle(new_angle)
 	
+	var was_attacking := data.is_attacking
 	player_attack_system.update(data, delta)
+	if not was_attacking and data.is_attacking: # ← new
+		stats.stamina.remove(attack_stamina_cost)
 	player_state_machine.update(data)
 	player_attack_system.post_update(data)
 	player_movement_system.update(data, delta)
 	player_animation_system.update(data)
+
+func _update_stamina(delta: float) -> void:
+	if data.is_exhausted and stats.stamina.ratio() >= exhaustion_recovery_ratio:
+		data.is_exhausted = false
+
+	# Intent alone isn't enough — holding run while standing still costs nothing.
+	var sprinting := data.is_running and data.move_vector != Vector2.ZERO
+	if data.is_exhausted or (sprinting and stats.stamina.is_empty()):
+		data.is_running = false
+		sprinting = false
+	if sprinting:
+		stats.stamina.drain(sprint_stamina_per_second, delta)
+
+	# Refuse an unaffordable swing before the attack system sees the request,
+	# so the input isn't eaten and the animation never plays for free.
+	if data.attack_requested and not data.is_attacking:
+		if not stats.stamina.can_afford(attack_stamina_cost):
+			data.attack_requested = false
+
+func _on_stamina_emptied() -> void:
+	data.is_exhausted = true
 
 func _on_damage_received(damage_amount: float) -> void:
 	stats.health.remove(roundi(damage_amount))
