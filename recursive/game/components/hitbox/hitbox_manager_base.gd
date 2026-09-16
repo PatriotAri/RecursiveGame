@@ -24,6 +24,9 @@ func spawn_hitbox(attack_name: StringName, damage: float, knockback_strength: fl
 	if entry == null:
 		push_warning("No hitbox registered for: %s" % attack_name)
 		return null
+	if entry.scene == null:
+		push_error("Hitbox '%s' on %s has no scene assigned." % [attack_name, body.name])
+		return null
 
 	var facing := get_facing()
 

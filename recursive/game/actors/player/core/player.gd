@@ -44,8 +44,6 @@ var death_handled := false
 func _ready() -> void:
 	data = PlayerData.new()
 	
-	add_to_group(&"player")
-	
 	data.walk_speed = walk_speed
 	data.run_speed = run_speed
 	data.acceleration = acceleration
@@ -140,9 +138,13 @@ func _on_animation_finished() -> void:
 
 func _handle_death() -> void:
 	$Collision.set_deferred("disabled", true)
+	$Hurtbox.set_deferred("monitorable", false)
 	player_state_machine.update(data)
 	player_animation_system.update(data)
 	await sprite.animation_finished
 	await get_tree().create_timer(1.0).timeout
 	var death_screen := get_tree().get_first_node_in_group(&"death_screen")
+	if death_screen == null:
+		push_warning("Player died with no death screen in the tree.")
+		return
 	death_screen.show_death()

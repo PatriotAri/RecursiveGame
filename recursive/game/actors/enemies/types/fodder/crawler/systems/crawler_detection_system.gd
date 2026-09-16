@@ -36,7 +36,7 @@ func update() -> void:
 
 func _on_body_entered(body: Node) -> void:
 	#if player enters detection area then
-	if body.is_in_group("Player"):
+	if body.is_in_group(&"player"):
 		player = body as CharacterBody2D
 		data.player_detected = true
 
