@@ -1,20 +1,22 @@
 class_name CrawlerAttackSystem
 
 var body: CharacterBody2D
-var hitbox_manager: CrawlerHitboxManager
+var hitbox_manager: HitboxManagerBase
 var windup_time: float
 var lifetime: float
-var damage: float
 
 var attack_performed := false
 var attack_timer := 0.0
 
-func _init(body_ref: CharacterBody2D, hb_ref: CrawlerHitboxManager) -> void:
+func _init(body_ref: CharacterBody2D, hb_ref: HitboxManagerBase) -> void:
 	body = body_ref
 	hitbox_manager = hb_ref
+	var spec := hitbox_manager.get_spec(&"melee")
+	if spec == null:
+		push_error("CrawlerAttackSystem: no 'melee' attack registered.")
+		return
 	windup_time = body.windup_time
 	lifetime = body.lifetime
-	damage = body.damage
 	
 func update(data: EnemyData, delta: float) -> void:
 	#resets state whenever attack begins
@@ -33,5 +35,4 @@ func update(data: EnemyData, delta: float) -> void:
 		data.attack_finished = true
 
 func execute_attack() -> void:
-	hitbox_manager.spawn_hitbox(&"melee", damage, 50.0, windup_time, lifetime)
-	
+	hitbox_manager.spawn_hitbox(&"melee")

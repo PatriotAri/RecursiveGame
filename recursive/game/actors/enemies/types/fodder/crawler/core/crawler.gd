@@ -7,7 +7,7 @@ var crawler_state_machine: CrawlerStateMachine
 var crawler_movement_system: CrawlerMovementSystem
 var crawler_attack_system: CrawlerAttackSystem
 var crawler_animation_system: CrawlerAnimationSystem
-var crawler_hitbox_manager: CrawlerHitboxManager
+var crawler_hitbox_manager: HitboxManagerBase
 
 #health component
 var stats: StatSystem
@@ -47,9 +47,17 @@ func _ready() -> void:
 	stats.health.emptied.connect(_on_health_emptied)
 	
 	data = EnemyData.new()
-		
-	crawler_hitbox_manager = CrawlerHitboxManager.new(self, data)
-	crawler_hitbox_manager.register_hitbox(&"melee", crawler_hitbox, crawler_melee_offsets)
+	
+	var melee := AttackSpec.new()
+	melee.scene = crawler_hitbox
+	melee.offsets = crawler_melee_offsets
+	melee.damage = damage
+	melee.windup_time = windup_time
+	melee.lifetime = lifetime
+	melee.knockback_strength = 50.0
+	
+	crawler_hitbox_manager = HitboxManagerBase.new(self, HitboxManagerBase.LAYER_PLAYER_HURTBOX, func(): return data.facing_dir)
+	crawler_hitbox_manager.register_attack(&"melee", melee)
 	
 	$Hurtbox._on_damage_received = _on_damage_received
 	$Hurtbox.knockback_received.connect(_on_knockback_received)

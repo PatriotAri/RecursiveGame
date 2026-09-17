@@ -1,23 +1,26 @@
 class_name PlayerAttackSystem
 
 var player: CharacterBody2D
-var player_hitbox_manager: PlayerHitboxManager
+var player_hitbox_manager: HitboxManagerBase
 
 var attack_timer:= 0.0
 
 #hitbox variables
 var windup_time: float
 var lifetime: float
-var damage: float
 
 var pending_spawn:= false
 
-func _init(player_ref: CharacterBody2D, hb_ref: PlayerHitboxManager) -> void:
+func _init(player_ref: CharacterBody2D, hb_ref: HitboxManagerBase) -> void:
 	player = player_ref
 	player_hitbox_manager = hb_ref
+	# Timing comes from the spec now, so there's one source of truth per attack.
+	var spec := player_hitbox_manager.get_spec(&"unarmed")
+	if spec == null:
+		push_error("PlayerAttackSystem: no 'unarmed' attack registered.")
+		return
 	windup_time = player.windup_time
 	lifetime = player.lifetime
-	damage = player.damage
 
 func update(data: PlayerData, delta: float) -> void:
 	# Update attack timer
@@ -40,4 +43,4 @@ func post_update(data: PlayerData) -> void:
 	
 	if pending_spawn:
 		pending_spawn = false
-		player_hitbox_manager.spawn_hitbox(&"unarmed", damage, 50.0, windup_time, lifetime)
+		player_hitbox_manager.spawn_hitbox(&"unarmed")

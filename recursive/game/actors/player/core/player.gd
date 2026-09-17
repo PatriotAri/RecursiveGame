@@ -9,7 +9,7 @@ var player_attack_system: PlayerAttackSystem
 var player_movement_system: PlayerMovementSystem
 var player_animation_system: PlayerAnimationSystem
 
-var player_hitbox_manager: PlayerHitboxManager
+var player_hitbox_manager: HitboxManagerBase
 
 var death_handled := false
 
@@ -57,8 +57,16 @@ func _ready() -> void:
 	stats.health.emptied.connect(_on_health_emptied)
 	stats.stamina.emptied.connect(_on_stamina_emptied)
 	
-	player_hitbox_manager = PlayerHitboxManager.new(self, data)
-	player_hitbox_manager.register_hitbox(&"unarmed", GlobalPackedScenes.player_unarmed_hitbox, unarmed_offsets)
+	var unarmed := AttackSpec.new()
+	unarmed.scene = GlobalPackedScenes.player_unarmed_hitbox
+	unarmed.offsets = unarmed_offsets
+	unarmed.damage = damage
+	unarmed.windup_time = windup_time
+	unarmed.lifetime = lifetime
+	unarmed.knockback_strength = 50.0
+	
+	player_hitbox_manager = HitboxManagerBase.new(self, HitboxManagerBase.LAYER_ENEMY_HURTBOX, func(): return data.facing_dir)
+	player_hitbox_manager.register_attack(&"unarmed", unarmed)
 	
 	player_input_system = PlayerInputSystem.new()
 	player_state_machine = PlayerStateMachine.new()
@@ -96,15 +104,7 @@ func _physics_process(delta: float) -> void:
 	player_attack_system.post_update(data)
 	player_movement_system.update(data, delta)
 	player_animation_system.update(data)
-	
-	#if data.modifiers.modifiers.size() > 0:
-		#print(data.modifiers.modifiers.size(), " ", data.modifiers.get_impulse_sum())
-	
-	for mod in data.modifiers.modifiers:
-		print(mod.id, "  finished=", mod.finished,
-			"  is_expired=", mod.is_expired(),
-			"  elapsed=", mod.elapsed, "  duration=", mod.duration)
-			
+
 func _update_stamina(delta: float) -> void:
 	if data.is_exhausted and stats.stamina.ratio() >= exhaustion_recovery_ratio:
 		data.is_exhausted = false
