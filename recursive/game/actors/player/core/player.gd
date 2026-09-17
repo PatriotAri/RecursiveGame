@@ -96,7 +96,15 @@ func _physics_process(delta: float) -> void:
 	player_attack_system.post_update(data)
 	player_movement_system.update(data, delta)
 	player_animation_system.update(data)
-
+	
+	#if data.modifiers.modifiers.size() > 0:
+		#print(data.modifiers.modifiers.size(), " ", data.modifiers.get_impulse_sum())
+	
+	for mod in data.modifiers.modifiers:
+		print(mod.id, "  finished=", mod.finished,
+			"  is_expired=", mod.is_expired(),
+			"  elapsed=", mod.elapsed, "  duration=", mod.duration)
+			
 func _update_stamina(delta: float) -> void:
 	if data.is_exhausted and stats.stamina.ratio() >= exhaustion_recovery_ratio:
 		data.is_exhausted = false
