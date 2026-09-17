@@ -35,6 +35,10 @@ var death_handled := false
 @export var damage:= 10.0
 @export var unarmed_offsets: HitboxOffsetData
 
+@export_group("Combat Feel")
+#how long player is locked in hitstun
+@export var hurt_duration:= 0.12
+
 @export_group("Movement Tuning")
 @export var walk_speed:= 100.0
 @export var run_speed:= 140.0
@@ -76,8 +80,6 @@ func _ready() -> void:
 	
 	$Hurtbox._on_damage_received = _on_damage_received
 	$Hurtbox.knockback_received.connect(_on_knockback_received)
-	
-	sprite.animation_finished.connect(_on_animation_finished)
 
 func _physics_process(delta: float) -> void:
 	if data.is_dead:
@@ -88,12 +90,19 @@ func _physics_process(delta: float) -> void:
 	stats.update(delta)
 	player_input_system.update(data)
 	
+	#hitstun is a timer now, ticks before the state machine
+	if data.hurt_timer > 0.0:
+		data.hurt_timer -= delta
+		if data.hurt_timer <= 0.0:
+			data.is_hurt = false
+	
 	_update_stamina(delta)
 	
 	if data.move_vector != Vector2.ZERO:
 		var current_angle := data.facing_dir.angle()
 		var target_angle := data.move_vector.angle()
-		var new_angle := lerp_angle(current_angle, target_angle, data.facing_turn_speed * delta)
+		var t := 1.0 - exp(-data.facing_turn_speed * delta)
+		var new_angle := lerp_angle(current_angle, target_angle, t)
 		data.facing_dir = Vector2.from_angle(new_angle)
 	
 	var was_attacking := data.is_attacking
@@ -130,8 +139,15 @@ func _on_damage_received(damage_amount: float) -> void:
 	stats.health.remove(roundi(damage_amount))
 	if data.is_dead:
 		return
-	data.is_attacking = false
+	# Re-arming the timer on every hit is what kills the permanent freeze:
+	# the old code waited on an animation_finished that never fires when the
+	# hurt state is re-entered without the animation name changing.
 	data.is_hurt = true
+	data.hurt_timer = hurt_duration
+	data.hurt_seq += 1
+	# An interrupted swing takes its hitbox with it.
+	player_attack_system.cancel(data)
+	player_hitbox_manager.cancel_all()
 
 func _on_health_emptied() -> void:
 	data.is_dead = true
@@ -139,10 +155,6 @@ func _on_health_emptied() -> void:
 func _on_knockback_received(direction: Vector2, strength: float, decay: float) -> void:
 	var knockback := MovementModifier.create_impulse(&"knockback", direction, strength, decay)
 	data.modifiers.add(knockback)
-
-func _on_animation_finished() -> void:
-	if sprite.animation.begins_with("hurt"):
-		data.is_hurt = false
 
 func _handle_death() -> void:
 	$Collision.set_deferred("disabled", true)

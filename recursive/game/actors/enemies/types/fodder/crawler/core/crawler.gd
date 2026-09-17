@@ -25,6 +25,9 @@ var death_handled := false
 @export var windup_time:= 0.5   # Enemy windup
 @export var lifetime:= 0.3       # How long hitbox stays active
 @export var damage:= 10.0    # Damage done by enemy
+## How long the crawler is locked in hitstun. Was implicitly the hurt
+## animation's length; now independent of it.
+@export var hurt_duration:= 0.2
 @export var attack_detection_range:= 32.0 #must be 32 minimum to properly detect player
 
 #patrol variables
@@ -78,6 +81,14 @@ func _physics_process(delta: float) -> void:
 		return
 	
 	stats.update(delta)
+	
+	# Hitstun is a timer now. Ticked before the state machine so is_hurt is
+	# current when the state resolves this frame.
+	if data.hurt_timer > 0.0:
+		data.hurt_timer -= delta
+		if data.hurt_timer <= 0.0:
+			data.is_hurt = false
+	
 	crawler_detection_system.update()
 	crawler_state_machine.update(data, delta)
 	crawler_movement_system.update(delta)
@@ -89,6 +100,11 @@ func _on_damage_received(damage_amount: float) -> void:
 	if data.is_dead:
 		return
 	data.is_hurt = true
+	data.hurt_timer = hurt_duration
+	data.hurt_seq += 1
+	# Getting hit drops the swing. One punch into a cluster cancels every
+	# crawler inside the hitbox — the player's answer to being mobbed.
+	crawler_hitbox_manager.cancel_all()
 
 func _on_health_emptied() -> void:
 	data.is_dead = true

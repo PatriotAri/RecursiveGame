@@ -23,6 +23,12 @@ func _init(player_ref: CharacterBody2D, hb_ref: HitboxManagerBase) -> void:
 	lifetime = player.lifetime
 
 func update(data: PlayerData, delta: float) -> void:
+	# No swinging out of hitstun. Without this the player could start an
+	# attack and spawn a hitbox while the hurt state was still active.
+	if data.is_hurt:
+		cancel(data)
+		return
+	
 	# Update attack timer
 	if data.is_attacking:
 		attack_timer -= delta
@@ -35,6 +41,14 @@ func update(data: PlayerData, delta: float) -> void:
 		data.is_attacking = true
 		attack_timer = windup_time + lifetime
 		pending_spawn = true
+
+## Drops any in-progress swing. pending_spawn surviving an interrupt would
+## spawn the hitbox a frame later, after the attack was already cancelled.
+func cancel(data: PlayerData) -> void:
+	data.is_attacking = false
+	data.attack_requested = false
+	attack_timer = 0.0
+	pending_spawn = false
 
 func post_update(data: PlayerData) -> void:
 	if not data.is_attacking:

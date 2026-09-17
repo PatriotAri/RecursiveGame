@@ -13,6 +13,11 @@ enum State {
 var is_hurt:= false
 var is_dead:= false
 
+#hitstun, ticked down in crawler.gd — replaces the old animation_finished hook
+var hurt_timer:= 0.0
+#bumped on every hit so the animation can tell a re-hit from a held state
+var hurt_seq:= 0
+
 #read/written by DetectionSystem
 var player_detected:= false
 var in_attack_range:= false

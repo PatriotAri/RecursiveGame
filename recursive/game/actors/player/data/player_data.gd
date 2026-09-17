@@ -10,6 +10,12 @@ enum State {
 
 var is_hurt:= false
 var is_dead:= false
+
+#hitstun, ticked down in player.gd - replaces the old animation_finished hook
+var hurt_timer:= 0.0
+#bumped on every hit so the animation can tell a rehit from a held state
+var hurt_seq:= 0
+
 #!!!rename to turn speed!!!
 var facing_turn_speed:= 35.0
 
