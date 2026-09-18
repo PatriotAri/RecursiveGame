@@ -156,6 +156,11 @@ func _on_knockback_received(direction: Vector2, strength: float, decay: float) -
 	var knockback := MovementModifier.create_impulse(&"knockback", direction, strength, decay)
 	data.modifiers.add(knockback)
 
+## The point other actors aim at. Movement wants our feet (global_position);
+## combat wants the middle of what it has to hit.
+func combat_anchor() -> Vector2:
+	return $Hurtbox/CollisionShape2D.global_position
+
 func _handle_death() -> void:
 	$Collision.set_deferred("disabled", true)
 	$Hurtbox.set_deferred("monitorable", false)

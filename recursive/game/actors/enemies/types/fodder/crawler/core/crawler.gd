@@ -28,7 +28,18 @@ var death_handled := false
 ## How long the crawler is locked in hitstun. Was implicitly the hurt
 ## animation's length; now independent of it.
 @export var hurt_duration:= 0.2
-@export var attack_detection_range:= 32.0 #must be 32 minimum to properly detect player
+## Pause between swings. Owed after a completed attack and after an
+## interrupted one.
+@export var attack_cooldown:= 1.5
+## Half-width of what this enemy is trying to hit — the player's hurtbox is
+## 32 wide, so 16. The narrow axis, so the derived range stays conservative.
+@export var target_radius:= 16.0
+## Grace period after the player leaves the detection shape before aggro drops.
+## Stops a target walking the boundary from flickering CHASE/PATROL every frame.
+@export var target_forget_delay:= 1.0
+
+## Derived in _ready() from the melee hitbox's own geometry.
+var attack_range:= 0.0
 
 #patrol variables
 @export_group("Patrol Tuning")
@@ -58,9 +69,14 @@ func _ready() -> void:
 	melee.windup_time = windup_time
 	melee.lifetime = lifetime
 	melee.knockback_strength = 50.0
+	melee.reach_radius = 10.0   # CrawlerMeleeHitbox.tscn's CircleShape2D
 	
 	crawler_hitbox_manager = HitboxManagerBase.new(self, HitboxManagerBase.LAYER_PLAYER_HURTBOX, func(): return data.facing_dir)
 	crawler_hitbox_manager.register_attack(&"melee", melee)
+	
+	# Commit range comes from the hitbox instead of a hand-typed number.
+	# Must be computed before the detection system initialises below.
+	attack_range = melee.min_reach() + target_radius
 	
 	$Hurtbox._on_damage_received = _on_damage_received
 	$Hurtbox.knockback_received.connect(_on_knockback_received)
@@ -68,7 +84,7 @@ func _ready() -> void:
 	#injects data
 	crawler_detection_system.initialize(data, self)
 	
-	crawler_state_machine = CrawlerStateMachine.new()
+	crawler_state_machine = CrawlerStateMachine.new(attack_cooldown)
 	crawler_movement_system = CrawlerMovementSystem.new(self, data)
 	crawler_attack_system = CrawlerAttackSystem.new(self, crawler_hitbox_manager)
 	crawler_animation_system = CrawlerAnimationSystem.new(sprite, data)
@@ -89,7 +105,7 @@ func _physics_process(delta: float) -> void:
 		if data.hurt_timer <= 0.0:
 			data.is_hurt = false
 	
-	crawler_detection_system.update()
+	crawler_detection_system.update(delta)
 	crawler_state_machine.update(data, delta)
 	crawler_movement_system.update(delta)
 	crawler_attack_system.update(data, delta)
@@ -108,13 +124,20 @@ func _on_damage_received(damage_amount: float) -> void:
 
 func _on_health_emptied() -> void:
 	data.is_dead = true
-		
+	
 func _on_knockback_received(direction: Vector2, strength: float, decay: float) -> void:
 	var knockback := MovementModifier.create_impulse(&"knockback", direction, strength, decay)
 	data.modifiers.add(knockback)
 
 func _handle_death() -> void:
 	set_physics_process(false)
+	# Hitboxes are children with their own _physics_process — killing this
+	# node's processing doesn't stop theirs. A swing started before the
+	# killing blow would still land from the corpse.
+	crawler_hitbox_manager.cancel_all()
+	# Stop being a wall, and stop eating the player's attacks.
+	$Collision.set_deferred("disabled", true)
+	$Hurtbox.set_deferred("monitorable", false)
 	sprite.play("died")
 	_try_spawn_drops()
 	await sprite.animation_finished
