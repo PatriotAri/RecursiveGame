@@ -2,6 +2,8 @@ class_name PlayerAnimationSystem
 
 var sprite: AnimatedSprite2D
 
+var _last_hurt_seq:= -1
+
 func _init(sprite_ref: AnimatedSprite2D) -> void:
 	sprite = sprite_ref
 
@@ -9,8 +11,16 @@ func update(data: PlayerData) -> void:
 	
 	var animation_name:= _resolve_animation(data)
 	
-	if animation_name != sprite.animation:
+	# A second hit during hitstun resolves to the same animation name, so the
+	# name check below won't replay it. The counter catches that case.
+	var restart:= data.current_state == PlayerData.State.HURT \
+		and data.hurt_seq != _last_hurt_seq
+	_last_hurt_seq = data.hurt_seq
+	
+	if animation_name != sprite.animation or restart:
 		sprite.play(animation_name)
+		if restart:
+			sprite.frame = 0
 
 #turns state + facing into an animation name string
 func _resolve_animation(data: PlayerData) -> String:

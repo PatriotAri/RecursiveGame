@@ -959,13 +959,16 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1yoff"]
 size = Vector2(32, 62)
 
-[node name="Player" type="CharacterBody2D" unique_id=1781926894 groups=["Player"]]
+[node name="Player" type="CharacterBody2D" unique_id=1781926894 groups=["player"]]
 collision_layer = 2
 collision_mask = 5
 script = ExtResource("1_oul6g")
+stamina_regen_per_second = 4.0
+stamina_regen_delay = 0.3
 windup_time = 0.2
 damage = 7.0
 unarmed_offsets = ExtResource("2_iwgb0")
+run_speed = 180.0
 
 [node name="Collision" type="CollisionShape2D" parent="." unique_id=1079167882]
 position = Vector2(0, -6)

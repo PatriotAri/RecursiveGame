@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://sv3gcqxl07q1"]
 
-[ext_resource type="Script" uid="uid://3wuiu73gjnna" path="res://game/ui/hud/counters/soul_counter/soul_counter.gd" id="1_dfdan"]
+[ext_resource type="Script" uid="uid://carg1j8orc5dt" path="res://game/ui/hud/counters/counter.gd" id="1_dfdan"]
 [ext_resource type="Resource" uid="uid://bj2cai01w6qai" path="res://game/items/drops/soul/soul.tres" id="2_tsx3j"]
 [ext_resource type="Texture2D" uid="uid://duasc1k3gyhc4" path="res://game/ui/hud/counters/soul_counter/soul_counter_icon.png" id="2_vrxl0"]
 

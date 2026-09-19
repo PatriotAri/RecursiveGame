@@ -587,12 +587,12 @@ radius = 15.0
 height = 34.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_iskh7"]
-radius = 362.01242
+radius = 160.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_23y3x"]
 size = Vector2(300, 275)
 
-[node name="Crawler" type="CharacterBody2D" unique_id=442968874 groups=["Enemy"]]
+[node name="Crawler" type="CharacterBody2D" unique_id=442968874 groups=["enemy"]]
 collision_layer = 4
 collision_mask = 7
 platform_floor_layers = 0

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bjtbcxf7ndhqb"]
 
-[ext_resource type="Script" uid="uid://c073vothqa6d6" path="res://game/ui/hud/counters/gold_counter/gold_counter.gd" id="1_6nprt"]
+[ext_resource type="Script" uid="uid://carg1j8orc5dt" path="res://game/ui/hud/counters/counter.gd" id="1_a6s04"]
 [ext_resource type="Texture2D" uid="uid://c8x7jemkxmo53" path="res://game/ui/hud/counters/gold_counter/gold_counter_icon.png" id="2_a6s04"]
 [ext_resource type="Resource" uid="uid://pg3ucqn2nstc" path="res://game/items/drops/gold_sack/gold.tres" id="2_u7rkv"]
 
@@ -14,7 +14,7 @@ offset_top = 7.0
 offset_right = -7.0
 offset_bottom = 38.0
 grow_horizontal = 0
-script = ExtResource("1_6nprt")
+script = ExtResource("1_a6s04")
 item = ExtResource("2_u7rkv")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=776660510]

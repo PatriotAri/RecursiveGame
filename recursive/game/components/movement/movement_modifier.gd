@@ -11,6 +11,7 @@ var id: StringName #unique name, e.g. &"knockback", &"ice_slow"
 var type: Type
 var duration: float #total lifetime (-1.0 = infinite, removed manually)
 var elapsed: float = 0.0
+var finished := false
 
 var impulse_velocity := Vector2.ZERO
 var impulse_decay := 0.0   # px/s^2
@@ -20,6 +21,8 @@ var speed_scale := 1.0
 var override_velocity := Vector2.ZERO
 
 func is_expired() -> bool:
+	if finished:
+		return true
 	if duration < 0.0:
 		return false
 	return elapsed >= duration
@@ -31,7 +34,7 @@ func update(delta: float) -> void:
 			impulse_velocity = impulse_velocity.move_toward(Vector2.ZERO, impulse_decay * delta)
 			if impulse_velocity.length() < 0.1:
 				impulse_velocity = Vector2.ZERO
-				elapsed = duration
+				finished = true
 
 static func create_impulse(mod_id: StringName, direction: Vector2, strength: float, decay: float) -> MovementModifier:
 	var mod:= MovementModifier.new()

@@ -2,11 +2,13 @@
 
 [ext_resource type="Script" uid="uid://xa5av4nmueml" path="res://game/ui/inventory/inventory_ui.gd" id="1_bs1id"]
 [ext_resource type="PackedScene" uid="uid://bjtbcxf7ndhqb" path="res://game/ui/hud/counters/gold_counter/gold_counter.tscn" id="2_85i2r"]
+[ext_resource type="PackedScene" uid="uid://dcgwvf7pq3t4x" path="res://game/ui/inventory/inventory_row.tscn" id="2_ljiqe"]
 [ext_resource type="PackedScene" uid="uid://sv3gcqxl07q1" path="res://game/ui/hud/counters/soul_counter/soul_counter.tscn" id="3_ljiqe"]
 
 [node name="InventoryUi" type="CanvasLayer" unique_id=241493269]
 layer = 7
 script = ExtResource("1_bs1id")
+row_scene = ExtResource("2_ljiqe")
 
 [node name="Dim" type="ColorRect" parent="." unique_id=1653272924]
 anchors_preset = 15
@@ -31,28 +33,33 @@ theme_override_constants/separation = 12
 layout_mode = 2
 
 [node name="Tabs" type="HBoxContainer" parent="Root/VBox/TopBar" unique_id=203659748]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="TabAll" type="Button" parent="Root/VBox/TopBar/Tabs" unique_id=1156513474]
+custom_minimum_size = Vector2(90, 32)
 layout_mode = 2
-focus_mode = 0
 toggle_mode = true
 button_pressed = true
+text = "All"
 
 [node name="TabArmor" type="Button" parent="Root/VBox/TopBar/Tabs" unique_id=244686629]
+custom_minimum_size = Vector2(90, 32)
 layout_mode = 2
-focus_mode = 0
-disabled = true
+toggle_mode = true
+text = "Armor"
 
 [node name="TabWeapons" type="Button" parent="Root/VBox/TopBar/Tabs" unique_id=1151337337]
+custom_minimum_size = Vector2(90, 32)
 layout_mode = 2
-focus_mode = 0
-disabled = true
+toggle_mode = true
+text = "Weapons"
 
 [node name="TabConsumeables" type="Button" parent="Root/VBox/TopBar/Tabs" unique_id=1105497980]
+custom_minimum_size = Vector2(90, 32)
 layout_mode = 2
-focus_mode = 0
-disabled = true
+toggle_mode = true
+text = "Consumeables"
 
 [node name="Spacer" type="Control" parent="Root/VBox/TopBar" unique_id=1973006737]
 layout_mode = 2
@@ -63,10 +70,12 @@ layout_mode = 2
 theme_override_constants/separation = 12
 
 [node name="GoldCounter" parent="Root/VBox/TopBar/Currency" unique_id=183642429 instance=ExtResource("2_85i2r")]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(120, 30)
 layout_mode = 2
 
 [node name="SoulCounter" parent="Root/VBox/TopBar/Currency" unique_id=1003963725 instance=ExtResource("3_ljiqe")]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(120, 30)
 layout_mode = 2
 
@@ -79,11 +88,13 @@ size_flags_vertical = 3
 theme_override_constants/separation = 16
 
 [node name="ListScroll" type="ScrollContainer" parent="Root/VBox/Body" unique_id=673148041]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 horizontal_scroll_mode = 0
 
 [node name="Rows" type="VBoxContainer" parent="Root/VBox/Body/ListScroll" unique_id=1384961625]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -99,10 +110,12 @@ layout_mode = 2
 theme_override_constants/separation = 12
 
 [node name="DetailName" type="Label" parent="Root/VBox/Body/Detail/DetailMargin/DetailVBox" unique_id=141081618]
+unique_name_in_owner = true
 layout_mode = 2
 horizontal_alignment = 1
 
 [node name="DetailIcon" type="TextureRect" parent="Root/VBox/Body/Detail/DetailMargin/DetailVBox" unique_id=641055168]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
 size_flags_vertical = 3
@@ -110,6 +123,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="DetailDesc" type="RichTextLabel" parent="Root/VBox/Body/Detail/DetailMargin/DetailVBox" unique_id=1953289126]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 fit_content = true

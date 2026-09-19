@@ -11,6 +11,9 @@ var patrol_target:= Vector2.ZERO
 var min_patrol_distance: float
 var max_attempts:= 10
 var arrival_threshold:= 5.0
+# The crawler's own intent-driven velocity. Impulses are layered onto
+# body.velocity for one frame only and never stored back here.
+var locomotion := Vector2.ZERO
 
 func _init(body_ref: CharacterBody2D, data_ref: EnemyData) -> void:
 	body = body_ref
@@ -27,7 +30,8 @@ func update(delta: float) -> void:
 
 	#velocity override takes full control
 	if data.modifiers.has_velocity_override():
-		body.velocity = data.modifiers.get_velocity_override()
+		locomotion = data.modifiers.get_velocity_override()
+		body.velocity = locomotion
 		body.move_and_slide()
 		return
 
@@ -47,10 +51,15 @@ func update(delta: float) -> void:
 		_:
 			idle(delta)
 
-func idle(delta: float) -> void:
-	body.velocity = body.velocity.move_toward(Vector2.ZERO, data.friction * delta)
-	body.velocity += data.modifiers.get_impulse_sum()
+# Single exit point for movement, so the impulse is applied once per frame
+# no matter which state ran.
+func _commit() -> void:
+	body.velocity = locomotion + data.modifiers.get_impulse_sum()
 	body.move_and_slide()
+
+func idle(delta: float) -> void:
+	locomotion = locomotion.move_toward(Vector2.ZERO, data.friction * delta)
+	_commit()
 
 func patrol(delta: float) -> void:
 	var direction:= patrol_target - body.global_position
@@ -68,9 +77,8 @@ func patrol(delta: float) -> void:
 		data.facing_dir = dir_norm
 		var speed:= data.patrol_speed * data.modifiers.get_speed_scale()
 		var target_velocity:= dir_norm * speed
-		body.velocity = body.velocity.move_toward(target_velocity, data.acceleration * delta)
-		body.velocity += data.modifiers.get_impulse_sum()
-		body.move_and_slide()
+		locomotion = locomotion.move_toward(target_velocity, data.acceleration * delta)
+		_commit()
 
 func pick_patrol_target() -> void:
 	if not body.has_node("PatrolZone"):
@@ -100,16 +108,18 @@ func chase(delta: float) -> void:
 	data.facing_dir = direction
 	var speed:= data.walk_speed * data.modifiers.get_speed_scale()
 	var target_velocity:= direction * speed
-	body.velocity = body.velocity.move_toward(target_velocity, data.acceleration * delta)
-	body.velocity += data.modifiers.get_impulse_sum()
-	body.move_and_slide()
+	locomotion = locomotion.move_toward(target_velocity, data.acceleration * delta)
+	_commit()
 
 func attack(delta: float) -> void:
 	if data.player_detected:
 		data.facing_dir = (data.player_pos - body.global_position).normalized()
 	idle(delta) #stands still, attack system spawns hitbox and does timing
-
+	
 func attack_cooldown(delta: float) -> void:
+	# Tracks while waiting — only the swing itself is committed.
+	if data.player_detected:
+		data.facing_dir = (data.player_pos - body.global_position).normalized()
 	idle(delta)
 
 func _on_state_changed(from: EnemyData.State, to: EnemyData.State) -> void:

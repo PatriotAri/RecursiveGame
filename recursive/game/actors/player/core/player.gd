@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 var data: PlayerData
-var health_utility: HealthUtility
+var stats: StatSystem
 
 var player_input_system: PlayerInputSystem
 var player_state_machine: PlayerStateMachine
@@ -9,17 +9,35 @@ var player_attack_system: PlayerAttackSystem
 var player_movement_system: PlayerMovementSystem
 var player_animation_system: PlayerAnimationSystem
 
-var player_hitbox_manager: PlayerHitboxManager
+var player_hitbox_manager: HitboxManagerBase
 
 var death_handled := false
 
 @onready var sprite: AnimatedSprite2D = $Sprite
+
+@export_group("Stat Tuning")
+@export var max_health: int = 20
+@export var health_regen_per_second: float = 0.0
+@export var health_regen_delay: float = 3.0
+@export var max_stamina: int = 20
+@export var stamina_regen_per_second: float = 8.0
+@export var stamina_regen_delay: float = 0.5
+@export var max_mana: int = 10
+@export var mana_regen_per_second: float = 1.0
+@export var mana_regen_delay: float = 1.0
+@export var sprint_stamina_per_second: float = 12.0
+@export var attack_stamina_cost: int = 4
+@export var exhaustion_recovery_ratio: float = 0.25
 
 @export_group("Attack Tuning")
 @export var windup_time:= 0.1
 @export var lifetime:= 0.1
 @export var damage:= 10.0
 @export var unarmed_offsets: HitboxOffsetData
+
+@export_group("Combat Feel")
+#how long player is locked in hitstun
+@export var hurt_duration:= 0.12
 
 @export_group("Movement Tuning")
 @export var walk_speed:= 100.0
@@ -30,17 +48,29 @@ var death_handled := false
 func _ready() -> void:
 	data = PlayerData.new()
 	
-	add_to_group(&"player")
-	
 	data.walk_speed = walk_speed
 	data.run_speed = run_speed
 	data.acceleration = acceleration
 	data.friction = friction
 	
-	health_utility = HealthUtility.new(data)
+	stats = StatSystem.new(
+		Stat.new(max_health, health_regen_per_second, health_regen_delay),
+		Stat.new(max_stamina, stamina_regen_per_second, stamina_regen_delay),
+		Stat.new(max_mana, mana_regen_per_second, mana_regen_delay)
+	)
+	stats.health.emptied.connect(_on_health_emptied)
+	stats.stamina.emptied.connect(_on_stamina_emptied)
 	
-	player_hitbox_manager = PlayerHitboxManager.new(self, data)
-	player_hitbox_manager.register_hitbox(&"unarmed", GlobalPackedScenes.player_unarmed_hitbox, unarmed_offsets)
+	var unarmed := AttackSpec.new()
+	unarmed.scene = GlobalPackedScenes.player_unarmed_hitbox
+	unarmed.offsets = unarmed_offsets
+	unarmed.damage = damage
+	unarmed.windup_time = windup_time
+	unarmed.lifetime = lifetime
+	unarmed.knockback_strength = 50.0
+	
+	player_hitbox_manager = HitboxManagerBase.new(self, HitboxManagerBase.LAYER_ENEMY_HURTBOX, func(): return data.facing_dir)
+	player_hitbox_manager.register_attack(&"unarmed", unarmed)
 	
 	player_input_system = PlayerInputSystem.new()
 	player_state_machine = PlayerStateMachine.new()
@@ -50,8 +80,6 @@ func _ready() -> void:
 	
 	$Hurtbox._on_damage_received = _on_damage_received
 	$Hurtbox.knockback_received.connect(_on_knockback_received)
-	
-	sprite.animation_finished.connect(_on_animation_finished)
 
 func _physics_process(delta: float) -> void:
 	if data.is_dead:
@@ -59,42 +87,89 @@ func _physics_process(delta: float) -> void:
 			death_handled = true
 			_handle_death()
 		return
-		
+	stats.update(delta)
 	player_input_system.update(data)
+	
+	#hitstun is a timer now, ticks before the state machine
+	if data.hurt_timer > 0.0:
+		data.hurt_timer -= delta
+		if data.hurt_timer <= 0.0:
+			data.is_hurt = false
+	
+	_update_stamina(delta)
 	
 	if data.move_vector != Vector2.ZERO:
 		var current_angle := data.facing_dir.angle()
 		var target_angle := data.move_vector.angle()
-		var new_angle := lerp_angle(current_angle, target_angle, data.facing_turn_speed * delta)
+		var t := 1.0 - exp(-data.facing_turn_speed * delta)
+		var new_angle := lerp_angle(current_angle, target_angle, t)
 		data.facing_dir = Vector2.from_angle(new_angle)
 	
+	var was_attacking := data.is_attacking
 	player_attack_system.update(data, delta)
+	if not was_attacking and data.is_attacking: # ← new
+		stats.stamina.remove(attack_stamina_cost)
 	player_state_machine.update(data)
 	player_attack_system.post_update(data)
 	player_movement_system.update(data, delta)
 	player_animation_system.update(data)
 
-func _on_damage_received(damage_amount: int) -> void:
-	health_utility.remove_health(damage_amount)
-	if health_utility.health_empty():
-		data.is_dead = true
-	else:
-		data.is_attacking = false
-		data.is_hurt = true
+func _update_stamina(delta: float) -> void:
+	if data.is_exhausted and stats.stamina.ratio() >= exhaustion_recovery_ratio:
+		data.is_exhausted = false
+
+	# Intent alone isn't enough — holding run while standing still costs nothing.
+	var sprinting := data.is_running and data.move_vector != Vector2.ZERO
+	if data.is_exhausted or (sprinting and stats.stamina.is_empty()):
+		data.is_running = false
+		sprinting = false
+	if sprinting:
+		stats.stamina.drain(sprint_stamina_per_second, delta)
+
+	# Refuse an unaffordable swing before the attack system sees the request,
+	# so the input isn't eaten and the animation never plays for free.
+	if data.attack_requested and not data.is_attacking:
+		if not stats.stamina.can_afford(attack_stamina_cost):
+			data.attack_requested = false
+
+func _on_stamina_emptied() -> void:
+	data.is_exhausted = true
+
+func _on_damage_received(damage_amount: float) -> void:
+	stats.health.remove(roundi(damage_amount))
+	if data.is_dead:
+		return
+	# Re-arming the timer on every hit is what kills the permanent freeze:
+	# the old code waited on an animation_finished that never fires when the
+	# hurt state is re-entered without the animation name changing.
+	data.is_hurt = true
+	data.hurt_timer = hurt_duration
+	data.hurt_seq += 1
+	# An interrupted swing takes its hitbox with it.
+	player_attack_system.cancel(data)
+	player_hitbox_manager.cancel_all()
+
+func _on_health_emptied() -> void:
+	data.is_dead = true
 
 func _on_knockback_received(direction: Vector2, strength: float, decay: float) -> void:
 	var knockback := MovementModifier.create_impulse(&"knockback", direction, strength, decay)
 	data.modifiers.add(knockback)
 
-func _on_animation_finished() -> void:
-	if sprite.animation.begins_with("hurt"):
-		data.is_hurt = false
+## The point other actors aim at. Movement wants our feet (global_position);
+## combat wants the middle of what it has to hit.
+func combat_anchor() -> Vector2:
+	return $Hurtbox/CollisionShape2D.global_position
 
 func _handle_death() -> void:
 	$Collision.set_deferred("disabled", true)
+	$Hurtbox.set_deferred("monitorable", false)
 	player_state_machine.update(data)
 	player_animation_system.update(data)
 	await sprite.animation_finished
 	await get_tree().create_timer(1.0).timeout
 	var death_screen := get_tree().get_first_node_in_group(&"death_screen")
+	if death_screen == null:
+		push_warning("Player died with no death screen in the tree.")
+		return
 	death_screen.show_death()

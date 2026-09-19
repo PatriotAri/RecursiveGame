@@ -10,6 +10,12 @@ enum State {
 
 var is_hurt:= false
 var is_dead:= false
+
+#hitstun, ticked down in player.gd - replaces the old animation_finished hook
+var hurt_timer:= 0.0
+#bumped on every hit so the animation can tell a rehit from a held state
+var hurt_seq:= 0
+
 #!!!rename to turn speed!!!
 var facing_turn_speed:= 35.0
 
@@ -37,20 +43,8 @@ var modifiers:= MovementModifierStack.new()
 #read/written by AttackSystem
 var is_attacking:= false
 
-#read/written by HealthUtility
-var health_regen_points: int = 2
-var max_health: int = 20
-var current_health: int = max_health
-
-#read/written by StaminaUtility
-var stamina_regen_points: int = 2
-var current_stamina: int = max_stamina
-var max_stamina: int = 20
-
-#read/written by ManaUtility
-var mana_regen_points: int = 2
-var current_mana: int = max_mana
-var max_mana: int = 10
+#read/written by StatSystem
+var is_exhausted:= false
 
 #inventory
 var inventory := Inventory.new()
