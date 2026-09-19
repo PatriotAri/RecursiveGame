@@ -33,6 +33,7 @@ theme_override_constants/separation = 12
 layout_mode = 2
 
 [node name="Tabs" type="HBoxContainer" parent="Root/VBox/TopBar" unique_id=203659748]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="TabAll" type="Button" parent="Root/VBox/TopBar/Tabs" unique_id=1156513474]
@@ -83,6 +84,7 @@ size_flags_vertical = 3
 theme_override_constants/separation = 16
 
 [node name="ListScroll" type="ScrollContainer" parent="Root/VBox/Body" unique_id=673148041]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 horizontal_scroll_mode = 0

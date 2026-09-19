@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bmonh3sf35441" path="res://game/actors/enemies/types/fodder/crawler/core/crawler.tscn" id="5_2ju8b"]
 [ext_resource type="PackedScene" uid="uid://boy2ry2riwkmv" path="res://game/items/general/core/item_pickup.tscn" id="6_wvw0b"]
 [ext_resource type="Resource" uid="uid://dryrs1y762okx" path="res://game/items/general/test_items/test_item.tres" id="7_2ju8b"]
+[ext_resource type="Resource" uid="uid://bdjft7r36yvv0" path="res://game/items/general/test_items/test_item_2.tres" id="8_pbrxw"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rcbyt"]
 texture = ExtResource("1_jgaso")
@@ -48,6 +49,7 @@ script = ExtResource("3_6rspa")
 [node name="EnemySpawner" parent="Y-sorted" unique_id=843157830 instance=ExtResource("3_hek21")]
 position = Vector2(0, 104)
 enemy_scene = ExtResource("5_2ju8b")
+spawn_count = 7
 waves_on = true
 wave_intervals = 4.0
 max_enemies = 12
@@ -61,4 +63,4 @@ item = ExtResource("7_2ju8b")
 
 [node name="Item2" parent="Y-sorted" unique_id=1004450809 instance=ExtResource("6_wvw0b")]
 position = Vector2(-228, -86)
-item = ExtResource("7_2ju8b")
+item = ExtResource("8_pbrxw")

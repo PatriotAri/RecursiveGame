@@ -5,6 +5,7 @@ extends CanvasLayer
 @onready var menu_container: VBoxContainer = $Background/VBoxContainer
 
 func _ready() -> void:
+	add_to_group(&"pause_menu")
 	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED_HIDDEN)
 	set_process_input(true)
 	#starts the pause menu hidden

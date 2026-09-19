@@ -2,9 +2,24 @@
 
 [ext_resource type="Script" uid="uid://d127rtkk00hvw" path="res://game/ui/inventory/inventory_row.gd" id="1_klmx7"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_klmx7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_74mjn"]
+bg_color = Color(1, 1, 1, 0.2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6qs7h"]
+bg_color = Color(1, 1, 1, 0.12156863)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5m4m5"]
+bg_color = Color(1, 1, 1, 0.2784314)
+
 [node name="Row" type="Button" unique_id=1271814841]
 custom_minimum_size = Vector2(0, 44)
 focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBoxEmpty_klmx7")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_74mjn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_6qs7h")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_5m4m5")
 toggle_mode = true
 script = ExtResource("1_klmx7")
 

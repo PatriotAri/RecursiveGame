@@ -4,8 +4,6 @@ extends Marker2D
 
 @export var enemy_scene: PackedScene
 
-@export var enemy_scene_transform: Vector2 = Vector2(2, 2)
-
 @export_group("Spawn Tuning")
 @export var spawn_count:= 1
 @export var spawn_radius:= 60.0
@@ -20,17 +18,17 @@ extends Marker2D
 @export var max_enemies:= 0
 
 var enemies_alive: Array[Node] = []
-var wave_timer:= wave_intervals
+var wave_timer:= 0.0
 
 func _ready() -> void:
 	if enemy_scene == null:
 		enemy_scene = GlobalPackedScenes.crawler_scene
+	wave_timer = wave_intervals
 	await get_tree().process_frame
 	spawn_wave()
 
 func _process(delta:float) -> void:
 	if not waves_on:
-		set_process(false)
 		return
 	wave_timer -= delta
 	if wave_timer <= 0.0:
@@ -52,8 +50,12 @@ func spawn_wave() -> void:
 		positions.append(pos)
 		
 		var enemy:= enemy_scene.instantiate()
-		enemy.position = pos
+		# pick_position() returns world space. Assigning it to `position`
+		# treated it as a local offset — correct only while Y-sorted happens
+		# to sit at the origin. global_position needs the node in the tree,
+		# hence the reorder.
 		target_parent.add_child(enemy)
+		enemy.global_position = pos
 		enemies_alive.append(enemy)
 		spawned += 1
 

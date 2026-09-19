@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Item" format=3 uid="uid://bdjft7r36yvv0"]
+
+[ext_resource type="Script" uid="uid://bh4it52lgf67d" path="res://game/items/general/core/item.gd" id="1_w05nm"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_6y8mh"]
+
+[resource]
+script = ExtResource("1_w05nm")
+id = &"test_item_2"
+display_name = "Test Item 2"
+description = "This one too?"
+icon = SubResource("PlaceholderTexture2D_6y8mh")
+metadata/_custom_type_script = "uid://bh4it52lgf67d"
