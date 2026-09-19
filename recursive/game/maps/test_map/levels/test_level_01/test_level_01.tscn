@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bmonh3sf35441" path="res://game/actors/enemies/types/fodder/crawler/core/crawler.tscn" id="5_2ju8b"]
 [ext_resource type="PackedScene" uid="uid://boy2ry2riwkmv" path="res://game/items/general/core/item_pickup.tscn" id="6_wvw0b"]
 [ext_resource type="Resource" uid="uid://dryrs1y762okx" path="res://game/items/general/test_items/test_item.tres" id="7_2ju8b"]
-[ext_resource type="Resource" uid="uid://bdjft7r36yvv0" path="res://game/items/general/test_items/test_item_2.tres" id="8_pbrxw"]
+[ext_resource type="Resource" uid="uid://bdjft7r36yvv0" path="res://game/items/general/test_items/test_item_weapon.tres" id="8_pbrxw"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rcbyt"]
 texture = ExtResource("1_jgaso")
