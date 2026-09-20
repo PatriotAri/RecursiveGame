@@ -157,6 +157,10 @@ func _rebuild() -> void:
 	if not still_selected:
 		_selected_id = &""
 	_show_detail()
+	# _rebuild() frees and recreates every row, so whatever had focus is gone.
+	# Selection survives via _selected_id; focus has to be re-taken by hand.
+	if visible:
+		_focus_selected_or_first()
 
 func _focus_selected_or_first() -> void:
 	var first: InventoryRow = null

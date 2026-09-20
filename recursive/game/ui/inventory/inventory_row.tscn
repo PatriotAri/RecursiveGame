@@ -15,7 +15,6 @@ bg_color = Color(1, 1, 1, 0.2784314)
 
 [node name="Row" type="Button" unique_id=1271814841]
 custom_minimum_size = Vector2(0, 44)
-focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxEmpty_klmx7")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_74mjn")
 theme_override_styles/hover = SubResource("StyleBoxFlat_6qs7h")
