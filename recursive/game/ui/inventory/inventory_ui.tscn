@@ -10,7 +10,7 @@ layer = 7
 script = ExtResource("1_bs1id")
 row_scene = ExtResource("2_ljiqe")
 
-[node name="Dim" type="ColorRect" parent="." unique_id=1653272924]
+[node name="Background" type="ColorRect" parent="." unique_id=1653272924]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

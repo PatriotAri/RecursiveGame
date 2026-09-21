@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="ConsumableItem" format=3 uid="uid://f134er318bg1"]
+
+[ext_resource type="Script" uid="uid://cvw8p7m5bbpmm" path="res://game/items/general/effects/item_effect.gd" id="1_34178"]
+[ext_resource type="Script" uid="uid://db35jbq8gxwd5" path="res://game/items/general/core/consumable_item.gd" id="2_glelh"]
+[ext_resource type="Script" uid="uid://dm505c8n2frk" path="res://game/items/general/effects/stat_restore_effect.gd" id="2_ikto3"]
+[ext_resource type="Texture2D" uid="uid://dhwe1ymmkuijh" path="res://game/items/consumables/potions/stamina_potion/Stamina Potion.png" id="3_ikto3"]
+
+[sub_resource type="Resource" id="Resource_ugcfn"]
+script = ExtResource("2_ikto3")
+target = 1
+metadata/_custom_type_script = "uid://dm505c8n2frk"
+
+[resource]
+script = ExtResource("2_glelh")
+effects = Array[ExtResource("1_34178")]([SubResource("Resource_ugcfn")])
+cooldown = 1.5
+id = &"stamina_potion"
+display_name = "Stamina Potion"
+description = "Restores 10 points of stamina."
+icon = ExtResource("3_ikto3")
+category = 3
+metadata/_custom_type_script = "uid://db35jbq8gxwd5"

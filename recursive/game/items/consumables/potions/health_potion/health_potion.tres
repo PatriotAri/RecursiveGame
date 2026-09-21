@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="ConsumableItem" format=3 uid="uid://dq1ckemgpbwtg"]
+
+[ext_resource type="Script" uid="uid://cvw8p7m5bbpmm" path="res://game/items/general/effects/item_effect.gd" id="1_r3uf4"]
+[ext_resource type="Script" uid="uid://db35jbq8gxwd5" path="res://game/items/general/core/consumable_item.gd" id="2_iuvf1"]
+[ext_resource type="Script" uid="uid://dm505c8n2frk" path="res://game/items/general/effects/stat_restore_effect.gd" id="2_xema6"]
+[ext_resource type="Texture2D" uid="uid://bhdt1qnbdauyq" path="res://game/items/consumables/potions/health_potion/Health Potion.png" id="3_wrc0b"]
+
+[sub_resource type="Resource" id="Resource_4ucm1"]
+script = ExtResource("2_xema6")
+amount = 8
+metadata/_custom_type_script = "uid://dm505c8n2frk"
+
+[resource]
+script = ExtResource("2_iuvf1")
+effects = Array[ExtResource("1_r3uf4")]([SubResource("Resource_4ucm1")])
+cooldown = 1.5
+id = &"health_potion"
+display_name = "Health Potion"
+description = "Restores 8 points of Health."
+icon = ExtResource("3_wrc0b")
+category = 3
+metadata/_custom_type_script = "uid://db35jbq8gxwd5"
