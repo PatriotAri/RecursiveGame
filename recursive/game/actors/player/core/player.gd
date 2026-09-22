@@ -98,7 +98,6 @@ func _physics_process(delta: float) -> void:
 		if data.hurt_timer <= 0.0:
 			data.is_hurt = false
 	
-	player_consumable_system.update(data, delta)
 	_update_stamina(delta)
 	
 	if data.move_vector != Vector2.ZERO:

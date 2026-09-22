@@ -7,4 +7,3 @@ extends Item
 ## until a drink animation exists — PlayerAnimationSystem builds names as
 ## "<state>_<dir>", and a missing animation errors instead of playing.
 @export var use_time: float = 0.0
-@export var cooldown: float = 1.0

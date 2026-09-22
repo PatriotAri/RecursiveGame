@@ -13,7 +13,6 @@ metadata/_custom_type_script = "uid://dm505c8n2frk"
 [resource]
 script = ExtResource("2_glelh")
 effects = Array[ExtResource("1_34178")]([SubResource("Resource_ugcfn")])
-cooldown = 1.5
 id = &"stamina_potion"
 display_name = "Stamina Potion"
 description = "Restores 10 points of stamina."

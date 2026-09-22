@@ -13,7 +13,6 @@ metadata/_custom_type_script = "uid://dm505c8n2frk"
 [resource]
 script = ExtResource("2_iuvf1")
 effects = Array[ExtResource("1_r3uf4")]([SubResource("Resource_4ucm1")])
-cooldown = 1.5
 id = &"health_potion"
 display_name = "Health Potion"
 description = "Restores 8 points of Health."
