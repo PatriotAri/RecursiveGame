@@ -23,7 +23,6 @@ const TAB_ALL := -1
 var inventory: Inventory
 var player: Node
 
-var _row_group := ButtonGroup.new()
 var _tab_group := ButtonGroup.new()
 var _displayed_id: StringName = &""
 var _active_tab: int = TAB_ALL
@@ -37,12 +36,13 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_setup_tabs()
 	
-	var player = get_tree().get_first_node_in_group(&"player")
+	player = get_tree().get_first_node_in_group(&"player")
 	if player == null:
 		# The level instances the player during its own _ready(), so node
 		# order decides whether it exists yet. Hud waits the same way.
 		await get_tree().process_frame
 		player = get_tree().get_first_node_in_group(&"player")
+	
 	if player and "data" in player:
 		bind(player.data.inventory)
 	else:

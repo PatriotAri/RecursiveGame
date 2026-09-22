@@ -70,5 +70,8 @@ item = ExtResource("8_pbrxw")
 [node name="HealthPotion" parent="Y-sorted" unique_id=1855851919 instance=ExtResource("9_dkccn")]
 position = Vector2(-51, -129)
 
+[node name="HealthPotion2" parent="Y-sorted" unique_id=272502458 instance=ExtResource("9_dkccn")]
+position = Vector2(-84, -109)
+
 [node name="StaminaPotion" parent="Y-sorted" unique_id=1193344449 instance=ExtResource("10_mpxm6")]
 position = Vector2(-85, -56)
