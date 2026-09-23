@@ -5,14 +5,14 @@
 [ext_resource type="Script" uid="uid://dm505c8n2frk" path="res://game/items/general/effects/stat_restore_effect.gd" id="2_xema6"]
 [ext_resource type="Texture2D" uid="uid://bhdt1qnbdauyq" path="res://game/items/consumables/potions/health_potion/Health Potion.png" id="3_wrc0b"]
 
-[sub_resource type="Resource" id="Resource_4ucm1"]
+[sub_resource type="Resource" id="Resource_xema6"]
 script = ExtResource("2_xema6")
 amount = 8
 metadata/_custom_type_script = "uid://dm505c8n2frk"
 
 [resource]
 script = ExtResource("2_iuvf1")
-effects = Array[ExtResource("1_r3uf4")]([SubResource("Resource_4ucm1")])
+effects = Array[ExtResource("1_r3uf4")]([SubResource("Resource_xema6")])
 id = &"health_potion"
 display_name = "Health Potion"
 description = "Restores 8 points of Health."

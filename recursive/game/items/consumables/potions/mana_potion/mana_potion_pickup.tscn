@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://nhtgaiby8a08"]
+
+[ext_resource type="Script" uid="uid://cu4q6pywaruof" path="res://game/items/general/core/item_pickup.gd" id="1_roftt"]
+[ext_resource type="Resource" uid="uid://dy7pwlbk2gc3t" path="res://game/items/consumables/potions/mana_potion/mana_potion.tres" id="2_g7wkn"]
+[ext_resource type="Texture2D" uid="uid://cupfr4g38aw0w" path="res://game/items/consumables/potions/mana_potion/Mana Potion.png" id="3_c8q77"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lvfgc"]
+radius = 8.0
+height = 18.0
+
+[node name="ManaPotion" type="Area2D" unique_id=1855851919]
+collision_layer = 8
+collision_mask = 2
+script = ExtResource("1_roftt")
+item = ExtResource("2_g7wkn")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1398690312]
+texture = ExtResource("3_c8q77")
+offset = Vector2(0, -16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=328759449]
+position = Vector2(0, -9)
+shape = SubResource("CapsuleShape2D_lvfgc")

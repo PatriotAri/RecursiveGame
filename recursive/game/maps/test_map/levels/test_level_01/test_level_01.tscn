@@ -10,6 +10,7 @@
 [ext_resource type="Resource" uid="uid://bdjft7r36yvv0" path="res://game/items/general/test_items/test_item_weapon.tres" id="8_pbrxw"]
 [ext_resource type="PackedScene" uid="uid://c2rn4u0yidyre" path="res://game/items/consumables/potions/health_potion/health_potion_pickup.tscn" id="9_dkccn"]
 [ext_resource type="PackedScene" uid="uid://drxqjod7tqrpj" path="res://game/items/consumables/potions/stamina_potion/stamina_potion_pickup.tscn" id="10_mpxm6"]
+[ext_resource type="PackedScene" uid="uid://nhtgaiby8a08" path="res://game/items/consumables/potions/mana_potion/mana_potion_pickup.tscn" id="11_mpxm6"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rcbyt"]
 texture = ExtResource("1_jgaso")
@@ -75,3 +76,6 @@ position = Vector2(-84, -109)
 
 [node name="StaminaPotion" parent="Y-sorted" unique_id=1193344449 instance=ExtResource("10_mpxm6")]
 position = Vector2(-85, -56)
+
+[node name="ManaPotion" parent="Y-sorted" unique_id=496157851 instance=ExtResource("11_mpxm6")]
+position = Vector2(-95, 42)
