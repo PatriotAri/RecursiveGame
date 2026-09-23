@@ -113,6 +113,7 @@ layout_mode = 2
 [node name="DetailVBox" type="VBoxContainer" parent="Root/VBox/Body/Detail/DetailMargin" unique_id=559841680]
 layout_mode = 2
 theme_override_constants/separation = 12
+alignment = 1
 
 [node name="DetailName" type="Label" parent="Root/VBox/Body/Detail/DetailMargin/DetailVBox" unique_id=141081618]
 unique_name_in_owner = true
@@ -125,15 +126,16 @@ autowrap_mode = 3
 unique_name_in_owner = true
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
-size_flags_vertical = 6
+size_flags_vertical = 4
 expand_mode = 1
 stretch_mode = 5
 
 [node name="DetailDesc" type="RichTextLabel" parent="Root/VBox/Body/Detail/DetailMargin/DetailVBox" unique_id=1953289126]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 120)
 layout_mode = 2
-size_flags_vertical = 3
 scroll_active = false
+horizontal_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="Root/VBox" unique_id=911202781]
 layout_mode = 2

@@ -43,10 +43,10 @@ theme_override_constants/separation = 12
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 22
+text_overrun_behavior = 4
 
 [node name="Count" type="Label" parent="Margin/HBox" unique_id=1657468683]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 horizontal_alignment = 2
-text_overrun_behavior = 3

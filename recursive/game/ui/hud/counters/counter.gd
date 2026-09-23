@@ -4,7 +4,7 @@ extends Control
 
 var inventory: Inventory
 
-@onready var label: Label = $Label
+@onready var label: Label = $Margin/HBox/Label
 
 func bind(inventory_ref: Inventory) -> void:
 	if inventory != null and inventory.changed.is_connected(_on_inventory_changed):
