@@ -7,6 +7,7 @@
 [ext_resource type="Resource" uid="uid://b3r4taoidcymg" path="res://game/actors/enemies/types/fodder/crawler/hitboxes/crawler_melee_offsets.tres" id="3_0pbox"]
 [ext_resource type="Texture2D" uid="uid://t6rs20w7omup" path="res://game/actors/enemies/types/fodder/crawler/assets/slime_DIED.png" id="3_k1huj"]
 [ext_resource type="Texture2D" uid="uid://b7yontipibenc" path="res://game/actors/enemies/types/fodder/crawler/assets/slime_HURT.png" id="4_0pbox"]
+[ext_resource type="Resource" uid="uid://c6pny72mk8boe" path="res://game/actors/enemies/types/fodder/crawler/crawler_drops.tres" id="4_kc0vh"]
 [ext_resource type="Script" uid="uid://bp8ie2pwt8578" path="res://game/components/hurtbox/hurtbox_component.gd" id="7_wwd7i"]
 [ext_resource type="Texture2D" uid="uid://8fraly8w6dfe" path="res://game/actors/enemies/types/fodder/crawler/assets/Slime_IDLE.png" id="8_03f4h"]
 [ext_resource type="Texture2D" uid="uid://cfp7knntoir16" path="res://game/actors/enemies/types/fodder/crawler/assets/Slime_WALK.png" id="9_oftu5"]
@@ -601,7 +602,7 @@ crawler_hitbox = ExtResource("2_k1huj")
 crawler_melee_offsets = ExtResource("3_0pbox")
 lifetime = 0.1
 damage = 1.0
-gold_drop_chance = 0.4
+drop_table = ExtResource("4_kc0vh")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=7471093]
 sprite_frames = SubResource("SpriteFrames_vlhhy")

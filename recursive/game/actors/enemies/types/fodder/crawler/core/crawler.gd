@@ -48,11 +48,7 @@ var attack_range:= 0.0
 @export var min_patrol_distance:= 40.0
 
 @export_group("Drop Tuning")
-@export var gold_drop_chance: float = 0.3
-@export var gold_min: int = 1
-@export var gold_max: int = 4
-@export var soul_drop_chance: float = 0.05
-@export var soul_drop_amount: int = 1
+@export var drop_table: DropTable
 
 var data: EnemyData
 
@@ -145,13 +141,5 @@ func _handle_death() -> void:
 	queue_free()
 
 func _try_spawn_drops() -> void:
-	if randf() < gold_drop_chance:
-		var sack := GlobalPackedScenes.gold_sack.instantiate()
-		sack.amount = randi_range(gold_min, gold_max)
-		sack.global_position = global_position
-		get_parent().add_child(sack)
-	if randf() < soul_drop_chance:
-		var soul := GlobalPackedScenes.soul.instantiate()
-		soul.amount = soul_drop_amount
-		soul.global_position = global_position
-		get_parent().add_child(soul)
+	if drop_table == null: return
+	drop_table.roll(get_parent(), global_position)

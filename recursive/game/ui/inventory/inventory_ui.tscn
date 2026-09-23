@@ -117,21 +117,22 @@ theme_override_constants/separation = 12
 [node name="DetailName" type="Label" parent="Root/VBox/Body/Detail/DetailMargin/DetailVBox" unique_id=141081618]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 26
 horizontal_alignment = 1
+autowrap_mode = 3
 
 [node name="DetailIcon" type="TextureRect" parent="Root/VBox/Body/Detail/DetailMargin/DetailVBox" unique_id=641055168]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_vertical = 6
 expand_mode = 1
 stretch_mode = 5
 
 [node name="DetailDesc" type="RichTextLabel" parent="Root/VBox/Body/Detail/DetailMargin/DetailVBox" unique_id=1953289126]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
-fit_content = true
+size_flags_vertical = 3
 scroll_active = false
 
 [node name="HSeparator" type="HSeparator" parent="Root/VBox" unique_id=911202781]
@@ -139,6 +140,7 @@ layout_mode = 2
 
 [node name="StatBars" type="HBoxContainer" parent="Root/VBox" unique_id=980263824]
 layout_mode = 2
+theme_override_constants/separation = 16
 
 [node name="HealthBar" parent="Root/VBox/StatBars" unique_id=240099235 instance=ExtResource("5_y17tc")]
 unique_name_in_owner = true

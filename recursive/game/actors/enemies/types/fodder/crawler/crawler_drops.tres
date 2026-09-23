@@ -1,0 +1,37 @@
+[gd_resource type="Resource" script_class="DropTable" format=3 uid="uid://c6pny72mk8boe"]
+
+[ext_resource type="Script" uid="uid://dysbiie00jqq2" path="res://game/items/drops/drop_entry.gd" id="1_le2u5"]
+[ext_resource type="PackedScene" uid="uid://cnlm3u842yyw3" path="res://game/items/drops/gold_sack/gold_sack.tscn" id="2_04m82"]
+[ext_resource type="Script" uid="uid://cid1wrvokph52" path="res://game/items/drops/drop_table.gd" id="2_pwjvn"]
+[ext_resource type="PackedScene" uid="uid://d37h8h5ogw2s6" path="res://game/items/drops/soul/soul.tscn" id="3_l6hj5"]
+[ext_resource type="PackedScene" uid="uid://c2rn4u0yidyre" path="res://game/items/consumables/potions/health_potion/health_potion_pickup.tscn" id="4_3gmh8"]
+[ext_resource type="PackedScene" uid="uid://drxqjod7tqrpj" path="res://game/items/consumables/potions/stamina_potion/stamina_potion_pickup.tscn" id="5_aqrrp"]
+
+[sub_resource type="Resource" id="Resource_gvfsy"]
+script = ExtResource("1_le2u5")
+scene = ExtResource("2_04m82")
+chance = 0.3
+max_amount = 4
+metadata/_custom_type_script = "uid://dysbiie00jqq2"
+
+[sub_resource type="Resource" id="Resource_fei2q"]
+script = ExtResource("1_le2u5")
+scene = ExtResource("3_l6hj5")
+metadata/_custom_type_script = "uid://dysbiie00jqq2"
+
+[sub_resource type="Resource" id="Resource_nv81u"]
+script = ExtResource("1_le2u5")
+scene = ExtResource("4_3gmh8")
+chance = 0.1
+metadata/_custom_type_script = "uid://dysbiie00jqq2"
+
+[sub_resource type="Resource" id="Resource_1ap6o"]
+script = ExtResource("1_le2u5")
+scene = ExtResource("5_aqrrp")
+chance = 0.1
+metadata/_custom_type_script = "uid://dysbiie00jqq2"
+
+[resource]
+script = ExtResource("2_pwjvn")
+entries = Array[ExtResource("1_le2u5")]([SubResource("Resource_gvfsy"), SubResource("Resource_fei2q"), SubResource("Resource_nv81u"), SubResource("Resource_1ap6o")])
+metadata/_custom_type_script = "uid://cid1wrvokph52"

@@ -154,6 +154,10 @@ func _rebuild() -> void:
 		rows.remove_child(child)
 		child.queue_free()
 	var still_displayed := false
+	var stacks := inventory.get_stacks()
+	# Dictionary order is insertion order, so rows reshuffle as you pick things
+	# up mid-run. Alphabetical keeps an item in the same place.
+	stacks.sort_custom(func(a, b): return a.item.display_name < b.item.display_name)
 	for stack in inventory.get_stacks():
 		if not _passes_filter(stack.item): continue
 		var row: InventoryRow = row_scene.instantiate()
