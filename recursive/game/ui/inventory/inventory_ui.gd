@@ -71,7 +71,7 @@ func _setup_tabs() -> void:
 		"TabAll": TAB_ALL,
 		"TabArmor": Item.Category.ARMOR,
 		"TabWeapons": Item.Category.WEAPON,
-		"TabConsumeables": Item.Category.CONSUMEABLE,
+		"TabConsumables": Item.Category.CONSUMABLE,
 	}
 	for child in tabs.get_children():
 		var tab := child as Button
@@ -199,7 +199,7 @@ func _on_row_hovered(item: Item) -> void:
 func _on_row_activated(item: Item) -> void:
 	if player == null: return
 	match item.category:
-		Item.Category.CONSUMEABLE:
+		Item.Category.CONSUMABLE:
 			# The `is` check rather than a cast: a .tres whose category was set
 			# to CONSUMEABLE but built from plain Item would otherwise pass a
 			# null into try_use().
