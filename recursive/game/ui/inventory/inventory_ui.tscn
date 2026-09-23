@@ -4,13 +4,14 @@
 [ext_resource type="PackedScene" uid="uid://bjtbcxf7ndhqb" path="res://game/ui/hud/counters/gold_counter/gold_counter.tscn" id="2_85i2r"]
 [ext_resource type="PackedScene" uid="uid://dcgwvf7pq3t4x" path="res://game/ui/inventory/inventory_row.tscn" id="2_ljiqe"]
 [ext_resource type="PackedScene" uid="uid://sv3gcqxl07q1" path="res://game/ui/hud/counters/soul_counter/soul_counter.tscn" id="3_ljiqe"]
+[ext_resource type="PackedScene" uid="uid://dxpc5mmj7dbmp" path="res://game/ui/hud/bars/stat_bar.tscn" id="5_y17tc"]
 
 [node name="InventoryUi" type="CanvasLayer" unique_id=241493269]
 layer = 7
 script = ExtResource("1_bs1id")
 row_scene = ExtResource("2_ljiqe")
 
-[node name="Dim" type="ColorRect" parent="." unique_id=1653272924]
+[node name="Background" type="ColorRect" parent="." unique_id=1653272924]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -24,6 +25,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 32
 
 [node name="VBox" type="VBoxContainer" parent="Root" unique_id=1891249593]
 layout_mode = 2
@@ -108,23 +113,53 @@ layout_mode = 2
 [node name="DetailVBox" type="VBoxContainer" parent="Root/VBox/Body/Detail/DetailMargin" unique_id=559841680]
 layout_mode = 2
 theme_override_constants/separation = 12
+alignment = 1
 
 [node name="DetailName" type="Label" parent="Root/VBox/Body/Detail/DetailMargin/DetailVBox" unique_id=141081618]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 26
 horizontal_alignment = 1
+autowrap_mode = 3
 
 [node name="DetailIcon" type="TextureRect" parent="Root/VBox/Body/Detail/DetailMargin/DetailVBox" unique_id=641055168]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_vertical = 4
 expand_mode = 1
 stretch_mode = 5
 
 [node name="DetailDesc" type="RichTextLabel" parent="Root/VBox/Body/Detail/DetailMargin/DetailVBox" unique_id=1953289126]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 120)
 layout_mode = 2
-fit_content = true
 scroll_active = false
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="Root/VBox" unique_id=911202781]
+layout_mode = 2
+
+[node name="StatBars" type="HBoxContainer" parent="Root/VBox" unique_id=980263824]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="HealthBar" parent="Root/VBox/StatBars" unique_id=240099235 instance=ExtResource("5_y17tc")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StaminaBar" parent="Root/VBox/StatBars" unique_id=766855107 instance=ExtResource("5_y17tc")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_horizontal = 3
+fill_color = Color(0.018915674, 0.7627069, 0, 1)
+
+[node name="ManaBar" parent="Root/VBox/StatBars" unique_id=1854189197 instance=ExtResource("5_y17tc")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_horizontal = 3
+fill_color = Color(0.3659098, 0.46226513, 0.9837175, 1)

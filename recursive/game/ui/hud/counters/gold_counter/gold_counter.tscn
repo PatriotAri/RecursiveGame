@@ -1,10 +1,11 @@
 [gd_scene format=3 uid="uid://bjtbcxf7ndhqb"]
 
 [ext_resource type="Script" uid="uid://carg1j8orc5dt" path="res://game/ui/hud/counters/counter.gd" id="1_a6s04"]
-[ext_resource type="Texture2D" uid="uid://c8x7jemkxmo53" path="res://game/ui/hud/counters/gold_counter/gold_counter_icon.png" id="2_a6s04"]
 [ext_resource type="Resource" uid="uid://pg3ucqn2nstc" path="res://game/items/drops/gold_sack/gold.tres" id="2_u7rkv"]
+[ext_resource type="Texture2D" uid="uid://c8x7jemkxmo53" path="res://game/ui/hud/counters/gold_counter/gold_counter_icon.png" id="3_u7rkv"]
 
 [node name="GoldCounter" type="Control" unique_id=183642429]
+custom_minimum_size = Vector2(140, 32)
 layout_mode = 3
 anchors_preset = 1
 anchor_left = 1.0
@@ -27,16 +28,32 @@ grow_vertical = 2
 color = Color(0, 0, 0, 1)
 metadata/_edit_use_anchors_ = true
 
-[node name="Label" type="Label" parent="." unique_id=983720583]
+[node name="Margin" type="MarginContainer" parent="." unique_id=1964735782]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="HBox" type="HBoxContainer" parent="Margin" unique_id=290030639]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Icon" type="TextureRect" parent="Margin/HBox" unique_id=1643853827]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("3_u7rkv")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Margin/HBox" unique_id=2074610115]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 22
 horizontal_alignment = 2
-
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=453751075]
-position = Vector2(16, 16)
-texture = ExtResource("2_a6s04")

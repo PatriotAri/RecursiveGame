@@ -9,15 +9,51 @@
 layer = 5
 script = ExtResource("1_l7e5k")
 
-[node name="HealthBar" parent="." unique_id=739649621 instance=ExtResource("1_d4vpa")]
+[node name="Bars" type="MarginContainer" parent="." unique_id=1070297704]
+offset_right = 160.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBox" type="VBoxContainer" parent="Bars" unique_id=914143218]
+layout_mode = 2
+
+[node name="HealthBar" parent="Bars/VBox" unique_id=739649621 instance=ExtResource("1_d4vpa")]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 18)
+layout_mode = 2
+size_flags_horizontal = 1
+size_flags_vertical = 1
 
-[node name="GoldCounter" parent="." unique_id=183642429 instance=ExtResource("3_8mv14")]
-
-[node name="SoulCounter" parent="." unique_id=1003963725 instance=ExtResource("4_c644b")]
-
-[node name="StaminaBar" parent="." unique_id=240099235 instance=ExtResource("1_d4vpa")]
+[node name="StaminaBar" parent="Bars/VBox" unique_id=240099235 instance=ExtResource("1_d4vpa")]
 unique_name_in_owner = true
-offset_top = 28.0
-offset_bottom = 44.0
+custom_minimum_size = Vector2(220, 18)
+layout_mode = 2
+size_flags_horizontal = 1
+size_flags_vertical = 1
 fill_color = Color(0, 0.7058824, 0, 1)
+
+[node name="ManaBar" parent="Bars/VBox" unique_id=491619215 instance=ExtResource("1_d4vpa")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 18)
+layout_mode = 2
+size_flags_horizontal = 1
+size_flags_vertical = 1
+fill_color = Color(0.3849788, 0.5086526, 0.9786572, 1)
+
+[node name="Counters" type="VBoxContainer" parent="." unique_id=98022950]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -100.0
+offset_bottom = 40.0
+grow_horizontal = 0
+theme_override_constants/separation = 6
+
+[node name="SoulCounter" parent="Counters" unique_id=1003963725 instance=ExtResource("4_c644b")]
+layout_mode = 2
+
+[node name="GoldCounter" parent="Counters" unique_id=183642429 instance=ExtResource("3_8mv14")]
+layout_mode = 2

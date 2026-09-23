@@ -2,7 +2,7 @@ class_name Item
 
 extends Resource
 
-enum Category {NONE, ARMOR, WEAPON, CONSUMEABLE, CURRENCY} #always append enum, never insert in middle
+enum Category {NONE, ARMOR, WEAPON, CONSUMABLE, CURRENCY} #always append enum, never insert in middle
 
 @export var id: StringName
 @export var display_name: String

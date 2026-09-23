@@ -7,6 +7,7 @@ var player_input_system: PlayerInputSystem
 var player_state_machine: PlayerStateMachine
 var player_attack_system: PlayerAttackSystem
 var player_movement_system: PlayerMovementSystem
+var player_consumable_system: PlayerConsumableSystem
 var player_animation_system: PlayerAnimationSystem
 
 var player_hitbox_manager: HitboxManagerBase
@@ -76,6 +77,7 @@ func _ready() -> void:
 	player_state_machine = PlayerStateMachine.new()
 	player_attack_system = PlayerAttackSystem.new(self, player_hitbox_manager)
 	player_movement_system = PlayerMovementSystem.new(self)
+	player_consumable_system = PlayerConsumableSystem.new(self)
 	player_animation_system = PlayerAnimationSystem.new(sprite)
 	
 	$Hurtbox._on_damage_received = _on_damage_received

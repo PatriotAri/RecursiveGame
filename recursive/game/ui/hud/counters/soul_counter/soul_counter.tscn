@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://duasc1k3gyhc4" path="res://game/ui/hud/counters/soul_counter/soul_counter_icon.png" id="2_vrxl0"]
 
 [node name="SoulCounter" type="Control" unique_id=1003963725]
-custom_minimum_size = Vector2(100, 26)
+custom_minimum_size = Vector2(140, 32)
 layout_mode = 3
 anchors_preset = 1
 anchor_left = 1.0
@@ -27,17 +27,32 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
-[node name="Label" type="Label" parent="." unique_id=186848580]
+[node name="Margin" type="MarginContainer" parent="." unique_id=1825615425]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="HBox" type="HBoxContainer" parent="Margin" unique_id=1897279401]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Icon" type="TextureRect" parent="Margin/HBox" unique_id=585452937]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("2_vrxl0")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Margin/HBox" unique_id=186848580]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 22
 horizontal_alignment = 2
-
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=704098617]
-position = Vector2(15.999985, 16)
-scale = Vector2(0.99999905, 1)
-texture = ExtResource("2_vrxl0")

@@ -8,6 +8,9 @@
 [ext_resource type="PackedScene" uid="uid://boy2ry2riwkmv" path="res://game/items/general/core/item_pickup.tscn" id="6_wvw0b"]
 [ext_resource type="Resource" uid="uid://dryrs1y762okx" path="res://game/items/general/test_items/test_item.tres" id="7_2ju8b"]
 [ext_resource type="Resource" uid="uid://bdjft7r36yvv0" path="res://game/items/general/test_items/test_item_weapon.tres" id="8_pbrxw"]
+[ext_resource type="PackedScene" uid="uid://c2rn4u0yidyre" path="res://game/items/consumables/potions/health_potion/health_potion_pickup.tscn" id="9_dkccn"]
+[ext_resource type="PackedScene" uid="uid://drxqjod7tqrpj" path="res://game/items/consumables/potions/stamina_potion/stamina_potion_pickup.tscn" id="10_mpxm6"]
+[ext_resource type="PackedScene" uid="uid://nhtgaiby8a08" path="res://game/items/consumables/potions/mana_potion/mana_potion_pickup.tscn" id="11_mpxm6"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rcbyt"]
 texture = ExtResource("1_jgaso")
@@ -49,7 +52,7 @@ script = ExtResource("3_6rspa")
 [node name="EnemySpawner" parent="Y-sorted" unique_id=843157830 instance=ExtResource("3_hek21")]
 position = Vector2(0, 104)
 enemy_scene = ExtResource("5_2ju8b")
-spawn_count = 7
+spawn_count = 2
 waves_on = true
 wave_intervals = 4.0
 max_enemies = 12
@@ -64,3 +67,15 @@ item = ExtResource("7_2ju8b")
 [node name="Item2" parent="Y-sorted" unique_id=1004450809 instance=ExtResource("6_wvw0b")]
 position = Vector2(-228, -86)
 item = ExtResource("8_pbrxw")
+
+[node name="HealthPotion" parent="Y-sorted" unique_id=1855851919 instance=ExtResource("9_dkccn")]
+position = Vector2(-51, -129)
+
+[node name="HealthPotion2" parent="Y-sorted" unique_id=272502458 instance=ExtResource("9_dkccn")]
+position = Vector2(-84, -109)
+
+[node name="StaminaPotion" parent="Y-sorted" unique_id=1193344449 instance=ExtResource("10_mpxm6")]
+position = Vector2(-85, -56)
+
+[node name="ManaPotion" parent="Y-sorted" unique_id=496157851 instance=ExtResource("11_mpxm6")]
+position = Vector2(-95, 42)
