@@ -64,7 +64,7 @@ text = "Weapons"
 custom_minimum_size = Vector2(90, 32)
 layout_mode = 2
 toggle_mode = true
-text = "Consumeables"
+text = "Consumables"
 
 [node name="Spacer" type="Control" parent="Root/VBox/TopBar" unique_id=1973006737]
 layout_mode = 2

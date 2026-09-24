@@ -8,6 +8,7 @@ var player_state_machine: PlayerStateMachine
 var player_attack_system: PlayerAttackSystem
 var player_movement_system: PlayerMovementSystem
 var player_consumable_system: PlayerConsumableSystem
+var player_equipment_system: PlayerEquipmentSystem
 var player_animation_system: PlayerAnimationSystem
 
 var player_hitbox_manager: HitboxManagerBase
@@ -78,6 +79,8 @@ func _ready() -> void:
 	data.run_speed = run_speed
 	data.acceleration = acceleration
 	data.friction = friction
+	data.sprint_stamina_cost = sprint_stamina_cost
+	data.attack_stamina_cost = attack_stamina_cost
 	
 	stats = StatSystem.new(
 		Stat.new(max_health, health_regen_per_second, health_regen_delay),
@@ -105,10 +108,15 @@ func _ready() -> void:
 	player_attack_system = PlayerAttackSystem.new(self, player_hitbox_manager)
 	player_movement_system = PlayerMovementSystem.new(self)
 	player_consumable_system = PlayerConsumableSystem.new(self)
+	player_equipment_system = PlayerEquipmentSystem.new(self)
 	player_animation_system = PlayerAnimationSystem.new(sprite)
 	
 	$Hurtbox._on_damage_received = _on_damage_received
 	$Hurtbox.knockback_received.connect(_on_knockback_received)
+
+	var test_weapon: EquippableItem = load("res://game/items/equipment/test_weapon.tres")
+	data.inventory.add(test_weapon, 1)
+	player_equipment_system.try_equip(data, test_weapon)
 
 func _physics_process(delta: float) -> void:
 	if data.is_dead:
