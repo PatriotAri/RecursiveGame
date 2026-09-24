@@ -17,8 +17,7 @@ metadata/_custom_type_script = "uid://c1b7wypd2oh0i"
 
 [sub_resource type="Resource" id="Resource_wxv45"]
 script = ExtResource("2_w320p")
-max_health = 15
-attack_stamina_cost = -1
+attack_stamina_cost = 1
 metadata/_custom_type_script = "uid://v162jjr58mo1"
 
 [resource]

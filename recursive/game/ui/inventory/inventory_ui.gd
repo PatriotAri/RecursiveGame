@@ -167,11 +167,12 @@ func _rebuild() -> void:
 	# Dictionary order is insertion order, so rows reshuffle as you pick things
 	# up mid-run. Alphabetical keeps an item in the same place.
 	stacks.sort_custom(func(a, b): return a.item.display_name < b.item.display_name)
+	var equipment: Equipment = player.data.equipment if player else null
 	for stack in stacks:
 		if not _passes_filter(stack.item): continue
 		var row: InventoryRow = row_scene.instantiate()
 		rows.add_child(row)
-		row.display(stack)
+		row.display(stack, equipment != null and equipment.is_equipped(stack.item))
 		if stack.item.id == _displayed_id:
 			still_displayed = true
 		row.hovered.connect(_on_row_hovered)
