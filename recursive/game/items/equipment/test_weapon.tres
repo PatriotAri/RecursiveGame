@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EquippableItem" format=3 uid="uid://gc75tdgl3xwr"]
+
+[ext_resource type="Script" uid="uid://c1b7wypd2oh0i" path="res://game/components/hitbox/attack_spec.gd" id="1_hknmk"]
+[ext_resource type="Script" uid="uid://c12w1whtmqtq7" path="res://game/items/equipment/equippable_item.gd" id="1_sr6ud"]
+
+[sub_resource type="Resource" id="Resource_w320p"]
+script = ExtResource("1_hknmk")
+metadata/_custom_type_script = "uid://c1b7wypd2oh0i"
+
+[resource]
+script = ExtResource("1_sr6ud")
+attack = SubResource("Resource_w320p")
+id = &"test_weapon"
+display_name = "Test Weapon"
+description = "This is a test weapon."
+category = 2
+metadata/_custom_type_script = "uid://c12w1whtmqtq7"

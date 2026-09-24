@@ -65,7 +65,6 @@ func _ready() -> void:
 	melee.damage = damage
 	melee.windup_time = windup_time
 	melee.lifetime = lifetime
-	melee.knockback_strength = 50.0
 	melee.reach_radius = 10.0   # CrawlerMeleeHitbox.tscn's CircleShape2D
 	melee.knockback_strength = 50.0
 	melee.hitstun_chance = 0.3
@@ -116,14 +115,12 @@ func _on_damage_received(damage_amount: float, apply_hitstun: bool) -> void:
 	if data.is_dead:
 		return
 	_flash_damage()
-	# Getting hit drops the swing regardless of the stagger roll. One punch
-	# into a cluster cancels every crawler inside the hitbox — the player's
-	# answer to being mobbed, and not something a dice roll should take away.
 	if not apply_hitstun:
 		return
 	data.is_hurt = true
 	data.hurt_timer = hurt_duration
 	data.hurt_seq += 1
+	# Getting hit drops the swing — but only when the stagger lands.
 	crawler_hitbox_manager.cancel_all()
 	
 ## Feedback that a hit landed, separate from whether it staggered. Every hit

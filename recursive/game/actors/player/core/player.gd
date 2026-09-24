@@ -12,6 +12,16 @@ var player_animation_system: PlayerAnimationSystem
 
 var player_hitbox_manager: HitboxManagerBase
 
+## Equipment recomputes from these, so the exports stay the unmodified base
+## no matter what's worn.
+var _base_max_health: int
+var _base_max_stamina: int
+var _base_max_mana: int
+var _base_walk_speed: float
+var _base_run_speed: float
+var _base_sprint_stamina_cost: float
+var _base_attack_stamina_cost: int
+
 var _flash_tween : Tween
 var death_handled := false
 
@@ -36,6 +46,7 @@ var death_handled := false
 @export var mana_regen_per_second: float = 1.0
 @export var mana_regen_delay: float = 1.0
 
+@export_category("Combat/Movement")
 @export_group("Attack")
 @export var windup_time:= 0.1
 @export var lifetime:= 0.1
@@ -54,6 +65,14 @@ var death_handled := false
 
 func _ready() -> void:
 	data = PlayerData.new()
+	
+	_base_max_health = max_health
+	_base_max_stamina = max_stamina
+	_base_max_mana = max_mana
+	_base_walk_speed = walk_speed
+	_base_run_speed = run_speed
+	_base_sprint_stamina_cost = sprint_stamina_cost
+	_base_attack_stamina_cost = attack_stamina_cost
 	
 	data.walk_speed = walk_speed
 	data.run_speed = run_speed
@@ -74,7 +93,6 @@ func _ready() -> void:
 	unarmed.damage = damage
 	unarmed.windup_time = windup_time
 	unarmed.lifetime = lifetime
-	unarmed.knockback_strength = 50.0
 	unarmed.knockback_strength = 50.0
 	unarmed.hitstun_chance = 0.3
 	unarmed.knockback_chance = 0.3
@@ -119,11 +137,29 @@ func _physics_process(delta: float) -> void:
 	var was_attacking := data.is_attacking
 	player_attack_system.update(data, delta)
 	if not was_attacking and data.is_attacking: # ← new
-		stats.stamina.remove(attack_stamina_cost)
+		stats.stamina.remove(data.attack_stamina_cost)
 	player_state_machine.update(data)
 	player_attack_system.post_update(data)
 	player_movement_system.update(data, delta)
 	player_animation_system.update(data)
+
+## Recomputes every equipment-affected value from base + the supplied total.
+## Called whenever equipment changes; safe to call with an empty StatBonuses
+## to strip all bonuses.
+func apply_stat_bonuses(bonuses: StatBonuses) -> void:
+	# keep_ratio false: gear gives headroom, it doesn't heal. Taking armour
+	# off clamps current down if it's now above the new maximum.
+	stats.health.set_maximum(_base_max_health + bonuses.max_health)
+	stats.stamina.set_maximum(_base_max_stamina + bonuses.max_stamina)
+	stats.mana.set_maximum(_base_max_mana + bonuses.max_mana)
+	
+	data.walk_speed = _base_walk_speed + bonuses.walk_speed
+	data.run_speed = _base_run_speed + bonuses.run_speed
+	
+	# Clamped at zero: free is a legitimate outcome for a very good item,
+	# negative is not.
+	data.sprint_stamina_cost = maxf(_base_sprint_stamina_cost + bonuses.sprint_stamina_cost, 0.0)
+	data.attack_stamina_cost = maxi(_base_attack_stamina_cost + bonuses.attack_stamina_cost, 0)
 
 func _update_stamina(delta: float) -> void:
 	if data.is_exhausted and stats.stamina.ratio() >= exhaustion_recovery_ratio:
@@ -135,12 +171,12 @@ func _update_stamina(delta: float) -> void:
 		data.is_running = false
 		sprinting = false
 	if sprinting:
-		stats.stamina.drain(sprint_stamina_cost, delta)
+		stats.stamina.drain(data.sprint_stamina_cost, delta)
 
 	# Refuse an unaffordable swing before the attack system sees the request,
 	# so the input isn't eaten and the animation never plays for free.
 	if data.attack_requested and not data.is_attacking:
-		if not stats.stamina.can_afford(attack_stamina_cost):
+		if not stats.stamina.can_afford(data.attack_stamina_cost):
 			data.attack_requested = false
 
 func _on_stamina_emptied() -> void:
