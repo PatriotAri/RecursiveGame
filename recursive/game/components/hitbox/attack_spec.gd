@@ -24,6 +24,9 @@ const DIRECTIONS := ["right", "left", "up", "down",
 @export var windup_time := 0.1
 @export var lifetime := 0.1
 
+@export_group("Stamina")
+@export var attack_stamina_cost := 5
+
 @export_group("Geometry")
 ## Radius of the collision shape inside `scene`. Stored here rather than read
 ## from the scene so a commit range can be computed without instancing one.

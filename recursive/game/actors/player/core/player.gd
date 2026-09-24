@@ -21,7 +21,6 @@ var _base_max_mana: int
 var _base_walk_speed: float
 var _base_run_speed: float
 var _base_sprint_stamina_cost: float
-var _base_attack_stamina_cost: int
 
 var _flash_tween : Tween
 var death_handled := false
@@ -73,14 +72,12 @@ func _ready() -> void:
 	_base_walk_speed = walk_speed
 	_base_run_speed = run_speed
 	_base_sprint_stamina_cost = sprint_stamina_cost
-	_base_attack_stamina_cost = attack_stamina_cost
 	
 	data.walk_speed = walk_speed
 	data.run_speed = run_speed
 	data.acceleration = acceleration
 	data.friction = friction
 	data.sprint_stamina_cost = sprint_stamina_cost
-	data.attack_stamina_cost = attack_stamina_cost
 	
 	stats = StatSystem.new(
 		Stat.new(max_health, health_regen_per_second, health_regen_delay),
@@ -99,6 +96,7 @@ func _ready() -> void:
 	unarmed.knockback_strength = 50.0
 	unarmed.hitstun_chance = 0.3
 	unarmed.knockback_chance = 0.3
+	unarmed.attack_stamina_cost = attack_stamina_cost
 	
 	player_hitbox_manager = HitboxManagerBase.new(self, HitboxManagerBase.LAYER_ENEMY_HURTBOX, func(): return data.facing_dir)
 	player_hitbox_manager.register_attack(&"unarmed", unarmed)
@@ -113,10 +111,6 @@ func _ready() -> void:
 	
 	$Hurtbox._on_damage_received = _on_damage_received
 	$Hurtbox.knockback_received.connect(_on_knockback_received)
-
-	var test_weapon: EquippableItem = load("res://game/items/equipment/test_weapon.tres")
-	data.inventory.add(test_weapon, 1)
-	player_equipment_system.try_equip(data, test_weapon)
 
 func _physics_process(delta: float) -> void:
 	if data.is_dead:
@@ -144,8 +138,8 @@ func _physics_process(delta: float) -> void:
 	
 	var was_attacking := data.is_attacking
 	player_attack_system.update(data, delta)
-	if not was_attacking and data.is_attacking: # ← new
-		stats.stamina.remove(data.attack_stamina_cost)
+	if not was_attacking and data.is_attacking:
+		stats.stamina.remove(current_attack_stamina_cost())
 	player_state_machine.update(data)
 	player_attack_system.post_update(data)
 	player_movement_system.update(data, delta)
@@ -167,7 +161,14 @@ func apply_stat_bonuses(bonuses: StatBonuses) -> void:
 	# Clamped at zero: free is a legitimate outcome for a very good item,
 	# negative is not.
 	data.sprint_stamina_cost = maxf(_base_sprint_stamina_cost + bonuses.sprint_stamina_cost, 0.0)
-	data.attack_stamina_cost = maxi(_base_attack_stamina_cost + bonuses.attack_stamina_cost, 0)
+	data.attack_stamina_modifier = bonuses.attack_stamina_cost
+
+## What one swing of the current attack costs, after equipment. Computed per
+## swing rather than stored, because it depends on which weapon is equipped.
+func current_attack_stamina_cost() -> int:
+	var spec := player_hitbox_manager.get_spec(data.current_attack)
+	if spec == null: return 0
+	return maxi(spec.attack_stamina_cost + data.attack_stamina_modifier, 0)
 
 func _update_stamina(delta: float) -> void:
 	if data.is_exhausted and stats.stamina.ratio() >= exhaustion_recovery_ratio:
@@ -184,7 +185,7 @@ func _update_stamina(delta: float) -> void:
 	# Refuse an unaffordable swing before the attack system sees the request,
 	# so the input isn't eaten and the animation never plays for free.
 	if data.attack_requested and not data.is_attacking:
-		if not stats.stamina.can_afford(data.attack_stamina_cost):
+		if not stats.stamina.can_afford(current_attack_stamina_cost()):
 			data.attack_requested = false
 
 func _on_stamina_emptied() -> void:

@@ -35,7 +35,7 @@ var run_speed: float
 
 #stamina costs — derived from base + equipment, read by player.gd
 var sprint_stamina_cost: float
-var attack_stamina_cost: int
+var attack_stamina_modifier: int = 0
 
 #acceleration/deceleration
 var acceleration: float
