@@ -12,25 +12,31 @@ var player_animation_system: PlayerAnimationSystem
 
 var player_hitbox_manager: HitboxManagerBase
 
+var _flash_tween : Tween
 var death_handled := false
 
 @onready var sprite: AnimatedSprite2D = $Sprite
 
-@export_group("Stat Tuning")
+@export_category("Stat Tuning")
+@export_group("Health")
 @export var max_health: int = 20
 @export var health_regen_per_second: float = 0.0
 @export var health_regen_delay: float = 3.0
+
+@export_group("Stamina")
 @export var max_stamina: int = 20
 @export var stamina_regen_per_second: float = 8.0
 @export var stamina_regen_delay: float = 0.5
-@export var max_mana: int = 10
-@export var mana_regen_per_second: float = 1.0
-@export var mana_regen_delay: float = 1.0
-@export var sprint_stamina_per_second: float = 12.0
+@export var sprint_stamina_cost: float = 12.0
 @export var attack_stamina_cost: int = 4
 @export var exhaustion_recovery_ratio: float = 0.25
 
-@export_group("Attack Tuning")
+@export_group("Mana")
+@export var max_mana: int = 10
+@export var mana_regen_per_second: float = 1.0
+@export var mana_regen_delay: float = 1.0
+
+@export_group("Attack")
 @export var windup_time:= 0.1
 @export var lifetime:= 0.1
 @export var damage:= 10.0
@@ -40,7 +46,7 @@ var death_handled := false
 #how long player is locked in hitstun
 @export var hurt_duration:= 0.12
 
-@export_group("Movement Tuning")
+@export_group("Movement")
 @export var walk_speed:= 100.0
 @export var run_speed:= 140.0
 @export var acceleration:= 600.0
@@ -69,6 +75,9 @@ func _ready() -> void:
 	unarmed.windup_time = windup_time
 	unarmed.lifetime = lifetime
 	unarmed.knockback_strength = 50.0
+	unarmed.knockback_strength = 50.0
+	unarmed.hitstun_chance = 0.3
+	unarmed.knockback_chance = 0.3
 	
 	player_hitbox_manager = HitboxManagerBase.new(self, HitboxManagerBase.LAYER_ENEMY_HURTBOX, func(): return data.facing_dir)
 	player_hitbox_manager.register_attack(&"unarmed", unarmed)
@@ -126,7 +135,7 @@ func _update_stamina(delta: float) -> void:
 		data.is_running = false
 		sprinting = false
 	if sprinting:
-		stats.stamina.drain(sprint_stamina_per_second, delta)
+		stats.stamina.drain(sprint_stamina_cost, delta)
 
 	# Refuse an unaffordable swing before the attack system sees the request,
 	# so the input isn't eaten and the animation never plays for free.
@@ -137,9 +146,12 @@ func _update_stamina(delta: float) -> void:
 func _on_stamina_emptied() -> void:
 	data.is_exhausted = true
 
-func _on_damage_received(damage_amount: float) -> void:
+func _on_damage_received(damage_amount: float, apply_hitstun: bool) -> void:
 	stats.health.remove(roundi(damage_amount))
 	if data.is_dead:
+		return
+	_flash_damage()
+	if not apply_hitstun:
 		return
 	# Re-arming the timer on every hit is what kills the permanent freeze:
 	# the old code waited on an animation_finished that never fires when the
@@ -162,6 +174,17 @@ func _on_knockback_received(direction: Vector2, strength: float, decay: float) -
 ## combat wants the middle of what it has to hit.
 func combat_anchor() -> Vector2:
 	return $Hurtbox/CollisionShape2D.global_position
+
+## Feedback that a hit landed, separate from whether it staggered. Every hit
+## flashes; only some of them interrupt.
+func _flash_damage() -> void:
+	# A second hit mid-flash would otherwise leave two tweens fighting over
+	# modulate, and the sprite can end up stuck tinted.
+	if _flash_tween and _flash_tween.is_valid():
+		_flash_tween.kill()
+	sprite.modulate = Color(1, 0.3, 0.3)
+	_flash_tween = create_tween()
+	_flash_tween.tween_property(sprite, "modulate", Color.WHITE, 0.15)
 
 func _handle_death() -> void:
 	$Collision.set_deferred("disabled", true)

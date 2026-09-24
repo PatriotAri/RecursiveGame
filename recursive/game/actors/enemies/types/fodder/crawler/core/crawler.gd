@@ -11,6 +11,7 @@ var crawler_hitbox_manager: HitboxManagerBase
 
 #health component
 var stats: StatSystem
+var _flash_tween: Tween
 var death_handled := false
 
 @export_group("Stat Tuning")
@@ -66,6 +67,9 @@ func _ready() -> void:
 	melee.lifetime = lifetime
 	melee.knockback_strength = 50.0
 	melee.reach_radius = 10.0   # CrawlerMeleeHitbox.tscn's CircleShape2D
+	melee.knockback_strength = 50.0
+	melee.hitstun_chance = 0.3
+	melee.knockback_chance = 0.3
 	
 	crawler_hitbox_manager = HitboxManagerBase.new(self, HitboxManagerBase.LAYER_PLAYER_HURTBOX, func(): return data.facing_dir)
 	crawler_hitbox_manager.register_attack(&"melee", melee)
@@ -107,16 +111,31 @@ func _physics_process(delta: float) -> void:
 	crawler_attack_system.update(data, delta)
 	crawler_animation_system.update()
 
-func _on_damage_received(damage_amount: float) -> void:
+func _on_damage_received(damage_amount: float, apply_hitstun: bool) -> void:
 	stats.health.remove(roundi(damage_amount))
 	if data.is_dead:
+		return
+	_flash_damage()
+	# Getting hit drops the swing regardless of the stagger roll. One punch
+	# into a cluster cancels every crawler inside the hitbox — the player's
+	# answer to being mobbed, and not something a dice roll should take away.
+	if not apply_hitstun:
 		return
 	data.is_hurt = true
 	data.hurt_timer = hurt_duration
 	data.hurt_seq += 1
-	# Getting hit drops the swing. One punch into a cluster cancels every
-	# crawler inside the hitbox — the player's answer to being mobbed.
 	crawler_hitbox_manager.cancel_all()
+	
+## Feedback that a hit landed, separate from whether it staggered. Every hit
+## flashes; only some of them interrupt.
+func _flash_damage() -> void:
+	# A second hit mid-flash would otherwise leave two tweens fighting over
+	# modulate, and the sprite can end up stuck tinted.
+	if _flash_tween and _flash_tween.is_valid():
+		_flash_tween.kill()
+	sprite.modulate = Color(1, 0.3, 0.3)
+	_flash_tween = create_tween()
+	_flash_tween.tween_property(sprite, "modulate", Color.WHITE, 0.15)
 
 func _on_health_emptied() -> void:
 	data.is_dead = true
