@@ -16,10 +16,16 @@ const DIRECTIONS := ["right", "left", "up", "down",
 @export var damage := 1.0
 @export var knockback_strength := 50.0
 @export var knockback_decay := 800.0
+## Rolled per target, per hit. 1.0 reproduces the old always-stagger behaviour.
+@export_range(0.0, 1.0) var hitstun_chance := 1.0
+@export_range(0.0, 1.0) var knockback_chance := 1.0
 
 @export_group("Timing")
 @export var windup_time := 0.1
 @export var lifetime := 0.1
+
+@export_group("Stamina")
+@export var attack_stamina_cost := 5
 
 @export_group("Geometry")
 ## Radius of the collision shape inside `scene`. Stored here rather than read

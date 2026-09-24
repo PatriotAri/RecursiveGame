@@ -39,6 +39,13 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 12
 
+[node name="EquippedMarker" type="ColorRect" parent="Margin/HBox" unique_id=1541785098]
+custom_minimum_size = Vector2(12, 12)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+color = Color(0.78431374, 0.11764706, 0.11764706, 1)
+
 [node name="ItemName" type="Label" parent="Margin/HBox" unique_id=1831621031]
 layout_mode = 2
 size_flags_horizontal = 3

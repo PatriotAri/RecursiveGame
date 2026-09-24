@@ -60,11 +60,11 @@ layout_mode = 2
 toggle_mode = true
 text = "Weapons"
 
-[node name="TabConsumeables" type="Button" parent="Root/VBox/TopBar/Tabs" unique_id=1105497980]
+[node name="TabConsumables" type="Button" parent="Root/VBox/TopBar/Tabs" unique_id=1105497980]
 custom_minimum_size = Vector2(90, 32)
 layout_mode = 2
 toggle_mode = true
-text = "Consumeables"
+text = "Consumables"
 
 [node name="Spacer" type="Control" parent="Root/VBox/TopBar" unique_id=1973006737]
 layout_mode = 2

@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="EquippableItem" format=3 uid="uid://gc75tdgl3xwr"]
+
+[ext_resource type="Resource" uid="uid://st2de7v0al8h" path="res://game/actors/player/hitboxes/player_unarmed_offsets.tres" id="1_gxdt4"]
+[ext_resource type="Script" uid="uid://c1b7wypd2oh0i" path="res://game/components/hitbox/attack_spec.gd" id="1_hknmk"]
+[ext_resource type="Script" uid="uid://c12w1whtmqtq7" path="res://game/items/equipment/equippable_item.gd" id="1_sr6ud"]
+[ext_resource type="PackedScene" uid="uid://dbi1x54t3m5fi" path="res://game/actors/player/hitboxes/PlayerUnarmedHitbox.tscn" id="2_k4u46"]
+[ext_resource type="Script" uid="uid://v162jjr58mo1" path="res://game/items/equipment/stat_bonuses.gd" id="2_w320p"]
+
+[sub_resource type="Resource" id="Resource_w320p"]
+script = ExtResource("1_hknmk")
+scene = ExtResource("2_k4u46")
+offsets = ExtResource("1_gxdt4")
+damage = 50.0
+windup_time = 0.6
+reach_radius = 35.0
+metadata/_custom_type_script = "uid://c1b7wypd2oh0i"
+
+[sub_resource type="Resource" id="Resource_wxv45"]
+script = ExtResource("2_w320p")
+attack_stamina_cost = 1
+metadata/_custom_type_script = "uid://v162jjr58mo1"
+
+[resource]
+script = ExtResource("1_sr6ud")
+attack = SubResource("Resource_w320p")
+bonuses = SubResource("Resource_wxv45")
+id = &"test_weapon"
+display_name = "Test Weapon"
+description = "This is a test weapon."
+category = 2
+metadata/_custom_type_script = "uid://c12w1whtmqtq7"

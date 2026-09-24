@@ -63,6 +63,8 @@ func spawn_hitbox(attack_name: StringName) -> HitboxBase:
 	hitbox.knockback_direction = facing
 	hitbox.knockback_strength = spec.knockback_strength
 	hitbox.knockback_decay = spec.knockback_decay
+	hitbox.hitstun_chance = spec.hitstun_chance
+	hitbox.knockback_chance = spec.knockback_chance
 	hitbox.damage = spec.damage
 	hitbox.target_layer = target_layer
 	hitbox.windup_time = spec.windup_time

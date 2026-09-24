@@ -8,29 +8,46 @@ var player_state_machine: PlayerStateMachine
 var player_attack_system: PlayerAttackSystem
 var player_movement_system: PlayerMovementSystem
 var player_consumable_system: PlayerConsumableSystem
+var player_equipment_system: PlayerEquipmentSystem
 var player_animation_system: PlayerAnimationSystem
 
 var player_hitbox_manager: HitboxManagerBase
 
+## Equipment recomputes from these, so the exports stay the unmodified base
+## no matter what's worn.
+var _base_max_health: int
+var _base_max_stamina: int
+var _base_max_mana: int
+var _base_walk_speed: float
+var _base_run_speed: float
+var _base_sprint_stamina_cost: float
+
+var _flash_tween : Tween
 var death_handled := false
 
 @onready var sprite: AnimatedSprite2D = $Sprite
 
-@export_group("Stat Tuning")
+@export_category("Stat Tuning")
+@export_group("Health")
 @export var max_health: int = 20
 @export var health_regen_per_second: float = 0.0
 @export var health_regen_delay: float = 3.0
+
+@export_group("Stamina")
 @export var max_stamina: int = 20
 @export var stamina_regen_per_second: float = 8.0
 @export var stamina_regen_delay: float = 0.5
-@export var max_mana: int = 10
-@export var mana_regen_per_second: float = 1.0
-@export var mana_regen_delay: float = 1.0
-@export var sprint_stamina_per_second: float = 12.0
+@export var sprint_stamina_cost: float = 12.0
 @export var attack_stamina_cost: int = 4
 @export var exhaustion_recovery_ratio: float = 0.25
 
-@export_group("Attack Tuning")
+@export_group("Mana")
+@export var max_mana: int = 10
+@export var mana_regen_per_second: float = 1.0
+@export var mana_regen_delay: float = 1.0
+
+@export_category("Combat/Movement")
+@export_group("Attack")
 @export var windup_time:= 0.1
 @export var lifetime:= 0.1
 @export var damage:= 10.0
@@ -40,7 +57,7 @@ var death_handled := false
 #how long player is locked in hitstun
 @export var hurt_duration:= 0.12
 
-@export_group("Movement Tuning")
+@export_group("Movement")
 @export var walk_speed:= 100.0
 @export var run_speed:= 140.0
 @export var acceleration:= 600.0
@@ -49,10 +66,18 @@ var death_handled := false
 func _ready() -> void:
 	data = PlayerData.new()
 	
+	_base_max_health = max_health
+	_base_max_stamina = max_stamina
+	_base_max_mana = max_mana
+	_base_walk_speed = walk_speed
+	_base_run_speed = run_speed
+	_base_sprint_stamina_cost = sprint_stamina_cost
+	
 	data.walk_speed = walk_speed
 	data.run_speed = run_speed
 	data.acceleration = acceleration
 	data.friction = friction
+	data.sprint_stamina_cost = sprint_stamina_cost
 	
 	stats = StatSystem.new(
 		Stat.new(max_health, health_regen_per_second, health_regen_delay),
@@ -69,6 +94,9 @@ func _ready() -> void:
 	unarmed.windup_time = windup_time
 	unarmed.lifetime = lifetime
 	unarmed.knockback_strength = 50.0
+	unarmed.hitstun_chance = 0.3
+	unarmed.knockback_chance = 0.3
+	unarmed.attack_stamina_cost = attack_stamina_cost
 	
 	player_hitbox_manager = HitboxManagerBase.new(self, HitboxManagerBase.LAYER_ENEMY_HURTBOX, func(): return data.facing_dir)
 	player_hitbox_manager.register_attack(&"unarmed", unarmed)
@@ -78,6 +106,7 @@ func _ready() -> void:
 	player_attack_system = PlayerAttackSystem.new(self, player_hitbox_manager)
 	player_movement_system = PlayerMovementSystem.new(self)
 	player_consumable_system = PlayerConsumableSystem.new(self)
+	player_equipment_system = PlayerEquipmentSystem.new(self)
 	player_animation_system = PlayerAnimationSystem.new(sprite)
 	
 	$Hurtbox._on_damage_received = _on_damage_received
@@ -109,12 +138,37 @@ func _physics_process(delta: float) -> void:
 	
 	var was_attacking := data.is_attacking
 	player_attack_system.update(data, delta)
-	if not was_attacking and data.is_attacking: # ← new
-		stats.stamina.remove(attack_stamina_cost)
+	if not was_attacking and data.is_attacking:
+		stats.stamina.remove(current_attack_stamina_cost())
 	player_state_machine.update(data)
 	player_attack_system.post_update(data)
 	player_movement_system.update(data, delta)
 	player_animation_system.update(data)
+
+## Recomputes every equipment-affected value from base + the supplied total.
+## Called whenever equipment changes; safe to call with an empty StatBonuses
+## to strip all bonuses.
+func apply_stat_bonuses(bonuses: StatBonuses) -> void:
+	# keep_ratio false: gear gives headroom, it doesn't heal. Taking armour
+	# off clamps current down if it's now above the new maximum.
+	stats.health.set_maximum(_base_max_health + bonuses.max_health)
+	stats.stamina.set_maximum(_base_max_stamina + bonuses.max_stamina)
+	stats.mana.set_maximum(_base_max_mana + bonuses.max_mana)
+	
+	data.walk_speed = _base_walk_speed + bonuses.walk_speed
+	data.run_speed = _base_run_speed + bonuses.run_speed
+	
+	# Clamped at zero: free is a legitimate outcome for a very good item,
+	# negative is not.
+	data.sprint_stamina_cost = maxf(_base_sprint_stamina_cost + bonuses.sprint_stamina_cost, 0.0)
+	data.attack_stamina_modifier = bonuses.attack_stamina_cost
+
+## What one swing of the current attack costs, after equipment. Computed per
+## swing rather than stored, because it depends on which weapon is equipped.
+func current_attack_stamina_cost() -> int:
+	var spec := player_hitbox_manager.get_spec(data.current_attack)
+	if spec == null: return 0
+	return maxi(spec.attack_stamina_cost + data.attack_stamina_modifier, 0)
 
 func _update_stamina(delta: float) -> void:
 	if data.is_exhausted and stats.stamina.ratio() >= exhaustion_recovery_ratio:
@@ -126,20 +180,23 @@ func _update_stamina(delta: float) -> void:
 		data.is_running = false
 		sprinting = false
 	if sprinting:
-		stats.stamina.drain(sprint_stamina_per_second, delta)
+		stats.stamina.drain(data.sprint_stamina_cost, delta)
 
 	# Refuse an unaffordable swing before the attack system sees the request,
 	# so the input isn't eaten and the animation never plays for free.
 	if data.attack_requested and not data.is_attacking:
-		if not stats.stamina.can_afford(attack_stamina_cost):
+		if not stats.stamina.can_afford(current_attack_stamina_cost()):
 			data.attack_requested = false
 
 func _on_stamina_emptied() -> void:
 	data.is_exhausted = true
 
-func _on_damage_received(damage_amount: float) -> void:
+func _on_damage_received(damage_amount: float, apply_hitstun: bool) -> void:
 	stats.health.remove(roundi(damage_amount))
 	if data.is_dead:
+		return
+	_flash_damage()
+	if not apply_hitstun:
 		return
 	# Re-arming the timer on every hit is what kills the permanent freeze:
 	# the old code waited on an animation_finished that never fires when the
@@ -162,6 +219,17 @@ func _on_knockback_received(direction: Vector2, strength: float, decay: float) -
 ## combat wants the middle of what it has to hit.
 func combat_anchor() -> Vector2:
 	return $Hurtbox/CollisionShape2D.global_position
+
+## Feedback that a hit landed, separate from whether it staggered. Every hit
+## flashes; only some of them interrupt.
+func _flash_damage() -> void:
+	# A second hit mid-flash would otherwise leave two tweens fighting over
+	# modulate, and the sprite can end up stuck tinted.
+	if _flash_tween and _flash_tween.is_valid():
+		_flash_tween.kill()
+	sprite.modulate = Color(1, 0.3, 0.3)
+	_flash_tween = create_tween()
+	_flash_tween.tween_property(sprite, "modulate", Color.WHITE, 0.15)
 
 func _handle_death() -> void:
 	$Collision.set_deferred("disabled", true)

@@ -45,6 +45,7 @@ func _ready() -> void:
 	
 	if player and "data" in player:
 		bind(player.data.inventory)
+		player.data.equipment.equipment_changed.connect(_on_equipment_changed)
 	else:
 		push_warning("InventoryUi: no player found to bind to.")
 	if player and "stats" in player:
@@ -138,6 +139,14 @@ func _passes_filter(item: Item) -> bool:
 	if not _is_listable(item): return false
 	return _active_tab == TAB_ALL or item.category == _active_tab
 
+## Equipping doesn't change the inventory, so inventory.changed never fires
+## for it — the rows need their own reason to redraw.
+func _on_equipment_changed() -> void:
+	if visible:
+		_rebuild()
+	else:
+		_dirty = true
+
 func _on_inventory_changed(item: Item, _new_count: int) -> void:
 	# Picking up gold used to tear down and rebuild every row for an item
 	# that can never appear in the list.
@@ -158,11 +167,12 @@ func _rebuild() -> void:
 	# Dictionary order is insertion order, so rows reshuffle as you pick things
 	# up mid-run. Alphabetical keeps an item in the same place.
 	stacks.sort_custom(func(a, b): return a.item.display_name < b.item.display_name)
+	var equipment: Equipment = player.data.equipment if player else null
 	for stack in stacks:
 		if not _passes_filter(stack.item): continue
 		var row: InventoryRow = row_scene.instantiate()
 		rows.add_child(row)
-		row.display(stack)
+		row.display(stack, equipment != null and equipment.is_equipped(stack.item))
 		if stack.item.id == _displayed_id:
 			still_displayed = true
 		row.hovered.connect(_on_row_hovered)
@@ -208,7 +218,13 @@ func _on_row_activated(item: Item) -> void:
 				# the row's count refreshes itself.
 				player.player_consumable_system.try_use(player.data, item)
 		Item.Category.WEAPON, Item.Category.ARMOR:
-			pass # equipment lands in its own phase
+			# Clicking an equipped item takes it off — one verb, same as
+			# consumables, no separate unequip affordance to discover.
+			if item is EquippableItem and player.player_equipment_system:
+				if player.data.equipment.is_equipped(item):
+					player.player_equipment_system.try_unequip(player.data, item.slot)
+				else:
+					player.player_equipment_system.try_equip(player.data, item)
 		_:
 			pass
 

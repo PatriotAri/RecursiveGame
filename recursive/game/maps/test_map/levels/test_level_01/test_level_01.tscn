@@ -7,9 +7,9 @@
 [ext_resource type="PackedScene" uid="uid://bmonh3sf35441" path="res://game/actors/enemies/types/fodder/crawler/core/crawler.tscn" id="5_2ju8b"]
 [ext_resource type="PackedScene" uid="uid://boy2ry2riwkmv" path="res://game/items/general/core/item_pickup.tscn" id="6_wvw0b"]
 [ext_resource type="Resource" uid="uid://dryrs1y762okx" path="res://game/items/general/test_items/test_item.tres" id="7_2ju8b"]
-[ext_resource type="Resource" uid="uid://bdjft7r36yvv0" path="res://game/items/general/test_items/test_item_weapon.tres" id="8_pbrxw"]
 [ext_resource type="PackedScene" uid="uid://c2rn4u0yidyre" path="res://game/items/consumables/potions/health_potion/health_potion_pickup.tscn" id="9_dkccn"]
 [ext_resource type="PackedScene" uid="uid://drxqjod7tqrpj" path="res://game/items/consumables/potions/stamina_potion/stamina_potion_pickup.tscn" id="10_mpxm6"]
+[ext_resource type="Resource" uid="uid://gc75tdgl3xwr" path="res://game/items/equipment/test_weapon.tres" id="11_hl04a"]
 [ext_resource type="PackedScene" uid="uid://nhtgaiby8a08" path="res://game/items/consumables/potions/mana_potion/mana_potion_pickup.tscn" id="11_mpxm6"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rcbyt"]
@@ -52,7 +52,6 @@ script = ExtResource("3_6rspa")
 [node name="EnemySpawner" parent="Y-sorted" unique_id=843157830 instance=ExtResource("3_hek21")]
 position = Vector2(0, 104)
 enemy_scene = ExtResource("5_2ju8b")
-spawn_count = 2
 waves_on = true
 wave_intervals = 4.0
 max_enemies = 12
@@ -63,10 +62,6 @@ position = Vector2(124, -122)
 [node name="Item" parent="Y-sorted" unique_id=2120133150 instance=ExtResource("6_wvw0b")]
 position = Vector2(-132, -147)
 item = ExtResource("7_2ju8b")
-
-[node name="Item2" parent="Y-sorted" unique_id=1004450809 instance=ExtResource("6_wvw0b")]
-position = Vector2(-228, -86)
-item = ExtResource("8_pbrxw")
 
 [node name="HealthPotion" parent="Y-sorted" unique_id=1855851919 instance=ExtResource("9_dkccn")]
 position = Vector2(-51, -129)
@@ -79,3 +74,7 @@ position = Vector2(-85, -56)
 
 [node name="ManaPotion" parent="Y-sorted" unique_id=496157851 instance=ExtResource("11_mpxm6")]
 position = Vector2(-95, 42)
+
+[node name="TestWeapon" parent="Y-sorted" unique_id=2124119347 instance=ExtResource("6_wvw0b")]
+position = Vector2(38, -129)
+item = ExtResource("11_hl04a")

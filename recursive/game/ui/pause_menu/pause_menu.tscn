@@ -80,6 +80,8 @@ layout_mode = 2
 text = "WASD - Move
 Shift - Run
 LMB - Attack
-ESC - Pause"
+ESC - Pause
+I - Inventory
+LMB - Use inventory item"
 horizontal_alignment = 1
 vertical_alignment = 1

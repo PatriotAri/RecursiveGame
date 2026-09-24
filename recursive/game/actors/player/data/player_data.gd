@@ -33,6 +33,10 @@ var facing_string: String = "down"
 var walk_speed: float
 var run_speed: float
 
+#stamina costs — derived from base + equipment, read by player.gd
+var sprint_stamina_cost: float
+var attack_stamina_modifier: int = 0
+
 #acceleration/deceleration
 var acceleration: float
 var friction: float
@@ -42,9 +46,15 @@ var modifiers:= MovementModifierStack.new()
 
 #read/written by AttackSystem
 var is_attacking:= false
+## Which registered attack a swing spawns. Points at the equipped weapon's
+## attack, or back at unarmed when nothing is equipped.
+var current_attack: StringName = &"unarmed"
 
 #read/written by StatSystem
 var is_exhausted:= false
 
 #inventory
 var inventory := Inventory.new()
+
+#equipment
+var equipment := Equipment.new()

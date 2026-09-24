@@ -13,6 +13,8 @@ var target_layer:= 0
 var knockback_direction:= Vector2.ZERO
 var knockback_strength:= 0.0
 var knockback_decay:= 800.0 #px/s^2
+var hitstun_chance:= 1.0
+var knockback_chance:= 1.0
 
 var _elapsed:= 0.0
 var _active:= false
@@ -81,4 +83,8 @@ func _on_area_entered(area: Area2D) -> void:
 		return
 	_hit_ids[id] = true
 	if area.has_method("receive_damage"):
-		area.receive_damage(damage, self)
+		# Rolled per target rather than per swing, so one swing into a cluster
+		# can stagger some of them and not others.
+		var stun := randf() < hitstun_chance
+		var knock := randf() < knockback_chance
+		area.receive_damage(damage, self, stun, knock)
