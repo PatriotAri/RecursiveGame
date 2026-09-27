@@ -15,3 +15,14 @@ enum Slot {WEAPON, ARMOR} #always append enum, never insert in middle
 
 ## Optional on either slot. Null means this item changes no stats.
 @export var bonuses: StatBonuses
+
+@export_group("Weapon Held")
+## Drawn in the player's hand while this is equipped. Null means the item has
+## no visible presence — armour, for now.
+@export var held_texture: Texture2D
+## Where it sits, per facing direction, relative to the body sprite's centre.
+@export var hold_offsets: HitboxOffsetData
+## Correction for how the texture was drawn. 0 means the art points right.
+@export_range(-180.0, 180.0) var rest_angle_degrees:= 0.0
+
+@export var animation_prefix := ""

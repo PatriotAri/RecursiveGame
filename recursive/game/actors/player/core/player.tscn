@@ -985,6 +985,9 @@ position = Vector2(0, -32)
 sprite_frames = SubResource("SpriteFrames_jfgyi")
 animation = &"idle_down"
 
+[node name="Weapon" type="Sprite2D" parent="Sprite" unique_id=1707004274]
+visible = false
+
 [node name="Hurtbox" type="Area2D" parent="." unique_id=387818382]
 visible = false
 collision_layer = 16

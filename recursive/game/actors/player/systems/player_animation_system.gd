@@ -8,8 +8,7 @@ func _init(sprite_ref: AnimatedSprite2D) -> void:
 	sprite = sprite_ref
 
 func update(data: PlayerData) -> void:
-	
-	var animation_name:= _resolve_animation(data)
+	var animation_name:= _base_animation(data)
 	
 	# A second hit during hitstun resolves to the same animation name, so the
 	# name check below won't replay it. The counter catches that case.
@@ -22,8 +21,21 @@ func update(data: PlayerData) -> void:
 		if restart:
 			sprite.frame = 0
 
-#turns state + facing into an animation name string
+#Applies the current stance to the unarmed animation name, where art for it
+#exists. A stance can ship partly drawn — anything missing falls back to the
+#unarmed version of that same state, so a half-finished set never leaves the
+#player invisible or frozen.
 func _resolve_animation(data: PlayerData) -> String:
+	var base:= _base_animation(data)
+	if data.animation_prefix == "":
+		return base
+	var armed:= data.animation_prefix + "_" + base
+	if sprite.sprite_frames.has_animation(armed):
+		return armed
+	return base
+
+#turns state + facing into an animation name string
+func _base_animation(data: PlayerData) -> String:
 	#gets name of the direction youre facing
 	var dir:= FacingHelper.facing_to_string(data.facing_dir)
 	

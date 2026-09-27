@@ -10,6 +10,7 @@ var player_movement_system: PlayerMovementSystem
 var player_consumable_system: PlayerConsumableSystem
 var player_equipment_system: PlayerEquipmentSystem
 var player_animation_system: PlayerAnimationSystem
+var player_weapon_visual_system: PlayerWeaponVisualSystem
 
 var player_hitbox_manager: HitboxManagerBase
 
@@ -106,6 +107,7 @@ func _ready() -> void:
 	player_attack_system = PlayerAttackSystem.new(self, player_hitbox_manager)
 	player_movement_system = PlayerMovementSystem.new(self)
 	player_consumable_system = PlayerConsumableSystem.new(self)
+	player_weapon_visual_system = PlayerWeaponVisualSystem.new($Sprite/Weapon)
 	player_equipment_system = PlayerEquipmentSystem.new(self)
 	player_animation_system = PlayerAnimationSystem.new(sprite)
 	
@@ -144,7 +146,8 @@ func _physics_process(delta: float) -> void:
 	player_attack_system.post_update(data)
 	player_movement_system.update(data, delta)
 	player_animation_system.update(data)
-
+	player_weapon_visual_system.update(data)
+	
 ## Recomputes every equipment-affected value from base + the supplied total.
 ## Called whenever equipment changes; safe to call with an empty StatBonuses
 ## to strip all bonuses.

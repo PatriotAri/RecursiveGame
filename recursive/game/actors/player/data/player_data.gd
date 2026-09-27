@@ -49,6 +49,9 @@ var is_attacking:= false
 ## Which registered attack a swing spawns. Points at the equipped weapon's
 ## attack, or back at unarmed when nothing is equipped.
 var current_attack: StringName = &"unarmed"
+## The animation set that attack uses. Set with current_attack, so the two
+## can never disagree about which weapon is in hand.
+var animation_prefix := ""
 
 #read/written by StatSystem
 var is_exhausted:= false
