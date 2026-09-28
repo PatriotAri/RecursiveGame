@@ -146,7 +146,7 @@ func _physics_process(delta: float) -> void:
 	player_attack_system.post_update(data)
 	player_movement_system.update(data, delta)
 	player_animation_system.update(data)
-	player_weapon_visual_system.update(data)
+	player_weapon_visual_system.update(data, player_attack_system.swing_progress())
 	
 ## Recomputes every equipment-affected value from base + the supplied total.
 ## Called whenever equipment changes; safe to call with an empty StatBonuses
