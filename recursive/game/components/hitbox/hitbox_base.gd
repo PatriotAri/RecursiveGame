@@ -16,6 +16,12 @@ var knockback_decay:= 800.0 #px/s^2
 var hitstun_chance:= 1.0
 var knockback_chance:= 1.0
 
+## Supplied at spawn so the hitbox can re-aim itself. Leave either unset and
+## it stays pinned to the offset it was given, which is what a hitbox that
+## shouldn't follow its owner wants.
+var offsets: HitboxOffsetData
+var facing_provider: Callable
+
 var _elapsed:= 0.0
 var _active:= false
 var _hit_ids:= {}
@@ -46,12 +52,27 @@ func begin_attack() -> void:
 
 func _physics_process(delta: float) -> void:
 	_elapsed += delta
+	_track_facing()
 	if not _active:
 		if _elapsed >= windup_time:
 			_activate()
 		return
 	if _elapsed >= windup_time + lifetime:
 		cancel()
+
+## Re-aims at the actor's current facing. Without this the hitbox keeps the
+## offset it was handed at spawn, so turning mid-swing leaves the damage where
+## you used to be pointing while the weapon sprite follows you round.
+func _track_facing() -> void:
+	if offsets == null or not facing_provider.is_valid():
+		return
+	var facing: Vector2 = facing_provider.call()
+	if facing == Vector2.ZERO:
+		return
+	position = offsets.get_offset(FacingHelper.facing_to_string(facing))
+	# Knockback too — otherwise a hit landed after turning shoves the target
+	# in the direction you were facing when the swing started.
+	knockback_direction = facing
 
 func _activate() -> void:
 	_active = true
