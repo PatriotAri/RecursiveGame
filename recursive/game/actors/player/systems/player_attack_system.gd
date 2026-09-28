@@ -4,6 +4,7 @@ var player: CharacterBody2D
 var player_hitbox_manager: HitboxManagerBase
 
 var attack_timer:= 0.0
+var attack_duration:= 0.0
 
 var pending_spawn:= false
 
@@ -40,6 +41,7 @@ func update(data: PlayerData, delta: float) -> void:
 		# Timing comes from the spec, so a weapon with a slower windup locks
 		# the player out for its own duration rather than the punch's.
 		attack_timer = spec.windup_time + spec.lifetime
+		attack_duration = attack_timer
 		pending_spawn = true
 
 ## Drops any in-progress swing. pending_spawn surviving an interrupt would
@@ -48,6 +50,7 @@ func cancel(data: PlayerData) -> void:
 	data.is_attacking = false
 	data.attack_requested = false
 	attack_timer = 0.0
+	attack_duration = 0.0
 	pending_spawn = false
 
 func post_update(data: PlayerData) -> void:
@@ -58,3 +61,10 @@ func post_update(data: PlayerData) -> void:
 	if pending_spawn:
 		pending_spawn = false
 		player_hitbox_manager.spawn_hitbox(data.current_attack)
+		
+## 0 at the start of a swing, 1 at the end. Anything animating off the swing
+## reads this rather than running its own timer, so a visual can't drift out
+## of sync with the hitbox it's supposed to be selling.
+func swing_progress() -> float:
+	if attack_duration <= 0.0: return 0.0
+	return clampf(1.0 - attack_timer / attack_duration, 0.0, 1.0)

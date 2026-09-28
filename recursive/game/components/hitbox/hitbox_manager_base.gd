@@ -69,7 +69,9 @@ func spawn_hitbox(attack_name: StringName) -> HitboxBase:
 	hitbox.target_layer = target_layer
 	hitbox.windup_time = spec.windup_time
 	hitbox.lifetime = spec.lifetime
-
+	hitbox.offsets = spec.offsets
+	hitbox.facing_provider = facing_provider
+	
 	body.add_child(hitbox)
 	hitbox.begin_attack()
 

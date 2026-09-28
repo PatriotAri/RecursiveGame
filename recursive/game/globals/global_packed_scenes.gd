@@ -11,5 +11,5 @@ static var player_scene = preload(
 
 # Hitboxes
 static var player_unarmed_hitbox = preload(
-	"res://game/actors/player/hitboxes/PlayerUnarmedHitbox.tscn"
+	"res://game/actors/player/hitboxes/player_unarmed_hitbox.tscn"
 	)

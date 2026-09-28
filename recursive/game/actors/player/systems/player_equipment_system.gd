@@ -31,7 +31,7 @@ func try_unequip(data: PlayerData, slot: EquippableItem.Slot) -> bool:
 ## same reason apply_stat_bonuses() recomputes from base: there's no "undo
 ## the last item" step to get wrong.
 func _refresh(data: PlayerData) -> void:
-	_refresh_attack(data)
+	_refresh_weapon(data)
 	player.apply_stat_bonuses(StatBonuses.stat_total(data.equipment.get_bonuses()))
 	# A swing in flight belongs to the weapon you were holding a moment ago.
 	# Without this, post_update() would spawn the NEW weapon's hitbox on the
@@ -39,16 +39,25 @@ func _refresh(data: PlayerData) -> void:
 	player.player_attack_system.cancel(data)
 	player.player_hitbox_manager.cancel_all()
 
-func _refresh_attack(data: PlayerData) -> void:
+func _refresh_weapon(data: PlayerData) -> void:
 	var weapon: EquippableItem = data.equipment.get_item(EquippableItem.Slot.WEAPON)
 	if weapon == null:
-		data.current_attack = &"unarmed"
+		_set_unarmed(data)
 		return
 	if weapon.attack == null:
 		push_warning("%s is in the weapon slot but has no attack assigned." % weapon.id)
-		data.current_attack = &"unarmed"
+		_set_unarmed(data)
 		return
 	# Registering under the item's own id means re-equipping the same weapon
 	# overwrites its entry rather than adding another.
 	player.player_hitbox_manager.register_attack(weapon.id, weapon.attack)
 	data.current_attack = weapon.id
+	data.animation_prefix = weapon.animation_prefix
+	player.player_weapon_visual_system.set_weapon(weapon)
+
+## Both values are set together everywhere, so the animation can never end up
+## describing a weapon you aren't actually swinging.
+func _set_unarmed(data: PlayerData) -> void:
+	data.current_attack = &"unarmed"
+	data.animation_prefix = ""
+	player.player_weapon_visual_system.set_weapon(null)

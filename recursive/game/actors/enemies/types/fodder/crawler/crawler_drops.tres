@@ -11,31 +11,32 @@
 [sub_resource type="Resource" id="Resource_gvfsy"]
 script = ExtResource("1_le2u5")
 scene = ExtResource("2_04m82")
-chance = 0.3
+chance = 0.25
 max_amount = 4
 metadata/_custom_type_script = "uid://dysbiie00jqq2"
 
 [sub_resource type="Resource" id="Resource_fei2q"]
 script = ExtResource("1_le2u5")
 scene = ExtResource("3_l6hj5")
+chance = 0.05
 metadata/_custom_type_script = "uid://dysbiie00jqq2"
 
 [sub_resource type="Resource" id="Resource_nv81u"]
 script = ExtResource("1_le2u5")
 scene = ExtResource("4_3gmh8")
-chance = 0.1
+chance = 0.05
 metadata/_custom_type_script = "uid://dysbiie00jqq2"
 
 [sub_resource type="Resource" id="Resource_1ap6o"]
 script = ExtResource("1_le2u5")
 scene = ExtResource("5_aqrrp")
-chance = 0.1
+chance = 0.05
 metadata/_custom_type_script = "uid://dysbiie00jqq2"
 
 [sub_resource type="Resource" id="Resource_3gmh8"]
 script = ExtResource("1_le2u5")
 scene = ExtResource("6_l6hj5")
-chance = 0.1
+chance = 0.05
 metadata/_custom_type_script = "uid://dysbiie00jqq2"
 
 [resource]
