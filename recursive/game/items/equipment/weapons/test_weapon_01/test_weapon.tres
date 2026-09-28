@@ -3,14 +3,14 @@
 [ext_resource type="Resource" uid="uid://st2de7v0al8h" path="res://game/actors/player/hitboxes/player_unarmed_offsets.tres" id="1_gxdt4"]
 [ext_resource type="Script" uid="uid://c1b7wypd2oh0i" path="res://game/components/hitbox/attack_spec.gd" id="1_hknmk"]
 [ext_resource type="Script" uid="uid://c12w1whtmqtq7" path="res://game/items/equipment/core/equippable_item.gd" id="1_sr6ud"]
-[ext_resource type="PackedScene" uid="uid://dbi1x54t3m5fi" path="res://game/actors/player/hitboxes/PlayerUnarmedHitbox.tscn" id="2_k4u46"]
+[ext_resource type="PackedScene" uid="uid://dbi1x54t3m5fi" path="res://game/actors/player/hitboxes/player_unarmed_hitbox.tscn" id="2_0nnqp"]
 [ext_resource type="Script" uid="uid://v162jjr58mo1" path="res://game/items/equipment/core/stat_bonuses.gd" id="2_w320p"]
 [ext_resource type="Texture2D" uid="uid://7cw27q5h868t" path="res://game/items/equipment/weapons/test_weapon_01/Test Weapon.png" id="5_0nnqp"]
 [ext_resource type="Resource" uid="uid://n50i5kp2n1su" path="res://game/items/equipment/weapons/test_weapon_01/test_weapon_hold_offsets.tres" id="6_hcgr5"]
 
 [sub_resource type="Resource" id="Resource_w320p"]
 script = ExtResource("1_hknmk")
-scene = ExtResource("2_k4u46")
+scene = ExtResource("2_0nnqp")
 offsets = ExtResource("1_gxdt4")
 damage = 50.0
 windup_time = 0.6
@@ -26,9 +26,9 @@ metadata/_custom_type_script = "uid://v162jjr58mo1"
 script = ExtResource("1_sr6ud")
 attack = SubResource("Resource_w320p")
 bonuses = SubResource("Resource_wxv45")
+animation_prefix = "onehand"
 held_texture = ExtResource("5_0nnqp")
 hold_offsets = ExtResource("6_hcgr5")
-animation_prefix = "onehand"
 id = &"test_weapon"
 display_name = "Test Weapon"
 description = "This is a test weapon."
