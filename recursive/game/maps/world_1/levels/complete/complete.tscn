@@ -1,0 +1,48 @@
+[gd_scene format=4]
+
+[ext_resource type="Script" uid="uid://cfwy36bm1t0y1" path="res://game/maps/core/map.gd" id="1_4ctkc"]
+[ext_resource type="TileSet" path="res://game/maps/world_1/assets/tilesets/w1_ground_tileset.tres" id="2_67lvu"]
+[ext_resource type="TileSet" path="res://game/maps/world_1/assets/tilesets/w1_walls_tileset.tres" id="3_qwbbp"]
+[ext_resource type="Script" uid="uid://bu3ha67fsw3t5" path="res://game/maps/scripts/level_navigation.gd" id="4_bygpk"]
+[ext_resource type="PackedScene" path="res://game/components/interaction/menu_exit.tscn" id="5_fexa8"]
+
+[node name="World1Complete" type="Node2D" unique_id=642632638]
+script = ExtResource("1_4ctkc")
+map_id = &"w1_complete"
+
+[node name="Ground" type="TileMapLayer" parent="." unique_id=788118773]
+tile_map_data = PackedByteArray("AAABAAEAAAACAAAAAAACAAEAAAACAAAAAAADAAEAAAAAAAAAAAAEAAEAAAAAAAAAAAAFAAEAAAABAAAAAAAGAAEAAAAAAAAAAAAHAAEAAAACAAAAAAAIAAEAAAAAAAAAAAAJAAEAAAAAAAAAAAABAAIAAAAAAAAAAAACAAIAAAAAAAAAAAADAAIAAAAAAAAAAAAEAAIAAAAAAAAAAAAFAAIAAAAAAAAAAAAGAAIAAAAAAAAAAAAHAAIAAAAAAAAAAAAIAAIAAAACAAAAAAAJAAIAAAAAAAAAAAABAAMAAAAAAAAAAAACAAMAAAABAAAAAAADAAMAAAAAAAAAAAAEAAMAAAAAAAAAAAAFAAMAAAAAAAAAAAAGAAMAAAAAAAAAAAAHAAMAAAAAAAAAAAAIAAMAAAAAAAAAAAAJAAMAAAAAAAAAAAABAAQAAAABAAAAAAACAAQAAAAAAAAAAAADAAQAAAAAAAAAAAAEAAQAAAACAAAAAAAFAAQAAAAAAAAAAAAGAAQAAAAAAAAAAAAHAAQAAAAAAAAAAAAIAAQAAAAAAAAAAAAJAAQAAAAAAAAAAAABAAUAAAACAAAAAAACAAUAAAAAAAAAAAADAAUAAAABAAAAAAAEAAUAAAABAAAAAAAFAAUAAAAAAAAAAAAGAAUAAAAAAAAAAAAHAAUAAAABAAAAAAAIAAUAAAAAAAAAAAAJAAUAAAAAAAAAAAA=")
+tile_set = ExtResource("2_67lvu")
+
+[node name="Walls" type="TileMapLayer" parent="." unique_id=25429877 groups=["navigation_obstacles"]]
+tile_map_data = PackedByteArray("AAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAACAAAAAAAAAAAAAAADAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAHAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAJAAAAAAAAAAAAAAAKAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAKAAEAAAAAAAAAAAAAAAIAAAAAAAAAAAAKAAIAAAAAAAAAAAAAAAMAAAAAAAAAAAAKAAMAAAAAAAAAAAAAAAQAAAAAAAAAAAAKAAQAAAAAAAAAAAAAAAUAAAAAAAAAAAAKAAUAAAAAAAAAAAAAAAYAAAAAAAAAAAABAAYAAAAAAAAAAAACAAYAAAAAAAAAAAADAAYAAAAAAAAAAAAEAAYAAAAAAAAAAAAFAAYAAAAAAAAAAAAGAAYAAAAAAAAAAAAHAAYAAAAAAAAAAAAIAAYAAAAAAAAAAAAJAAYAAAAAAAAAAAAKAAYAAAAAAAAAAAA=")
+tile_set = ExtResource("3_qwbbp")
+
+[node name="Navigation" type="NavigationRegion2D" parent="." unique_id=1632132153 node_paths=PackedStringArray("ground")]
+script = ExtResource("4_bygpk")
+ground = NodePath("../Ground")
+
+[node name="Y-sorted" type="Node2D" parent="." unique_id=79291033]
+z_index = 2
+y_sort_enabled = true
+
+[node name="MenuExit" parent="Y-sorted" unique_id=1401032600 instance=ExtResource("5_fexa8")]
+position = Vector2(352, 200)
+
+[node name="SpawnPoints" type="Node2D" parent="." unique_id=1119282035]
+
+[node name="FromLevel" type="Marker2D" parent="SpawnPoints" unique_id=1739767058]
+position = Vector2(96, 288)
+
+[node name="Banner" type="Label" parent="." unique_id=118865320]
+z_index = 10
+offset_left = 152.0
+offset_top = 100.0
+offset_right = 552.0
+offset_bottom = 140.0
+theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(0.86, 0.68, 0.32, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+text = "WORLD 1 COMPLETE"
+horizontal_alignment = 1

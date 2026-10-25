@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="MapRegistry" format=3]
 
-[ext_resource type="Script" path="res://game/maps/core/map_data.gd" id="1_26ba6"]
-[ext_resource type="Script" path="res://game/maps/core/map_registry.gd" id="2_mna1h"]
+[ext_resource type="Script" uid="uid://bow426472yil4" path="res://game/maps/core/map_data.gd" id="1_26ba6"]
+[ext_resource type="Script" uid="uid://cv8myh1a6htas" path="res://game/maps/core/map_registry.gd" id="2_mna1h"]
 
 [sub_resource type="Resource" id="Resource_keaa4"]
 script = ExtResource("1_26ba6")
@@ -27,6 +27,36 @@ id = &"w1_rest"
 display_name = "World 1 — Rest Area"
 scene_path = "res://game/maps/world_1/levels/rest_area/rest_area.tscn"
 
+[sub_resource type="Resource" id="Resource_muyqm"]
+script = ExtResource("1_26ba6")
+id = &"w1_level_2"
+display_name = "World 1 — Level 2"
+scene_path = "res://game/maps/world_1/levels/level_2/level_2.tscn"
+
+[sub_resource type="Resource" id="Resource_asd3n"]
+script = ExtResource("1_26ba6")
+id = &"w1_rest_2"
+display_name = "World 1 — Rest Area 2"
+scene_path = "res://game/maps/world_1/levels/rest_area_2/rest_area_2.tscn"
+
+[sub_resource type="Resource" id="Resource_21rp8"]
+script = ExtResource("1_26ba6")
+id = &"w1_level_3"
+display_name = "World 1 — Level 3"
+scene_path = "res://game/maps/world_1/levels/level_3/level_3.tscn"
+
+[sub_resource type="Resource" id="Resource_ftkrx"]
+script = ExtResource("1_26ba6")
+id = &"w1_rest_3"
+display_name = "World 1 — Rest Area 3"
+scene_path = "res://game/maps/world_1/levels/rest_area_3/rest_area_3.tscn"
+
+[sub_resource type="Resource" id="Resource_6csou"]
+script = ExtResource("1_26ba6")
+id = &"w1_complete"
+display_name = "World 1 — Complete"
+scene_path = "res://game/maps/world_1/levels/complete/complete.tscn"
+
 [resource]
 script = ExtResource("2_mna1h")
-maps = Array[ExtResource("1_26ba6")]([SubResource("Resource_keaa4"), SubResource("Resource_tmvgk"), SubResource("Resource_26ba6"), SubResource("Resource_mna1h")])
+maps = Array[ExtResource("1_26ba6")]([SubResource("Resource_keaa4"), SubResource("Resource_tmvgk"), SubResource("Resource_26ba6"), SubResource("Resource_mna1h"), SubResource("Resource_muyqm"), SubResource("Resource_asd3n"), SubResource("Resource_21rp8"), SubResource("Resource_ftkrx"), SubResource("Resource_6csou")])

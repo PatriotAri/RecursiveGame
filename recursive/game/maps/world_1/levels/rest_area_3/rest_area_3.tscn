@@ -1,0 +1,44 @@
+[gd_scene format=4]
+
+[ext_resource type="Script" uid="uid://cfwy36bm1t0y1" path="res://game/maps/core/map.gd" id="1_aeobi"]
+[ext_resource type="TileSet" path="res://game/maps/world_1/assets/tilesets/w1_ground_tileset.tres" id="2_gbc7x"]
+[ext_resource type="TileSet" path="res://game/maps/world_1/assets/tilesets/w1_walls_tileset.tres" id="3_mn0jg"]
+[ext_resource type="Script" uid="uid://bu3ha67fsw3t5" path="res://game/maps/scripts/level_navigation.gd" id="4_j0tke"]
+[ext_resource type="PackedScene" path="res://game/components/shop/shop.tscn" id="5_gdugr"]
+[ext_resource type="PackedScene" path="res://game/components/doors/door.tscn" id="6_ehil6"]
+[ext_resource type="PackedScene" uid="uid://c2rn4u0yidyre" path="res://game/items/consumables/potions/health_potion/health_potion_pickup.tscn" id="7_oeew5"]
+
+[node name="RestArea3" type="Node2D" unique_id=552827651]
+script = ExtResource("1_aeobi")
+map_id = &"w1_rest_3"
+
+[node name="Ground" type="TileMapLayer" parent="." unique_id=727972609]
+tile_map_data = PackedByteArray("AAABAAEAAAAAAAAAAAACAAEAAAAAAAAAAAADAAEAAAAAAAAAAAAEAAEAAAAAAAAAAAAFAAEAAAAAAAAAAAAGAAEAAAAAAAAAAAAHAAEAAAAAAAAAAAAIAAEAAAAAAAAAAAAJAAEAAAAAAAAAAAAKAAEAAAAAAAAAAAABAAIAAAAAAAAAAAACAAIAAAAAAAAAAAADAAIAAAAAAAAAAAAEAAIAAAAAAAAAAAAFAAIAAAACAAAAAAAGAAIAAAACAAAAAAAHAAIAAAABAAAAAAAIAAIAAAAAAAAAAAAJAAIAAAAAAAAAAAAKAAIAAAAAAAAAAAABAAMAAAAAAAAAAAACAAMAAAAAAAAAAAADAAMAAAAAAAAAAAAEAAMAAAAAAAAAAAAFAAMAAAACAAAAAAAGAAMAAAAAAAAAAAAHAAMAAAAAAAAAAAAIAAMAAAACAAAAAAAJAAMAAAAAAAAAAAAKAAMAAAAAAAAAAAABAAQAAAAAAAAAAAACAAQAAAAAAAAAAAADAAQAAAACAAAAAAAEAAQAAAAAAAAAAAAFAAQAAAACAAAAAAAGAAQAAAAAAAAAAAAHAAQAAAABAAAAAAAIAAQAAAAAAAAAAAAJAAQAAAAAAAAAAAAKAAQAAAAAAAAAAAABAAUAAAAAAAAAAAACAAUAAAAAAAAAAAADAAUAAAABAAAAAAAEAAUAAAAAAAAAAAAFAAUAAAAAAAAAAAAGAAUAAAAAAAAAAAAHAAUAAAAAAAAAAAAIAAUAAAAAAAAAAAAJAAUAAAAAAAAAAAAKAAUAAAAAAAAAAAA=")
+tile_set = ExtResource("2_gbc7x")
+
+[node name="Walls" type="TileMapLayer" parent="." unique_id=408221166 groups=["navigation_obstacles"]]
+tile_map_data = PackedByteArray("AAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAACAAAAAAAAAAAAAAADAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAHAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAJAAAAAAAAAAAAAAAKAAAAAAAAAAAAAAALAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAALAAEAAAAAAAAAAAAAAAIAAAAAAAAAAAALAAIAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAQAAAAAAAAAAAALAAQAAAAAAAAAAAAAAAUAAAAAAAAAAAALAAUAAAAAAAAAAAAAAAYAAAAAAAAAAAABAAYAAAAAAAAAAAACAAYAAAAAAAAAAAADAAYAAAAAAAAAAAAEAAYAAAAAAAAAAAAFAAYAAAAAAAAAAAAGAAYAAAAAAAAAAAAHAAYAAAAAAAAAAAAIAAYAAAAAAAAAAAAJAAYAAAAAAAAAAAAKAAYAAAAAAAAAAAALAAYAAAAAAAAAAAA=")
+tile_set = ExtResource("3_mn0jg")
+
+[node name="Navigation" type="NavigationRegion2D" parent="." unique_id=2123094 node_paths=PackedStringArray("ground")]
+script = ExtResource("4_j0tke")
+ground = NodePath("../Ground")
+
+[node name="Y-sorted" type="Node2D" parent="." unique_id=732362516]
+z_index = 2
+y_sort_enabled = true
+
+[node name="Shop" parent="Y-sorted" unique_id=548514372 instance=ExtResource("5_gdugr")]
+position = Vector2(352, 112)
+
+[node name="OnwardDoor" parent="Y-sorted" unique_id=1463101833 instance=ExtResource("6_ehil6")]
+position = Vector2(736, 224)
+target_map = &"w1_complete"
+
+[node name="h1" parent="Y-sorted" unique_id=1855851919 instance=ExtResource("7_oeew5")]
+position = Vector2(352, 352)
+
+[node name="SpawnPoints" type="Node2D" parent="." unique_id=1004055141]
+
+[node name="FromLevel" type="Marker2D" parent="SpawnPoints" unique_id=471476735]
+position = Vector2(96, 224)

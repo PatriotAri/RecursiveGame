@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="SpawnEntry" format=3]
+
+[ext_resource type="PackedScene" path="res://game/actors/enemies/types/normal/grunt/core/grunt.tscn" id="1_o5fw7"]
+[ext_resource type="Script" path="res://game/components/spawners/spawn_entry.gd" id="2_b3y1x"]
+
+[resource]
+script = ExtResource("2_b3y1x")
+scene = ExtResource("1_o5fw7")
+weight = 1.5
+min_round = 2

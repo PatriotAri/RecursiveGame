@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="SpawnEntry" format=3]
+
+[ext_resource type="PackedScene" path="res://game/actors/enemies/types/ranged/spitter/core/spitter.tscn" id="1_iv2vm"]
+[ext_resource type="Script" path="res://game/components/spawners/spawn_entry.gd" id="2_hh67a"]
+
+[resource]
+script = ExtResource("2_hh67a")
+scene = ExtResource("1_iv2vm")
+weight = 1.5

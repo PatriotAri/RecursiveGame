@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="SpawnEntry" format=3]
+
+[ext_resource type="PackedScene" path="res://game/actors/enemies/types/flyer/bat/core/bat.tscn" id="1_jo7xr"]
+[ext_resource type="Script" path="res://game/components/spawners/spawn_entry.gd" id="2_0o1eu"]
+
+[resource]
+script = ExtResource("2_0o1eu")
+scene = ExtResource("1_jo7xr")
+min_round = 2

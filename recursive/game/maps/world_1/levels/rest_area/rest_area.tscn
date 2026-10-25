@@ -33,7 +33,7 @@ position = Vector2(352, 112)
 
 [node name="OnwardDoor" parent="Y-sorted" unique_id=784534541 instance=ExtResource("6_ollyv")]
 position = Vector2(736, 224)
-locked = true
+target_map = &"w1_level_2"
 
 [node name="h1" parent="Y-sorted" unique_id=1855851919 instance=ExtResource("7_bmue8")]
 position = Vector2(352, 352)

@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="SpawnEntry" format=3]
+
+[ext_resource type="PackedScene" path="res://game/actors/enemies/types/fodder/crawler/core/crawler.tscn" id="1_55kdq"]
+[ext_resource type="Script" path="res://game/components/spawners/spawn_entry.gd" id="2_55ero"]
+
+[resource]
+script = ExtResource("2_55ero")
+scene = ExtResource("1_55kdq")
