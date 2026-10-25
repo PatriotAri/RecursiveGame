@@ -23,6 +23,9 @@ func _ready() -> void:
 	await get_tree().process_frame
 	bake()
 
+## Rebuilds the navmesh, on the main thread. A threaded bake was tried for
+## door rebakes and came back empty, and a synchronous one measured under
+## half a millisecond on the largest map here, so it isn't worth the risk.
 func bake() -> void:
 	var poly := NavigationPolygon.new()
 	poly.agent_radius = agent_radius

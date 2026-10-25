@@ -240,11 +240,23 @@ func has_navigation() -> bool:
 func steering_velocity() -> Vector2:
 	return spacing_velocity()
 
+## Every enemy, fetched once per physics frame and shared. Each enemy asking
+## the tree itself meant copying the whole group n times a frame.
+static var _group_cache: Array[Node] = []
+static var _group_cache_frame:= -1
+
+func _enemies() -> Array[Node]:
+	var frame := Engine.get_physics_frames()
+	if frame != _group_cache_frame:
+		_group_cache_frame = frame
+		_group_cache = get_tree().get_nodes_in_group(&"enemy")
+	return _group_cache
+
 ## Push away from nearby enemies, as a velocity.
 func spacing_velocity() -> Vector2:
 	var push := Vector2.ZERO
-	for other in get_tree().get_nodes_in_group(&"enemy"):
-		if other == self or not (other is Enemy) or other.data == null or other.data.is_dead:
+	for other in _enemies():
+		if other == self or not is_instance_valid(other) or not (other is Enemy) or other.data == null or other.data.is_dead:
 			continue
 		var away: Vector2 = global_position - other.global_position
 		var dist := away.length()

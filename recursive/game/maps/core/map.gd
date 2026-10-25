@@ -13,6 +13,8 @@ extends Node2D
 @export var entity_root_path:= NodePath("Y-sorted")
 ## Used when a door or a load names no spawn point, or names a missing one.
 @export var default_spawn:= &"Default"
+## Saves the game whenever the player walks in. For safe rooms between fights.
+@export var autosave_on_enter:= false
 
 func _enter_tree() -> void:
 	add_to_group(&"map")
@@ -41,6 +43,20 @@ func get_spawn_position(spawn_name: StringName) -> Vector2:
 	push_warning("Map %s: no spawn point '%s' or '%s'; using the origin." % [map_id, spawn_name, default_spawn])
 	return global_position
 
+## The world-space rectangle covered by the map's floor and walls, for
+## keeping the camera from showing the void beyond them.
+func get_bounds() -> Rect2:
+	var bounds := Rect2()
+	for layer_name in ["Ground", "Walls"]:
+		var layer := get_node_or_null(layer_name) as TileMapLayer
+		if layer == null or layer.tile_set == null: continue
+		var cells := layer.get_used_rect()
+		if cells.size == Vector2i.ZERO: continue
+		var half := Vector2(layer.tile_set.tile_size) * 0.5
+		var rect := Rect2(layer.to_global(layer.map_to_local(cells.position) - half), Vector2(cells.size * layer.tile_set.tile_size))
+		bounds = rect if bounds.size == Vector2.ZERO else bounds.merge(rect)
+	return bounds
+
 ## The first RoundManager in this map, or null for a map without rounds.
 func get_round_manager() -> RoundManager:
 	for node in get_tree().get_nodes_in_group(&"round_manager"):
@@ -52,3 +68,4 @@ func _spawn_standalone_player() -> void:
 	var player := GlobalPackedScenes.player_scene.instantiate()
 	get_entity_root().add_child(player)
 	player.global_position = get_spawn_position(default_spawn)
+	player.set_camera_limits(get_bounds())

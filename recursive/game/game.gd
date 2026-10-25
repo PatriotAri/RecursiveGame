@@ -62,6 +62,8 @@ func change_map(map_id: StringName, spawn_name: StringName = &"") -> void:
 	tween.tween_property(_fade, "color:a", 1.0, fade_time)
 	await tween.finished
 	_load_map(map_id, spawn_name)
+	if current_map.autosave_on_enter:
+		SaveManager.save_game()
 	tween = create_tween()
 	tween.tween_property(_fade, "color:a", 0.0, fade_time)
 	await tween.finished
@@ -95,6 +97,7 @@ func _load_map(map_id: StringName, spawn_name: StringName) -> void:
 	map.get_entity_root().add_child(player)
 	player.global_position = map.get_spawn_position(spawn_name)
 	player.velocity = Vector2.ZERO
+	player.set_camera_limits(map.get_bounds())
 	if data.music:
 		AudioManager.play_music(data.music)
 	map_changed.emit(map)

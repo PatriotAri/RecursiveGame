@@ -55,10 +55,20 @@ func set_prompt(text: String) -> void:
 
 func _refresh_label() -> void:
 	if _label == null: return
-	_label.text = "[E] " + prompt
+	_label.text = "[%s] %s" % [_key_text(), prompt]
 	# Centred on prompt_offset. size is only known after the text is set.
 	_label.reset_size()
 	_label.position = prompt_offset - Vector2(_label.size.x * 0.5, _label.size.y)
+
+## Whatever the interact action is bound to right now, so the prompt stays
+## right if the binding changes.
+static func _key_text() -> String:
+	for event in InputMap.action_get_events(&"interact"):
+		var key := event as InputEventKey
+		if key:
+			var code := key.physical_keycode if key.physical_keycode != KEY_NONE else key.keycode
+			return OS.get_keycode_string(code)
+	return "?"
 
 func _on_body_entered(body: Node) -> void:
 	if body.has_method("register_interactable"):

@@ -330,6 +330,16 @@ func play_sound(effect: SoundEffect) -> void:
 func combat_anchor() -> Vector2:
 	return $Hurtbox/CollisionShape2D.global_position
 
+## Stops the camera at the edges of `bounds`. An empty rect lifts the limits.
+func set_camera_limits(bounds: Rect2) -> void:
+	if camera == null: return
+	if bounds.size == Vector2.ZERO:
+		bounds = Rect2(-10000000, -10000000, 20000000, 20000000)
+	camera.limit_left = floori(bounds.position.x)
+	camera.limit_top = floori(bounds.position.y)
+	camera.limit_right = ceili(bounds.end.x)
+	camera.limit_bottom = ceili(bounds.end.y)
+
 ## Jolts the camera by up to `strength` px, settling over `duration`.
 func shake_camera(strength: float, duration: float) -> void:
 	if camera == null: return
