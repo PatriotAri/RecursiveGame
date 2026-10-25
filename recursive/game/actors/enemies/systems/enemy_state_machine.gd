@@ -32,6 +32,11 @@ func _resolve_state(data: EnemyData) -> EnemyData.State:
 			data.attack_cooldown_timer = attack_cooldown_duration
 		return EnemyData.State.HURT
 
+	# Running beats fighting — but only between swings. A swing already in
+	# progress finishes first.
+	if data.in_danger and data.current_state != EnemyData.State.ATTACK:
+		return EnemyData.State.FLEE
+
 	# Swing completed → cooldown
 	if data.current_state == EnemyData.State.ATTACK and data.attack_finished:
 		data.attack_finished = false

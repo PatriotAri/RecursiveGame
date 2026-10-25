@@ -53,6 +53,10 @@ var death_handled := false
 ## Grace period after the player leaves the detection shape before aggro drops.
 ## Stops a target walking the boundary from flickering CHASE/PATROL every frame.
 @export var target_forget_delay:= 1.0
+## Once aggroed, the player has to get this far away before the forget
+## countdown even starts. Pathing round a wall routinely carries an enemy
+## out of its detection shape mid-chase; without this it would give up.
+@export var leash_distance:= 320.0
 
 #movement variables
 @export_group("Movement Tuning")
@@ -60,6 +64,27 @@ var death_handled := false
 @export var walk_speed:= 65.0
 @export var acceleration:= 500.0 #px/s^2
 @export var friction:= 600.0 #px/s^2
+
+#spacing variables
+@export_group("Spacing Tuning")
+## Other enemies closer than this get pushed apart, so a group doesn't
+## collapse into one stacked sprite.
+@export var spacing_radius:= 28.0
+## Push speed at full overlap, in px/s. Fades to zero at spacing_radius.
+@export var spacing_strength:= 60.0
+
+#flee variables
+@export_group("Flee Tuning")
+## Flees when health falls to this fraction with the player nearby.
+## 0 = never flees.
+@export_range(0.0, 1.0) var flee_health_ratio:= 0.0
+@export var flee_speed:= 110.0
+## Stops running once the player is this far away.
+@export var flee_safe_distance:= 220.0
+## A single flee gives up after this long...
+@export var flee_max_time:= 3.0
+## ...and can't start again until this much later.
+@export var flee_recover_time:= 2.5
 
 #patrol variables
 @export_group("Patrol Tuning")
@@ -86,6 +111,14 @@ var attack_range:= 0.0
 
 var data: EnemyData
 
+## Paths around walls. Created in code so enemy scenes need no extra node;
+## with no navmesh in the level, movement falls back to straight lines.
+var nav_agent: NavigationAgent2D
+
+## Re-query the path only when the target has moved this far. Chasing a
+## moving player otherwise asks for a new path every single frame.
+const REPATH_DISTANCE_SQ := 16.0 * 16.0
+
 func _ready() -> void:
 	stats = StatSystem.new(Stat.new(max_health))
 	stats.health.emptied.connect(_on_health_emptied)
@@ -95,6 +128,12 @@ func _ready() -> void:
 	data.walk_speed = walk_speed
 	data.acceleration = acceleration
 	data.friction = friction
+	
+	nav_agent = NavigationAgent2D.new()
+	nav_agent.path_desired_distance = 8.0
+	nav_agent.target_desired_distance = 8.0
+	nav_agent.radius = spacing_radius * 0.5
+	add_child(nav_agent)
 
 	hitbox_manager = HitboxManagerBase.new(self, HitboxManagerBase.LAYER_PLAYER_HURTBOX, func(): return data.facing_dir)
 	_register_attacks()
@@ -131,10 +170,73 @@ func _physics_process(delta: float) -> void:
 			data.is_hurt = false
 
 	detection_system.update(delta)
+	_update_danger(delta)
 	state_machine.update(data, delta)
 	movement_system.update(delta)
 	attack_system.update(delta)
 	animation_system.update()
+
+## Decides whether this enemy wants to run, and keeps the flee timers.
+func _update_danger(delta: float) -> void:
+	if data.flee_block_timer > 0.0:
+		data.flee_block_timer -= delta
+	if data.current_state == EnemyData.State.FLEE:
+		data.flee_timer += delta
+		if data.flee_timer >= flee_max_time:
+			data.flee_timer = 0.0
+			data.flee_block_timer = flee_recover_time
+	else:
+		data.flee_timer = 0.0
+	
+	data.in_danger = flee_health_ratio > 0.0 \
+		and data.flee_block_timer <= 0.0 \
+		and data.player_detected \
+		and stats.health.ratio() <= flee_health_ratio \
+		and global_position.distance_to(data.player_pos) < flee_safe_distance
+
+# --- navigation -------------------------------------------------------------
+
+## Where to head next on the way to `target`: the next corner of a path
+## around walls, or `target` itself when there's no navmesh to path on.
+func next_path_position(target: Vector2) -> Vector2:
+	if not has_navigation():
+		return target
+	if nav_agent.target_position.distance_squared_to(target) > REPATH_DISTANCE_SQ:
+		nav_agent.target_position = target
+	if nav_agent.is_navigation_finished():
+		return target
+	return nav_agent.get_next_path_position()
+
+## The nearest walkable point to `point`, for picking destinations that
+## aren't inside a wall. Unchanged when there's no navmesh.
+func closest_walkable(point: Vector2) -> Vector2:
+	if not has_navigation():
+		return point
+	return NavigationServer2D.map_get_closest_point(nav_agent.get_navigation_map(), point)
+
+func has_navigation() -> bool:
+	var map := nav_agent.get_navigation_map()
+	# Iteration 0 means the map has never synced — no region baked yet.
+	return map.is_valid() and NavigationServer2D.map_get_iteration_id(map) > 0 \
+		and not NavigationServer2D.map_get_regions(map).is_empty()
+
+## Push away from nearby enemies, as a velocity.
+func spacing_velocity() -> Vector2:
+	var push := Vector2.ZERO
+	for other in get_tree().get_nodes_in_group(&"enemy"):
+		if other == self or not (other is Enemy) or other.data == null or other.data.is_dead:
+			continue
+		var away: Vector2 = global_position - other.global_position
+		var dist := away.length()
+		if dist >= spacing_radius:
+			continue
+		if dist < 0.01:
+			# Exactly stacked (two spawns on one point): pick a direction
+			# rather than dividing by zero.
+			away = Vector2.RIGHT.rotated(randf() * TAU)
+			dist = 0.01
+		push += away / dist * (1.0 - dist / spacing_radius)
+	return push * spacing_strength
 
 # --- overridable ------------------------------------------------------------
 

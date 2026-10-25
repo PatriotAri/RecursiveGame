@@ -8,6 +8,7 @@ enum State {
 	ATTACK_COOLDOWN,
 	HURT,
 	DIED,
+	FLEE, #always append, never insert in the middle
 }
 
 var is_hurt:= false
@@ -40,6 +41,15 @@ var walk_speed:= 65.0
 var facing_dir:= Vector2.ZERO
 var acceleration:= 500.0 #px/s^2
 var friction:= 600.0 #px/s^2
+
+#read/written by Enemy, read by state machine
+## Low on health with the player close. Only ever true for a type that flees.
+var in_danger:= false
+## Counts how long the current flee has lasted; FLEE gives up at the limit.
+var flee_timer:= 0.0
+## After giving up, fleeing is blocked until this runs out — a cornered
+## enemy turns and fights instead of pressing into the wall forever.
+var flee_block_timer:= 0.0
 
 #movement modifiers (knockback, slows, dashes, etc.)
 var modifiers := MovementModifierStack.new()

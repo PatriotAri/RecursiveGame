@@ -34,7 +34,7 @@ func _resolve_animation() -> StringName:
 			return "hurt_" + dir_str
 		EnemyData.State.ATTACK:
 			return "attack_" + dir_str
-		EnemyData.State.CHASE, EnemyData.State.PATROL:
+		EnemyData.State.CHASE, EnemyData.State.PATROL, EnemyData.State.FLEE:
 			return "walk_" + dir_str
 		_:
 			return "idle_" + dir_str

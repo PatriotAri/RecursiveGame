@@ -11,6 +11,7 @@ var player: CharacterBody2D = null
 
 var attack_range: float
 var forget_delay: float
+var leash_distance_sq: float
 var max_range_sq: float
 
 # Offset of the detection shape, read from the scene. The range check measures
@@ -26,6 +27,7 @@ func initialize(data_ref: EnemyData, body_ref: Enemy) -> void:
 	
 	attack_range = body.attack_range
 	forget_delay = body.target_forget_delay
+	leash_distance_sq = body.leash_distance * body.leash_distance
 	
 	max_range_sq = attack_range * attack_range
 
@@ -53,8 +55,10 @@ func update(delta: float) -> void:
 		return
 	
 	# Hysteresis: leaving the shape starts a countdown rather than dropping
-	# aggro instantly.
-	if not _player_inside:
+	# aggro instantly — and only once the player is past the leash.
+	if not _player_inside and _within_leash():
+		_forget_timer = forget_delay
+	elif not _player_inside:
 		_forget_timer -= delta
 		if _forget_timer <= 0.0:
 			clear_target()
@@ -78,6 +82,9 @@ func _on_body_exited(exited: Node) -> void:
 	if exited == player:
 		_player_inside = false
 		_forget_timer = forget_delay
+
+func _within_leash() -> bool:
+	return detection_anchor().distance_squared_to(_player_anchor()) <= leash_distance_sq
 
 func has_player() -> bool:
 	return is_instance_valid(player)

@@ -15,14 +15,18 @@ var arrival_threshold:= 5.0
 # body.velocity for one frame only and never stored back here.
 var locomotion := Vector2.ZERO
 
+## How far ahead a fleeing enemy aims each frame. Far enough that the path
+## bends round walls, near enough that it keeps re-aiming as the player moves.
+const FLEE_LOOKAHEAD := 96.0
+
 func _init(body_ref: Enemy, data_ref: EnemyData) -> void:
 	body = body_ref
 	data = data_ref
-	
+
 	patrol_wait_time = body.patrol_wait_time
 	patrol_timer = body.patrol_timer
 	min_patrol_distance = body.min_patrol_distance
-	
+
 	pick_patrol_target() #sets patrol point on spawn
 
 func update(delta: float) -> void:
@@ -44,6 +48,8 @@ func update(delta: float) -> void:
 			patrol(delta)
 		EnemyData.State.CHASE:
 			chase(delta)
+		EnemyData.State.FLEE:
+			flee(delta)
 		EnemyData.State.ATTACK:
 			attack(delta)
 		EnemyData.State.ATTACK_COOLDOWN:
@@ -51,20 +57,34 @@ func update(delta: float) -> void:
 		_:
 			idle(delta)
 
-# Single exit point for movement, so the impulse is applied once per frame
-# no matter which state ran.
+# Single exit point for movement, so the impulse and spacing push are applied
+# once per frame no matter which state ran.
 func _commit() -> void:
-	body.velocity = locomotion + data.modifiers.get_impulse_sum()
+	body.velocity = locomotion + data.modifiers.get_impulse_sum() + body.spacing_velocity()
 	body.move_and_slide()
 
 func idle(delta: float) -> void:
 	locomotion = locomotion.move_toward(Vector2.ZERO, data.friction * delta)
 	_commit()
 
+## Accelerates toward `target` along a path round walls (or straight, with no
+## navmesh) and faces the way it's going.
+func _move_toward(target: Vector2, speed: float, delta: float) -> void:
+	var next := body.next_path_position(target)
+	var direction := next - body.global_position
+	if direction.length_squared() < 0.01:
+		idle(delta)
+		return
+	direction = direction.normalized()
+	data.facing_dir = direction
+	var target_velocity := direction * speed * data.modifiers.get_speed_scale()
+	locomotion = locomotion.move_toward(target_velocity, data.acceleration * delta)
+	_commit()
+
 func patrol(delta: float) -> void:
 	var direction:= patrol_target - body.global_position
 	#the "arrival_threshold" tells the enemy when its within the range,
-	#act like it's reached the patrol point. This prevents the enemy from 
+	#act like it's reached the patrol point. This prevents the enemy from
 	#jittering on the patrol point or not being able to find the patrol point all together.
 	if direction.length() < arrival_threshold:
 		idle(delta)
@@ -73,49 +93,52 @@ func patrol(delta: float) -> void:
 			patrol_timer = 0.0
 			pick_patrol_target()
 	else:
-		var dir_norm:= direction.normalized()
-		data.facing_dir = dir_norm
-		var speed:= data.patrol_speed * data.modifiers.get_speed_scale()
-		var target_velocity:= dir_norm * speed
-		locomotion = locomotion.move_toward(target_velocity, data.acceleration * delta)
-		_commit()
+		_move_toward(patrol_target, data.patrol_speed, delta)
 
 func pick_patrol_target() -> void:
 	if not body.has_node("PatrolZone"):
 		patrol_target = body.global_position
 		return
-		
+
 	var zone:= body.get_node("PatrolZone")
 	var shape:= zone.get_node("CollisionShape2D").shape as RectangleShape2D
 	var half:= shape.size / 2.0
-	
+
 	for attempts in max_attempts:
 		var candidate:= body.global_position + Vector2(
 			randf_range(-half.x, half.x),
 			randf_range(-half.y, half.y)
 		)
+		# Snapped onto the navmesh, so a point picked inside a wall becomes
+		# the nearest reachable spot instead of somewhere to grind against.
+		candidate = body.closest_walkable(candidate)
 		if body.global_position.distance_to(candidate) >= min_patrol_distance:
 			patrol_target = candidate
 			return
-			
+
 	patrol_target = body.global_position
 
 func chase(delta: float) -> void:
 	if not data.player_detected:
 		idle(delta)
 		return
-	var direction := (data.player_pos - body.global_position).normalized()
-	data.facing_dir = direction
-	var speed:= data.walk_speed * data.modifiers.get_speed_scale()
-	var target_velocity:= direction * speed
-	locomotion = locomotion.move_toward(target_velocity, data.acceleration * delta)
-	_commit()
+	_move_toward(data.player_pos, data.walk_speed, delta)
+
+func flee(delta: float) -> void:
+	if not data.player_detected:
+		idle(delta)
+		return
+	var away := body.global_position - data.player_pos
+	if away == Vector2.ZERO:
+		away = Vector2.RIGHT
+	var goal := body.closest_walkable(body.global_position + away.normalized() * FLEE_LOOKAHEAD)
+	_move_toward(goal, body.flee_speed, delta)
 
 func attack(delta: float) -> void:
 	if data.player_detected:
 		data.facing_dir = (data.player_pos - body.global_position).normalized()
 	idle(delta) #stands still, attack system spawns hitbox and does timing
-	
+
 func attack_cooldown(delta: float) -> void:
 	# Tracks while waiting — only the swing itself is committed.
 	if data.player_detected:
