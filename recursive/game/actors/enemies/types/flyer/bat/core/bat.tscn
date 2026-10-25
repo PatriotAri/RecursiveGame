@@ -5,12 +5,11 @@
 [ext_resource type="Texture2D" path="res://game/actors/enemies/types/flyer/bat/assets/bat_shadow.png" id="3_shadow"]
 [ext_resource type="Script" path="res://game/components/combat/hurtbox/hurtbox_component.gd" id="4_hurt"]
 [ext_resource type="Script" path="res://game/actors/enemies/systems/enemy_detection_system.gd" id="5_detect"]
-[ext_resource type="PackedScene" uid="uid://dr8dgg3mtr20a" path="res://game/actors/enemies/shared/melee_hitbox.tscn" id="6_hitbox"]
 [ext_resource type="Resource" uid="uid://c6pny72mk8boe" path="res://game/actors/enemies/types/fodder/crawler/crawler_drops.tres" id="7_drops"]
-[ext_resource type="Resource" path="res://game/actors/enemies/types/flyer/bat/bat_melee_offsets.tres" id="8_offsets"]
 
 [ext_resource type="Resource" path="res://game/audio/sfx/hit.tres" id="90_hurt"]
 [ext_resource type="Resource" path="res://game/audio/sfx/enemy_death.tres" id="91_death"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/flyer/bat/bat_melee_attack.tres" id="93_attack"]
 [sub_resource type="AtlasTexture" id="AtlasTexture_up"]
 atlas = ExtResource("2_sheet")
 region = Rect2(0, 0, 32, 32)
@@ -82,12 +81,6 @@ collision_mask = 0
 motion_mode = 1
 script = ExtResource("1_bat")
 max_health = 6
-melee_hitbox = ExtResource("6_hitbox")
-melee_offsets = ExtResource("8_offsets")
-windup_time = 0.25
-lifetime = 0.15
-damage = 1.0
-knockback_strength = 40.0
 attack_cooldown = 1.4
 target_radius = 16.0
 patrol_speed = 60.0
@@ -98,6 +91,7 @@ drop_table = ExtResource("7_drops")
 hurt_sound = ExtResource("90_hurt")
 death_sound = ExtResource("91_death")
 patrol_size = Vector2(320, 260)
+attack = ExtResource("93_attack")
 
 [node name="Shadow" type="Sprite2D" parent="."]
 modulate = Color(1, 1, 1, 0.35)

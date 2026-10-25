@@ -2,25 +2,20 @@
 
 [ext_resource type="PackedScene" uid="uid://bmonh3sf35441" path="res://game/actors/enemies/types/fodder/crawler/core/crawler.tscn" id="1_base"]
 [ext_resource type="Script" path="res://game/actors/enemies/types/ranged/spitter/core/spitter.gd" id="2_script"]
-[ext_resource type="PackedScene" path="res://game/actors/enemies/types/ranged/spitter/acid_glob.tscn" id="3_glob"]
-[ext_resource type="Resource" path="res://game/actors/enemies/types/ranged/spitter/spitter_projectile_offsets.tres" id="4_off"]
 
+[ext_resource type="Resource" path="res://game/actors/enemies/types/ranged/spitter/spitter_spit_attack.tres" id="93_attack"]
 [sub_resource type="CircleShape2D" id="CircleShape2D_detect"]
 radius = 220.0
 
 [node name="Spitter" instance=ExtResource("1_base")]
 script = ExtResource("2_script")
 max_health = 8
-windup_time = 0.4
-lifetime = 0.2
-damage = 2.0
 attack_cooldown = 1.8
 needs_line_of_sight = true
 preferred_distance = 100.0
 walk_speed = 55.0
 flee_health_ratio = 0.0
-projectile_scene = ExtResource("3_glob")
-projectile_offsets = ExtResource("4_off")
+attack = ExtResource("93_attack")
 
 [node name="Sprite" parent="." index="0"]
 self_modulate = Color(0.55, 1, 0.45, 1)

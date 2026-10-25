@@ -45,7 +45,6 @@ var _shake_tween : Tween
 @export var stamina_regen_per_second: float = 8.0
 @export var stamina_regen_delay: float = 0.5
 @export var sprint_stamina_cost: float = 12.0
-@export var attack_stamina_cost: int = 4
 @export var exhaustion_recovery_ratio: float = 0.25
 
 @export_group("Armor")
@@ -59,14 +58,8 @@ var _shake_tween : Tween
 
 @export_category("Combat/Movement")
 @export_group("Attack")
-@export var windup_time:= 0.1
-@export var lifetime:= 0.1
-@export var damage:= 10.0
-@export var unarmed_offsets: HitboxOffsetData
-
-@export_group("Sounds")
-## Given to the unarmed attack. Weapons carry their own on AttackSpec.sound.
-@export var attack_sound: SoundEffect = preload("res://game/audio/sfx/swing.tres")
+## The punch thrown with no weapon equipped. Weapons bring their own.
+@export var unarmed_attack: AttackSpec
 
 @export_group("Movement")
 @export var walk_speed:= 100.0
@@ -100,20 +93,8 @@ func _ready() -> void:
 	stats.stamina.emptied.connect(_on_stamina_emptied)
 	_setup_actor(data)
 	
-	var unarmed := AttackSpec.new()
-	unarmed.scene = GlobalPackedScenes.player_unarmed_hitbox
-	unarmed.offsets = unarmed_offsets
-	unarmed.damage = damage
-	unarmed.windup_time = windup_time
-	unarmed.lifetime = lifetime
-	unarmed.knockback_strength = 50.0
-	unarmed.hitstun_chance = 0.3
-	unarmed.knockback_chance = 0.3
-	unarmed.attack_stamina_cost = attack_stamina_cost
-	unarmed.sound = attack_sound
-	
 	player_hitbox_manager = HitboxManagerBase.new(self, HitboxManagerBase.LAYER_ENEMY_HURTBOX, func(): return data.facing_dir)
-	player_hitbox_manager.register_attack(&"unarmed", unarmed)
+	player_hitbox_manager.register_attack(&"unarmed", unarmed_attack)
 	
 	player_input_system = PlayerInputSystem.new()
 	player_state_machine = PlayerStateMachine.new()

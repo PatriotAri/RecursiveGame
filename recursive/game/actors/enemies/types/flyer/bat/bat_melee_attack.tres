@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="AttackSpec" format=3]
+
+[ext_resource type="Resource" path="res://game/actors/enemies/types/flyer/bat/bat_melee_offsets.tres" id="1_tig80"]
+[ext_resource type="PackedScene" uid="uid://dr8dgg3mtr20a" path="res://game/actors/enemies/shared/melee_hitbox.tscn" id="2_qgyoj"]
+[ext_resource type="Script" uid="uid://c1b7wypd2oh0i" path="res://game/components/combat/hitbox/attack_spec.gd" id="3_xx0m3"]
+[ext_resource type="Resource" path="res://game/audio/sfx/enemy_attack.tres" id="4_dxclg"]
+
+[resource]
+script = ExtResource("3_xx0m3")
+scene = ExtResource("2_qgyoj")
+offsets = ExtResource("1_tig80")
+knockback_strength = 40.0
+hitstun_chance = 0.3
+knockback_chance = 0.3
+windup_time = 0.25
+lifetime = 0.15
+attack_stamina_cost = 0
+sound = ExtResource("4_dxclg")

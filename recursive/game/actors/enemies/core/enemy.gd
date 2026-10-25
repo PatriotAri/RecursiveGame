@@ -22,20 +22,11 @@ var hitbox_manager: HitboxManagerBase
 ## Armor points. See StatSystem.mitigate().
 @export var armor: int = 0
 
-#hitbox variables
-@export_group("Hitbox Type")
-@export var melee_hitbox: PackedScene
-@export var melee_offsets: HitboxOffsetData
-## Radius of melee_hitbox's CircleShape2D. See AttackSpec.reach_radius.
-@export var melee_reach_radius:= 10.0
-
 @export_group("Attack Tuning")
-@export var windup_time:= 0.5   # Enemy windup
-@export var lifetime:= 0.3       # How long hitbox stays active
-@export var damage:= 10.0    # Damage done by enemy
-@export var knockback_strength:= 50.0
-@export_range(0.0, 1.0) var hitstun_chance:= 0.3
-@export_range(0.0, 1.0) var knockback_chance:= 0.3
+## What a swing (or shot) is: hitbox or projectile scene, damage, timing,
+## sound. A resource like a weapon's, so attacks are tuned and shared as
+## data rather than as a dozen exports per enemy.
+@export var attack: AttackSpec
 ## Pause between swings. Owed after a completed attack and after an
 ## interrupted one.
 @export var attack_cooldown:= 1.5
@@ -98,11 +89,6 @@ var hitbox_manager: HitboxManagerBase
 
 @export_group("Drop Tuning")
 @export var drop_table: DropTable
-
-@export_group("Sounds")
-## Given to the default melee attack. A type that registers its own attacks
-## sets AttackSpec.sound on each instead.
-@export var attack_sound: SoundEffect = preload("res://game/audio/sfx/enemy_attack.tres")
 
 ## Which registered attack the state machine commits to. A type with several
 ## attacks can change this between swings.
@@ -255,21 +241,13 @@ func spacing_velocity() -> Vector2:
 # --- overridable ------------------------------------------------------------
 
 ## Registers every attack this enemy can use with hitbox_manager. The default
-## builds one melee swing from the exports above, which is all a fodder enemy
-## needs. Override to add more, and set primary_attack to the one to commit to.
+## registers `attack` as primary_attack, which is all most enemies need.
+## Override to add more, and set primary_attack to the one to commit to.
 func _register_attacks() -> void:
-	var melee := AttackSpec.new()
-	melee.scene = melee_hitbox
-	melee.offsets = melee_offsets
-	melee.damage = damage
-	melee.windup_time = windup_time
-	melee.lifetime = lifetime
-	melee.reach_radius = melee_reach_radius
-	melee.knockback_strength = knockback_strength
-	melee.hitstun_chance = hitstun_chance
-	melee.knockback_chance = knockback_chance
-	melee.sound = attack_sound
-	hitbox_manager.register_attack(&"melee", melee)
+	if attack == null:
+		push_error("%s: no attack assigned." % name)
+		return
+	hitbox_manager.register_attack(primary_attack, attack)
 
 ## How close the target has to be before the state machine commits to an
 ## attack. Override for attacks that don't come from a melee hitbox.

@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://dydoo8w4uhpis" path="res://game/actors/player/core/player.gd" id="1_oul6g"]
 [ext_resource type="Texture2D" uid="uid://digfavgddia4a" path="res://game/actors/player/assets/player_UNARMED_ATTACK.png" id="2_4ve6c"]
 [ext_resource type="Texture2D" uid="uid://ymy8x3l8ml8d" path="res://game/actors/player/assets/player_idle.png" id="2_g1dw6"]
-[ext_resource type="Resource" uid="uid://st2de7v0al8h" path="res://game/actors/player/hitboxes/player_unarmed_offsets.tres" id="2_iwgb0"]
 [ext_resource type="Texture2D" uid="uid://cp0r4v0cabs4l" path="res://game/actors/player/assets/player_died.png" id="3_4ve6c"]
 [ext_resource type="Texture2D" uid="uid://gstykpkfl3p7" path="res://game/actors/player/assets/player_hurt.png" id="3_7suon"]
 [ext_resource type="Texture2D" uid="uid://dgn63i64mxi2" path="res://game/actors/player/assets/player_walk.png" id="3_yw30f"]
@@ -11,6 +10,7 @@
 
 [ext_resource type="Resource" path="res://game/audio/sfx/player_hurt.tres" id="90_hurt"]
 [ext_resource type="Resource" path="res://game/audio/sfx/player_death.tres" id="91_death"]
+[ext_resource type="Resource" path="res://game/actors/player/hitboxes/unarmed_attack.tres" id="93_attack"]
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_iwgb0"]
 radius = 6.0
 height = 26.0
@@ -968,16 +968,13 @@ script = ExtResource("1_oul6g")
 stamina_regen_per_second = 5.0
 stamina_regen_delay = 0.3
 sprint_stamina_cost = 6.0
-attack_stamina_cost = 2
-windup_time = 0.2
-damage = 7.0
-unarmed_offsets = ExtResource("2_iwgb0")
 run_speed = 180.0
 hurt_duration = 0.12
 damage_number_color = Color(1, 0.35, 0.35, 1)
 hit_spark_color = Color(1, 0.5, 0.5, 1)
 hurt_sound = ExtResource("90_hurt")
 death_sound = ExtResource("91_death")
+unarmed_attack = ExtResource("93_attack")
 
 [node name="Collision" type="CollisionShape2D" parent="." unique_id=1079167882]
 position = Vector2(0, -6)

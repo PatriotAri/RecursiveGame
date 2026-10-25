@@ -2,9 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bex0jclbed1so" path="res://game/actors/enemies/types/fodder/crawler/core/crawler.gd" id="1_iskh7"]
 [ext_resource type="Script" uid="uid://b78qrelon2r6a" path="res://game/actors/enemies/systems/enemy_detection_system.gd" id="2_et6g1"]
-[ext_resource type="PackedScene" uid="uid://dr8dgg3mtr20a" path="res://game/actors/enemies/shared/melee_hitbox.tscn" id="2_k1huj"]
 [ext_resource type="Texture2D" uid="uid://d2xia3iwmytx8" path="res://game/actors/enemies/types/fodder/crawler/assets/slime_ATTACK.png" id="2_oftu5"]
-[ext_resource type="Resource" uid="uid://b3r4taoidcymg" path="res://game/actors/enemies/types/fodder/crawler/crawler_melee_offsets.tres" id="3_0pbox"]
 [ext_resource type="Texture2D" uid="uid://t6rs20w7omup" path="res://game/actors/enemies/types/fodder/crawler/assets/slime_DIED.png" id="3_k1huj"]
 [ext_resource type="Texture2D" uid="uid://b7yontipibenc" path="res://game/actors/enemies/types/fodder/crawler/assets/slime_HURT.png" id="4_0pbox"]
 [ext_resource type="Resource" uid="uid://c6pny72mk8boe" path="res://game/actors/enemies/types/fodder/crawler/crawler_drops.tres" id="4_kc0vh"]
@@ -14,6 +12,7 @@
 
 [ext_resource type="Resource" path="res://game/audio/sfx/hit.tres" id="90_hurt"]
 [ext_resource type="Resource" path="res://game/audio/sfx/enemy_death.tres" id="91_death"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/fodder/crawler/crawler_melee_attack.tres" id="93_attack"]
 [sub_resource type="AtlasTexture" id="AtlasTexture_sjx0v"]
 atlas = ExtResource("2_oftu5")
 region = Rect2(0, 0, 64, 64)
@@ -597,14 +596,11 @@ collision_layer = 4
 collision_mask = 3
 platform_floor_layers = 0
 script = ExtResource("1_iskh7")
-melee_hitbox = ExtResource("2_k1huj")
-melee_offsets = ExtResource("3_0pbox")
-lifetime = 0.1
-damage = 1.0
 flee_health_ratio = 0.5
 drop_table = ExtResource("4_kc0vh")
 hurt_sound = ExtResource("90_hurt")
 death_sound = ExtResource("91_death")
+attack = ExtResource("93_attack")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=7471093]
 sprite_frames = SubResource("SpriteFrames_vlhhy")

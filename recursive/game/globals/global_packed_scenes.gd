@@ -9,7 +9,3 @@ static var player_scene = preload(
 	"res://game/actors/player/core/player.tscn"
 	)
 
-# Hitboxes
-static var player_unarmed_hitbox = preload(
-	"res://game/actors/player/hitboxes/player_unarmed_hitbox.tscn"
-	)

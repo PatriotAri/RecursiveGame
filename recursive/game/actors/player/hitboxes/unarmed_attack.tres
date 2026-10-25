@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="AttackSpec" format=3]
+
+[ext_resource type="Resource" uid="uid://st2de7v0al8h" path="res://game/actors/player/hitboxes/player_unarmed_offsets.tres" id="1_mdit7"]
+[ext_resource type="PackedScene" uid="uid://dbi1x54t3m5fi" path="res://game/actors/player/hitboxes/player_unarmed_hitbox.tscn" id="2_71diq"]
+[ext_resource type="Script" uid="uid://c1b7wypd2oh0i" path="res://game/components/combat/hitbox/attack_spec.gd" id="3_cinnl"]
+[ext_resource type="Resource" path="res://game/audio/sfx/swing.tres" id="4_7nec0"]
+
+[resource]
+script = ExtResource("3_cinnl")
+scene = ExtResource("2_71diq")
+offsets = ExtResource("1_mdit7")
+damage = 7.0
+hitstun_chance = 0.3
+knockback_chance = 0.3
+windup_time = 0.2
+attack_stamina_cost = 2
+sound = ExtResource("4_7nec0")

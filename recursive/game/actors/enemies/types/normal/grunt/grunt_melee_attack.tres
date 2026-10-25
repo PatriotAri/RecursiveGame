@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="AttackSpec" format=3]
+
+[ext_resource type="Resource" uid="uid://b3r4taoidcymg" path="res://game/actors/enemies/types/fodder/crawler/crawler_melee_offsets.tres" id="1_1i5i0"]
+[ext_resource type="PackedScene" uid="uid://dr8dgg3mtr20a" path="res://game/actors/enemies/shared/melee_hitbox.tscn" id="2_snav5"]
+[ext_resource type="Script" uid="uid://c1b7wypd2oh0i" path="res://game/components/combat/hitbox/attack_spec.gd" id="3_skk7h"]
+[ext_resource type="Resource" path="res://game/audio/sfx/enemy_attack.tres" id="4_jfavx"]
+
+[resource]
+script = ExtResource("3_skk7h")
+scene = ExtResource("2_snav5")
+offsets = ExtResource("1_1i5i0")
+damage = 3.0
+knockback_strength = 120.0
+hitstun_chance = 0.5
+knockback_chance = 0.3
+windup_time = 0.6
+lifetime = 0.15
+attack_stamina_cost = 0
+sound = ExtResource("4_jfavx")
