@@ -3,6 +3,7 @@ extends CanvasLayer
 @onready var background: ColorRect = $Background
 @onready var controls_panel: Control = $Background/ControlsPanel
 @onready var menu_container: VBoxContainer = $Background/VBoxContainer
+@onready var audio_settings: AudioSettings = $Background/AudioSettings
 
 func _ready() -> void:
 	add_to_group(&"pause_menu")
@@ -16,6 +17,8 @@ func _ready() -> void:
 	$Background/VBoxContainer/MainMenu.pressed.connect(_on_main_menu_button_pressed)
 	$Background/VBoxContainer/Quit.pressed.connect(_on_quit_button_pressed)
 	$Background/VBoxContainer/Controls.pressed.connect(_on_controls_button_pressed)
+	$Background/VBoxContainer/Audio.pressed.connect(_on_audio_button_pressed)
+	audio_settings.back_pressed.connect(_on_audio_back_pressed)
 	$Background/ControlsPanel/VBoxContainer/BackButton.pressed.connect(_on_controls_back_pressed)
 	controls_panel.visible = false
 	
@@ -45,6 +48,7 @@ func pause() -> void:
 func resume() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED_HIDDEN)
 	controls_panel.visible = false
+	audio_settings.visible = false
 	menu_container.visible = true
 	visible = false
 	get_tree().paused = false
@@ -65,4 +69,12 @@ func _on_controls_button_pressed() -> void:
 
 func _on_controls_back_pressed() -> void:
 	controls_panel.visible = false
+	menu_container.visible = true
+
+func _on_audio_button_pressed() -> void:
+	menu_container.visible = false
+	audio_settings.visible = true
+
+func _on_audio_back_pressed() -> void:
+	audio_settings.visible = false
 	menu_container.visible = true

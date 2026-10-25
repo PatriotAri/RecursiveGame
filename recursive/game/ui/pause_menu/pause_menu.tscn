@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dbwno0nl0ynp4"]
 
 [ext_resource type="Script" uid="uid://brwqgd33tc81m" path="res://game/ui/pause_menu/pause_menu.gd" id="1_8byh7"]
+[ext_resource type="PackedScene" path="res://game/ui/settings/audio_settings.tscn" id="2_audio"]
 
 [node name="PauseMenu" type="CanvasLayer" unique_id=1670530463]
 process_mode = 3
@@ -52,6 +53,11 @@ custom_minimum_size = Vector2(50, 10)
 layout_mode = 2
 text = "Controls"
 
+[node name="Audio" type="Button" parent="Background/VBoxContainer"]
+custom_minimum_size = Vector2(50, 10)
+layout_mode = 2
+text = "Audio"
+
 [node name="MainMenu" type="Button" parent="Background/VBoxContainer" unique_id=1964641709]
 layout_mode = 2
 text = "Main Menu"
@@ -85,3 +91,11 @@ I - Inventory
 LMB - Use inventory item"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="AudioSettings" parent="Background" instance=ExtResource("2_audio")]
+visible = false
+layout_mode = 0
+offset_left = -110.0
+offset_top = -60.0
+offset_right = 110.0
+offset_bottom = 60.0
