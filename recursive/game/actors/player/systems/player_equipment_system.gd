@@ -35,12 +35,24 @@ func try_unequip(data: PlayerData, slot: EquippableItem.Slot) -> bool:
 func _refresh(data: PlayerData) -> void:
 	_refresh_weapon(data)
 	player.player_spell_system.refresh(data)
+	_refresh_layers(data)
 	player.apply_stat_bonuses(StatBonuses.stat_total(data.equipment.get_bonuses()))
 	# A swing in flight belongs to the weapon you were holding a moment ago.
 	# Without this, post_update() would spawn the NEW weapon's hitbox on the
 	# OLD weapon's timer.
 	player.player_attack_system.cancel(data)
 	player.player_hitbox_manager.cancel_all()
+
+## Puts every layer back to the player's own art, then lets each worn item
+## that draws a layer replace it.
+func _refresh_layers(data: PlayerData) -> void:
+	var animation := player.player_animation_system as PlayerAnimationSystem
+	for layer_name in PlayerAnimationSystem.LAYERS:
+		animation.set_layer_frames(layer_name, null)
+	for slot in EquippableItem.Slot.values():
+		var item := data.equipment.get_item(slot)
+		if item and item.layer != &"" and item.layer_frames:
+			animation.set_layer_frames(item.layer, item.layer_frames)
 
 func _refresh_weapon(data: PlayerData) -> void:
 	var weapon: EquippableItem = data.equipment.get_item(EquippableItem.Slot.WEAPON)

@@ -41,6 +41,9 @@ func _ready() -> void:
 		if game.current_map: _on_map_changed(game.current_map)
 
 func _on_armor_changed(armor: int) -> void:
+	if armor <= 0:
+		armor_value.text = "0"
+		return
 	armor_value.text = "%d  (-%d%% damage)" % [armor, roundi(100.0 - 100.0 * StatSystem.ARMOR_SCALE / (StatSystem.ARMOR_SCALE + armor))]
 
 ## A line of text in the corner that fades out on its own.

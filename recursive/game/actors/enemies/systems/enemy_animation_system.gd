@@ -9,8 +9,14 @@ func _init(sprite_ref: AnimatedSprite2D, data_ref: EnemyData) -> void:
 	sprite = sprite_ref
 	data = data_ref
 	
-func update() -> void:
+## `attack_duration` is the swing's full length; the attack animation is
+## stretched or squeezed to match it.
+func update(attack_duration := 0.0) -> void:
 	var animation_name:= _resolve_animation()
+	if data.current_state == EnemyData.State.ATTACK:
+		sprite.speed_scale = AnimationTiming.speed_to_fit(sprite.sprite_frames, animation_name, attack_duration)
+	else:
+		sprite.speed_scale = 1.0
 	
 	# A second hit during hitstun resolves to the same animation name, so the
 	# name check below won't replay it. The counter catches that case.

@@ -985,6 +985,16 @@ position = Vector2(0, -32)
 sprite_frames = SubResource("SpriteFrames_jfgyi")
 animation = &"idle_S"
 
+[node name="Feet" type="AnimatedSprite2D" parent="Sprite"]
+visible = false
+show_behind_parent = true
+
+[node name="Arms" type="AnimatedSprite2D" parent="Sprite"]
+visible = false
+
+[node name="Head" type="AnimatedSprite2D" parent="Sprite"]
+visible = false
+
 [node name="Weapon" type="Sprite2D" parent="Sprite" unique_id=1707004274]
 visible = false
 

@@ -18,6 +18,14 @@ enum Slot {WEAPON, ARMOR, HEAD} #always append enum, never insert in middle
 
 @export var animation_prefix := ""
 
+@export_group("Layer Art")
+## A player sprite layer this item redraws while worn — &"Head" for a helmet.
+## Empty, or no frames, leaves the player's own art alone.
+@export var layer: StringName = &""
+## Animations for that layer, named like the body's ("idle_S", "attack_NE").
+## Any the item doesn't draw hide that layer for that animation.
+@export var layer_frames: SpriteFrames
+
 @export_group("Texture & Offsets")
 ## Drawn in the player's hand while this is equipped. Null means the item has
 ## no visible presence — armour, for now.
