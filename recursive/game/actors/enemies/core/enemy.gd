@@ -30,6 +30,10 @@ var attack_range:= 0.0
 
 var data: EnemyData
 
+## False while off screen: the sprite stops animating. Nobody can see it,
+## and with a big wave most of the field is off screen at once.
+var _on_screen:= true
+
 ## Paths round walls; see EnemyNavigation.
 var navigation: EnemyNavigation
 
@@ -45,6 +49,18 @@ func _ready() -> void:
 	data.friction = profile.friction
 	
 	navigation = EnemyNavigation.new(self)
+	
+	# Headless runs (servers, tests) draw nothing and never report on-screen
+	# changes, so there's nothing to save and the notifier is skipped.
+	if DisplayServer.get_name() != "headless":
+		var notifier := VisibleOnScreenNotifier2D.new()
+		notifier.rect = Rect2(-40, -80, 80, 96)
+		notifier.screen_entered.connect(_set_on_screen.bind(true))
+		notifier.screen_exited.connect(_set_on_screen.bind(false))
+		add_child(notifier)
+		# The signals only fire on a change. One spawned off screen never
+		# changes, so take the real state once the notifier has had a frame.
+		_sync_on_screen.call_deferred(notifier)
 
 	hitbox_manager = HitboxManagerBase.new(self, HitboxManagerBase.LAYER_PLAYER_HURTBOX, func(): return data.facing_dir)
 	_register_attacks()
@@ -66,7 +82,22 @@ func _actor_process(delta: float) -> void:
 	state_machine.update(data, delta)
 	movement_system.update(delta)
 	attack_system.update(delta)
-	animation_system.update(attack_system.attack_duration)
+	if _on_screen:
+		animation_system.update(attack_system.attack_duration)
+
+func _sync_on_screen(notifier: VisibleOnScreenNotifier2D) -> void:
+	await get_tree().process_frame
+	if is_instance_valid(notifier):
+		_set_on_screen(notifier.is_on_screen())
+
+func _set_on_screen(on_screen: bool) -> void:
+	_on_screen = on_screen
+	# The death animation always plays out — something waits on it finishing.
+	if data.is_dead: return
+	if on_screen:
+		sprite.play()
+	else:
+		sprite.pause()
 
 # --- navigation -------------------------------------------------------------
 

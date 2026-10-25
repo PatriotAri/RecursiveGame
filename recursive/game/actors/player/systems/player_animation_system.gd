@@ -22,8 +22,12 @@ var layers: Array[AnimatedSprite2D] = []
 ## The scene's own frames per layer, restored when equipment stops
 ## overriding them.
 var _default_frames: Dictionary = {}
-var _base_name:= ""
-var _armed_name:= ""
+var _base_name: StringName = &""
+var _armed_name: StringName = &""
+## Base name -> stance name ("attack_S" -> "onehand_attack_S") for the
+## current prefix, so the stance's names are built once, not every frame.
+var _armed_names: Dictionary = {}
+var _armed_prefix:= ""
 
 func _init(sprite_ref: AnimatedSprite2D) -> void:
 	super(sprite_ref)
@@ -49,7 +53,7 @@ func set_layer_frames(layer_name: StringName, frames: SpriteFrames) -> void:
 ## stretched or squeezed to match it.
 func update(data: PlayerData, attack_duration := 0.0) -> void:
 	_base_name = _base_animation(data)
-	_armed_name = data.animation_prefix + "_" + _base_name if data.animation_prefix != "" else ""
+	_armed_name = _armed_for(data.animation_prefix, _base_name)
 	play_state(_resolve_for(sprite.sprite_frames), data.hurt_seq,
 		data.current_state == PlayerData.State.HURT,
 		data.current_state == PlayerData.State.ATTACK, attack_duration)
@@ -59,20 +63,31 @@ func update(data: PlayerData, attack_duration := 0.0) -> void:
 #exists. A stance can ship partly drawn — anything missing falls back to the
 #unarmed version of that same state, so a half-finished set never leaves the
 #player invisible or frozen.
-func _resolve_for(frames: SpriteFrames) -> String:
-	if frames == null: return ""
-	if _armed_name != "" and frames.has_animation(_armed_name):
+func _resolve_for(frames: SpriteFrames) -> StringName:
+	if frames == null: return &""
+	if _armed_name != &"" and frames.has_animation(_armed_name):
 		return _armed_name
 	if frames.has_animation(_base_name):
 		return _base_name
-	return ""
+	return &""
+
+func _armed_for(prefix: String, base: StringName) -> StringName:
+	if prefix == "": return &""
+	if prefix != _armed_prefix:
+		_armed_prefix = prefix
+		_armed_names.clear()
+	var armed: StringName = _armed_names.get(base, &"")
+	if armed == &"":
+		armed = StringName(prefix + "_" + base)
+		_armed_names[base] = armed
+	return armed
 
 ## Points every layer at the body's current frame. Layers don't play on
 ## their own; they're posed.
 func _sync_layers() -> void:
 	for layer in layers:
 		var anim := _resolve_for(layer.sprite_frames)
-		if anim == "":
+		if anim == &"":
 			layer.visible = false
 			continue
 		layer.visible = true
@@ -82,24 +97,25 @@ func _sync_layers() -> void:
 		# last one rather than going blank.
 		layer.frame = mini(sprite.frame, layer.sprite_frames.get_frame_count(anim) - 1)
 
-#turns state + facing into an animation name string
-func _base_animation(data: PlayerData) -> String:
-	#gets name of the direction youre facing
-	var dir:= FacingHelper.facing_to_string(data.facing_dir)
+#turns state + facing into an animation name
+func _base_animation(data: PlayerData) -> StringName:
+	#the direction comes from the state machine's cached facing_index, and
+	#names come from FacingHelper's tables — nothing is built per frame.
+	var dir:= data.facing_index
 	
 	#Gets the current player state from player data, combines with 
 	#direction, and outputs the proper animation name to be called.
 	match data.current_state:
 		PlayerData.State.DIED:
-			return "died"
+			return &"died"
 		PlayerData.State.HURT:
-			return "hurt_" + dir
+			return FacingHelper.anim(&"hurt", dir)
 		PlayerData.State.WALK:
 			if data.is_running:
-				return "run_" + dir
+				return FacingHelper.anim(&"run", dir)
 			else:
-				return "walk_" + dir
+				return FacingHelper.anim(&"walk", dir)
 		PlayerData.State.ATTACK:
-			return "attack_" + dir
+			return FacingHelper.anim(&"attack", dir)
 		_:
-			return "idle_" + dir
+			return FacingHelper.anim(&"idle", dir)

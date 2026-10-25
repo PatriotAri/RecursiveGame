@@ -1,7 +1,7 @@
 class_name PlayerWeaponVisualSystem
 
 ## Facings where the weapon belongs behind the body rather than in front.
-const BEHIND := ["N", "NW", "NE"]
+const BEHIND := [FacingHelper.N, FacingHelper.NW, FacingHelper.NE]
 
 var sprite: Sprite2D
 
@@ -36,8 +36,8 @@ func set_weapon(item: EquippableItem) -> void:
 func update(data: PlayerData, swing_progress: float) -> void:
 	if _hold == null: return
 	
-	var dir:= FacingHelper.facing_to_string(data.facing_dir)
-	sprite.position = _hold.get_offset(dir)
+	var dir:= data.facing_index
+	sprite.position = _hold.get_offset_at(dir)
 	sprite.z_index = -1 if dir in BEHIND else 1
 	
 	# Cocked back at the start and arriving at rest exactly as the swing ends,
@@ -48,19 +48,7 @@ func update(data: PlayerData, swing_progress: float) -> void:
 	if data.is_attacking:
 		swing = -_swing_arc * (1.0 - swing_progress)
 	
-	sprite.rotation = _facing_angle(dir) + _rest_offset + swing
-
-## Snapped to the eight facings rather than taken from facing_dir's own angle.
-## facing_dir turns smoothly, and rotated pixel art looks worst at arbitrary
-## angles — this keeps the weapon on the octants the art was drawn for.
-func _facing_angle(dir: String) -> float:
-	match dir:
-		"E": return 0.0
-		"SE": return PI * 0.25
-		"S": return PI * 0.5
-		"SW": return PI * 0.75
-		"W": return PI
-		"NW": return -PI * 0.75
-		"N": return -PI * 0.5
-		"NE": return -PI * 0.25
-		_: return 0.0
+	# Snapped to the eight facings rather than taken from facing_dir's own
+	# angle. facing_dir turns smoothly, and rotated pixel art looks worst at
+	# arbitrary angles — this keeps the weapon on the octants it was drawn for.
+	sprite.rotation = dir * (PI / 4.0) + _rest_offset + swing

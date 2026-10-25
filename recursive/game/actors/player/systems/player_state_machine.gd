@@ -18,4 +18,4 @@ func _resolve_state(data: PlayerData) -> void:
 		data.current_state = PlayerData.State.WALK
 
 func cache_facing(data: PlayerData) -> void:
-	data.facing_string = FacingHelper.facing_to_string(data.facing_dir)
+	data.facing_index = FacingHelper.facing_index(data.facing_dir)

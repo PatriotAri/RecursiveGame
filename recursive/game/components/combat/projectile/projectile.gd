@@ -80,7 +80,7 @@ func _follow_thrower() -> void:
 		cancel()
 		return
 	var facing := _current_facing()
-	var offset := offsets.get_offset(FacingHelper.facing_to_string(facing)) if offsets else Vector2.ZERO
+	var offset := offsets.get_offset_at(FacingHelper.facing_index(facing)) if offsets else Vector2.ZERO
 	global_position = thrower.global_position + offset
 
 func _current_facing() -> Vector2:

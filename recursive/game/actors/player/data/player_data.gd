@@ -23,7 +23,9 @@ var interact_requested:= false
 
 #read/written by StateMachine 
 var current_state: State = State.IDLE
-var facing_string: String = "S"
+## facing_dir as a FacingHelper index, worked out once per frame by the state
+## machine for everything else to read.
+var facing_index: int = FacingHelper.S
 
 #read/written by ModifierSystem
 var walk_speed: float

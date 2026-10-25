@@ -58,7 +58,7 @@ const DIRECTIONS := ["E", "W", "N", "S",
 func offset_for(facing: Vector2) -> Vector2:
 	if offsets == null:
 		return Vector2.ZERO
-	return offsets.get_offset(FacingHelper.facing_to_string(facing))
+	return offsets.get_offset_at(FacingHelper.facing_index(facing))
 
 ## Shortest distance from the actor's origin at which this attack can still
 ## touch something, across all eight facings.

@@ -69,7 +69,7 @@ func _track_facing() -> void:
 	var facing: Vector2 = facing_provider.call()
 	if facing == Vector2.ZERO:
 		return
-	position = offsets.get_offset(FacingHelper.facing_to_string(facing))
+	position = offsets.get_offset_at(FacingHelper.facing_index(facing))
 	# Knockback too — otherwise a hit landed after turning shoves the target
 	# in the direction you were facing when the swing started.
 	knockback_direction = facing

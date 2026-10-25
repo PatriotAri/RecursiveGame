@@ -21,6 +21,13 @@ var _shape_offset := Vector2.ZERO
 var _player_inside := false
 var _forget_timer := 0.0
 
+## Line of sight is a raycast, so it's re-checked ten times a second rather
+## than every frame. Staggered per enemy so a crowd doesn't cast together.
+const LOS_INTERVAL := 0.1
+var _los_timer:= randf() * LOS_INTERVAL
+var _los_clear:= false
+var _was_close:= false
+
 func initialize(data_ref: EnemyData, body_ref: Enemy) -> void:
 	data = data_ref
 	body = body_ref
@@ -66,6 +73,7 @@ func update(delta: float) -> void:
 	
 	data.player_pos = player.global_position
 	data.player_anchor = _player_anchor()
+	_los_timer -= delta
 	update_attack_range()
 
 # Parameter renamed from `body` — the original shadowed the member above it,
@@ -99,8 +107,17 @@ func clear_target() -> void:
 func update_attack_range() -> void:
 	# Anchor to anchor. Measuring our torso against the player's feet made the
 	# 31px shape offset eat most of the range budget on the horizontal axis.
-	data.in_attack_range = detection_anchor().distance_squared_to(data.player_anchor) <= max_range_sq \
-		and (not body.profile.needs_line_of_sight or _has_line_of_sight())
+	var close_enough := detection_anchor().distance_squared_to(data.player_anchor) <= max_range_sq
+	if close_enough and body.profile.needs_line_of_sight:
+		# Checked at once on coming into range, so a stale answer from last
+		# time can't send a shot into a wall; then on the interval.
+		if _los_timer <= 0.0 or not _was_close:
+			_los_timer = LOS_INTERVAL
+			_los_clear = _has_line_of_sight()
+		data.in_attack_range = _los_clear
+	else:
+		data.in_attack_range = close_enough
+	_was_close = close_enough
 
 ## True when no wall sits between us and the player.
 func _has_line_of_sight() -> bool:
