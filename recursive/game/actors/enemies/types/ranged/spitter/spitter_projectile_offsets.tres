@@ -4,11 +4,11 @@
 
 [resource]
 script = ExtResource("1_xruh8")
-right_y = -14.0
-left_y = -14.0
-up_y = -14.0
-down_y = -14.0
-up_right_y = -14.0
-up_left_y = -14.0
-down_right_y = -14.0
-down_left_y = -14.0
+e_y = -14.0
+w_y = -14.0
+n_y = -14.0
+s_y = -14.0
+ne_y = -14.0
+nw_y = -14.0
+se_y = -14.0
+sw_y = -14.0

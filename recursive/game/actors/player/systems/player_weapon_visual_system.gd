@@ -1,7 +1,7 @@
 class_name PlayerWeaponVisualSystem
 
 ## Facings where the weapon belongs behind the body rather than in front.
-const BEHIND := ["up", "up_left", "up_right"]
+const BEHIND := ["N", "NW", "NE"]
 
 var sprite: Sprite2D
 
@@ -55,12 +55,12 @@ func update(data: PlayerData, swing_progress: float) -> void:
 ## angles — this keeps the weapon on the octants the art was drawn for.
 func _facing_angle(dir: String) -> float:
 	match dir:
-		"right": return 0.0
-		"down_right": return PI * 0.25
-		"down": return PI * 0.5
-		"down_left": return PI * 0.75
-		"left": return PI
-		"up_left": return -PI * 0.75
-		"up": return -PI * 0.5
-		"up_right": return -PI * 0.25
+		"E": return 0.0
+		"SE": return PI * 0.25
+		"S": return PI * 0.5
+		"SW": return PI * 0.75
+		"W": return PI
+		"NW": return -PI * 0.75
+		"N": return -PI * 0.5
+		"NE": return -PI * 0.25
 		_: return 0.0

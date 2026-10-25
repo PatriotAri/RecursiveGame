@@ -8,18 +8,18 @@ static func facing_to_string(facing: Vector2) -> String:
 		degrees += 360
 
 	if degrees >= 337.5 or degrees < 22.5:
-		return "right"
+		return "E"
 	elif degrees < 67.5:
-		return "down_right"
+		return "SE"
 	elif degrees < 112.5:
-		return "down"
+		return "S"
 	elif degrees < 157.5:
-		return "down_left"
+		return "SW"
 	elif degrees < 202.5:
-		return "left"
+		return "W"
 	elif degrees < 247.5:
-		return "up_left"
+		return "NW"
 	elif degrees < 292.5:
-		return "up"
+		return "N"
 	else:
-		return "up_right"
+		return "NE"
