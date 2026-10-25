@@ -259,34 +259,31 @@ func has_navigation() -> bool:
 func steering_velocity() -> Vector2:
 	return spacing_velocity()
 
-## Every enemy, fetched once per physics frame and shared. Each enemy asking
-## the tree itself meant copying the whole group n times a frame.
-static var _group_cache: Array[Node] = []
-static var _group_cache_frame:= -1
-
-func _enemies() -> Array[Node]:
-	var frame := Engine.get_physics_frames()
-	if frame != _group_cache_frame:
-		_group_cache_frame = frame
-		_group_cache = get_tree().get_nodes_in_group(&"enemy")
-	return _group_cache
-
-## Push away from nearby enemies, as a velocity.
+## Push away from nearby enemies, as a velocity. Only the grid cells within
+## spacing_radius are searched; see SpacingGrid.
 func spacing_velocity() -> Vector2:
+	if spacing_radius <= 0.0: return Vector2.ZERO
 	var push := Vector2.ZERO
-	for other in _enemies():
-		if other == self or not is_instance_valid(other) or not (other is Enemy) or other.data == null or other.data.is_dead:
-			continue
-		var away: Vector2 = global_position - other.global_position
-		var dist := away.length()
-		if dist >= spacing_radius:
-			continue
-		if dist < 0.01:
-			# Exactly stacked (two spawns on one point): pick a direction
-			# rather than dividing by zero.
-			away = Vector2.RIGHT.rotated(randf() * TAU)
-			dist = 0.01
-		push += away / dist * (1.0 - dist / spacing_radius)
+	var here := SpacingGrid.cell_of(global_position)
+	var reach := ceili(spacing_radius / SpacingGrid.CELL)
+	var radius_sq := spacing_radius * spacing_radius
+	var tree := get_tree()
+	for cy in range(here.y - reach, here.y + reach + 1):
+		for cx in range(here.x - reach, here.x + reach + 1):
+			for other in SpacingGrid.bucket(tree, Vector2i(cx, cy)):
+				if other == self:
+					continue
+				var away := global_position - other.global_position
+				var dist_sq := away.length_squared()
+				if dist_sq >= radius_sq:
+					continue
+				var dist := sqrt(dist_sq)
+				if dist < 0.01:
+					# Exactly stacked (two spawns on one point): pick a
+					# direction rather than dividing by zero.
+					away = Vector2.RIGHT.rotated(randf() * TAU)
+					dist = 0.01
+				push += away / dist * (1.0 - dist / spacing_radius)
 	return push * spacing_strength
 
 # --- overridable ------------------------------------------------------------
