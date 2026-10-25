@@ -52,6 +52,9 @@ var _recent_positions: Array[Vector2] = []
 
 func _ready() -> void:
 	add_to_group(&"enemy_spawner")
+	# The marker sprite is for placing spawners in the editor, not for play.
+	var marker := get_node_or_null("Sprite2D") as CanvasItem
+	if marker: marker.visible = false
 	if enemy_scene == null and entries.is_empty():
 		enemy_scene = GlobalPackedScenes.crawler_scene
 	wave_timer = wave_intervals

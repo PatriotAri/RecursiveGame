@@ -2,6 +2,19 @@
 
 [ext_resource type="Script" uid="uid://dts46p802c1d8" path="res://game/ui/hud/bars/stat_bar.gd" id="1_6py1a"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_frame"]
+bg_color = Color(0.05, 0.05, 0.07, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.32, 0.3, 0.38, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+anti_aliasing = false
+
 [node name="StatBar" type="Control" unique_id=240099235]
 custom_minimum_size = Vector2(160, 16)
 layout_mode = 3
@@ -14,14 +27,27 @@ size_flags_horizontal = 0
 size_flags_vertical = 8
 script = ExtResource("1_6py1a")
 
-[node name="Background" type="ColorRect" parent="." unique_id=218777739]
+[node name="Frame" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 2.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_frame")
+
+[node name="Ghost" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 1)
+color = Color(1, 0.9, 0.6, 0.85)
 
 [node name="Fill" type="ColorRect" parent="." unique_id=1698637719]
 layout_mode = 1
@@ -31,3 +57,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.95, 0.00949999, 0.00949999, 1)
+
+[node name="Value" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 11
+text = "0 / 0"
+horizontal_alignment = 1
+vertical_alignment = 1

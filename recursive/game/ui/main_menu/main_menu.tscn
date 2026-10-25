@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://ck5pbop5a4l4p" path="res://game/ui/main_menu/main_menu.gd" id="1_gof3u"]
 [ext_resource type="PackedScene" path="res://game/ui/settings/audio_settings.tscn" id="2_audio"]
+[ext_resource type="Texture2D" path="res://game/maps/world_1/assets/textures/stone_floor.png" id="3_floor"]
 
 [node name="MainMenu" type="Control" unique_id=981603861]
 layout_mode = 3
@@ -12,6 +13,27 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_gof3u")
 
+[node name="Floor" type="TextureRect" parent="."]
+modulate = Color(0.35, 0.33, 0.38, 1)
+texture_repeat = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_floor")
+stretch_mode = 1
+
+[node name="Vignette" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.35)
+
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=609076325]
 layout_mode = 1
 anchors_preset = 8
@@ -19,45 +41,67 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -150.5
-offset_top = -135.5
-offset_right = 150.5
-offset_bottom = 135.5
+offset_left = -150.0
+offset_top = -190.0
+offset_right = 150.0
+offset_bottom = 190.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 10
 alignment = 1
 
-[node name="R E C U R S I V E" type="Label" parent="VBoxContainer" unique_id=1377359161]
+[node name="Title" type="Label" parent="VBoxContainer"]
 layout_mode = 2
-text = "=============
-R E C U R S I V E
-============="
+theme_override_colors/font_color = Color(0.86, 0.68, 0.32, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 52
+text = "RECURSIVE"
 horizontal_alignment = 1
 
 [node name="spacer" type="Control" parent="VBoxContainer" unique_id=970547814]
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 
 [node name="Play" type="Button" parent="VBoxContainer" unique_id=960631148]
-custom_minimum_size = Vector2(160, 48)
+custom_minimum_size = Vector2(200, 40)
 layout_mode = 2
+size_flags_horizontal = 4
 text = "Play"
 
 [node name="Load" type="Button" parent="VBoxContainer"]
-custom_minimum_size = Vector2(160, 48)
+custom_minimum_size = Vector2(200, 40)
 layout_mode = 2
+size_flags_horizontal = 4
 text = "Load"
 
 [node name="Settings" type="Button" parent="VBoxContainer"]
-custom_minimum_size = Vector2(160, 48)
+custom_minimum_size = Vector2(200, 40)
 layout_mode = 2
+size_flags_horizontal = 4
 text = "Settings"
 
 [node name="Quit" type="Button" parent="VBoxContainer" unique_id=636891424]
-custom_minimum_size = Vector2(160, 48)
+custom_minimum_size = Vector2(200, 40)
 layout_mode = 2
+size_flags_horizontal = 4
 text = "Quit"
+
+[node name="Version" type="Label" parent="."]
+modulate = Color(1, 1, 1, 0.6)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_top = -30.0
+offset_right = -10.0
+offset_bottom = -8.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 12
+horizontal_alignment = 2
 
 [node name="AudioSettings" parent="." instance=ExtResource("2_audio")]
 visible = false
@@ -67,9 +111,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -110.0
-offset_top = -60.0
-offset_right = 110.0
-offset_bottom = 60.0
+offset_left = -130.0
+offset_top = -80.0
+offset_right = 130.0
+offset_bottom = 80.0
 grow_horizontal = 2
 grow_vertical = 2

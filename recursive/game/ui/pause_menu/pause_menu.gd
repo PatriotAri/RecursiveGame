@@ -2,10 +2,10 @@ extends CanvasLayer
 
 @onready var background: ColorRect = $Background
 @onready var controls_panel: Control = $Background/ControlsPanel
-@onready var menu_container: VBoxContainer = $Background/VBoxContainer
+@onready var menu_container: Control = $Background/Panel
 @onready var audio_settings: AudioSettings = $Background/AudioSettings
-@onready var load_button: Button = $Background/VBoxContainer/Load
-@onready var status_label: Label = $Background/VBoxContainer/Status
+@onready var load_button: Button = $Background/Panel/VBoxContainer/Load
+@onready var status_label: Label = $Background/Panel/VBoxContainer/Status
 
 func _ready() -> void:
 	add_to_group(&"pause_menu")
@@ -15,12 +15,12 @@ func _ready() -> void:
 	visible = false
 	#processes the node even when paused
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	$Background/VBoxContainer/Resume.pressed.connect(_on_resume_button_pressed)
-	$Background/VBoxContainer/MainMenu.pressed.connect(_on_main_menu_button_pressed)
-	$Background/VBoxContainer/Quit.pressed.connect(_on_quit_button_pressed)
-	$Background/VBoxContainer/Controls.pressed.connect(_on_controls_button_pressed)
-	$Background/VBoxContainer/Audio.pressed.connect(_on_audio_button_pressed)
-	$Background/VBoxContainer/Save.pressed.connect(_on_save_button_pressed)
+	$Background/Panel/VBoxContainer/Resume.pressed.connect(_on_resume_button_pressed)
+	$Background/Panel/VBoxContainer/MainMenu.pressed.connect(_on_main_menu_button_pressed)
+	$Background/Panel/VBoxContainer/Quit.pressed.connect(_on_quit_button_pressed)
+	$Background/Panel/VBoxContainer/Controls.pressed.connect(_on_controls_button_pressed)
+	$Background/Panel/VBoxContainer/Audio.pressed.connect(_on_audio_button_pressed)
+	$Background/Panel/VBoxContainer/Save.pressed.connect(_on_save_button_pressed)
 	load_button.pressed.connect(_on_load_button_pressed)
 	audio_settings.back_pressed.connect(_on_audio_back_pressed)
 	$Background/ControlsPanel/VBoxContainer/BackButton.pressed.connect(_on_controls_back_pressed)

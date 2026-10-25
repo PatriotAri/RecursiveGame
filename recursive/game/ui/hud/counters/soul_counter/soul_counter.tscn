@@ -18,14 +18,13 @@ grow_horizontal = 0
 script = ExtResource("1_dfdan")
 item = ExtResource("2_tsx3j")
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=316737931]
+[node name="Background" type="Panel" parent="." unique_id=316737931]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 1)
 
 [node name="Margin" type="MarginContainer" parent="." unique_id=1825615425]
 layout_mode = 1

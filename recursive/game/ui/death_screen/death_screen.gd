@@ -4,14 +4,14 @@ func _ready() -> void:
 	add_to_group(&"death_screen")
 	visible = false
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	$Background/VBoxContainer/Respawn.pressed.connect(_on_respawn)
-	$Background/VBoxContainer/LoadSave.pressed.connect(_on_load_save)
-	$Background/VBoxContainer/MainMenu.pressed.connect(_on_main_menu)
-	$Background/VBoxContainer/Quit.pressed.connect(_on_quit)
+	$Background/Panel/VBoxContainer/Respawn.pressed.connect(_on_respawn)
+	$Background/Panel/VBoxContainer/LoadSave.pressed.connect(_on_load_save)
+	$Background/Panel/VBoxContainer/MainMenu.pressed.connect(_on_main_menu)
+	$Background/Panel/VBoxContainer/Quit.pressed.connect(_on_quit)
 
 func show_death() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	$Background/VBoxContainer/LoadSave.disabled = not SaveManager.has_save()
+	$Background/Panel/VBoxContainer/LoadSave.disabled = not SaveManager.has_save()
 	visible = true
 	get_tree().paused = true
 

@@ -1,14 +1,11 @@
 [gd_scene format=3 uid="uid://di5p52ar71okx"]
 
-[ext_resource type="Script" uid="uid://wi46aeis4drq" path="res://game/ui/death_screen/death_screen.gd" id="1_h5hxm"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_h5hxm"]
-font_size = 42
-font_color = Color(1, 0.05882353, 0.05882353, 1)
+[ext_resource type="Script" uid="uid://wi46aeis4drq" path="res://game/ui/death_screen/death_screen.gd" id="1_death"]
 
 [node name="DeathScreen" type="CanvasLayer" unique_id=1709738352]
-layer = 15
-script = ExtResource("1_h5hxm")
+process_mode = 3
+layer = 20
+script = ExtResource("1_death")
 
 [node name="Background" type="ColorRect" parent="." unique_id=2049858341]
 anchors_preset = 15
@@ -16,39 +13,51 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 1)
+color = Color(0.12, 0, 0, 0.7)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Background" unique_id=30332072]
+[node name="Panel" type="PanelContainer" parent="Background"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -156.5
-offset_top = -81.5
-offset_right = 156.5
-offset_bottom = 81.5
+offset_left = -140.0
+offset_top = -120.0
+offset_right = 140.0
+offset_bottom = 120.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="Background/VBoxContainer" unique_id=1268114448]
+[node name="VBoxContainer" type="VBoxContainer" parent="Background/Panel" unique_id=30332072]
 layout_mode = 2
-text = "YOU ARE DEAD."
-label_settings = SubResource("LabelSettings_h5hxm")
+theme_override_constants/separation = 8
+alignment = 1
 
-[node name="Respawn" type="Button" parent="Background/VBoxContainer" unique_id=1678549670]
+[node name="Label" type="Label" parent="Background/Panel/VBoxContainer" unique_id=1268114448]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.25, 0.2, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 28
+text = "YOU ARE DEAD."
+horizontal_alignment = 1
+
+[node name="Respawn" type="Button" parent="Background/Panel/VBoxContainer" unique_id=1678549670]
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 text = "Respawn"
 
-[node name="LoadSave" type="Button" parent="Background/VBoxContainer"]
+[node name="LoadSave" type="Button" parent="Background/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 text = "Load Last Save"
 
-[node name="MainMenu" type="Button" parent="Background/VBoxContainer" unique_id=1443744558]
+[node name="MainMenu" type="Button" parent="Background/Panel/VBoxContainer" unique_id=1443744558]
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 text = "Main Menu"
 
-[node name="Quit" type="Button" parent="Background/VBoxContainer" unique_id=1419531264]
+[node name="Quit" type="Button" parent="Background/Panel/VBoxContainer" unique_id=1419531264]
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 text = "Quit"

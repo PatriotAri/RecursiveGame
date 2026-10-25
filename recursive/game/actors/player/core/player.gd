@@ -26,9 +26,11 @@ var _base_run_speed: float
 var _base_sprint_stamina_cost: float
 
 var _flash_tween : Tween
+var _shake_tween : Tween
 var death_handled := false
 
 @onready var sprite: AnimatedSprite2D = $Sprite
+@onready var camera: Camera2D = $tempcam
 
 @export_category("Stat Tuning")
 @export_group("Health")
@@ -244,6 +246,9 @@ func _on_stamina_emptied() -> void:
 
 func _on_damage_received(damage_amount: float, apply_hitstun: bool) -> void:
 	stats.health.remove(roundi(damage_amount))
+	DamageNumber.spawn(get_parent(), combat_anchor() + Vector2(0, -20), roundi(damage_amount), Color(1, 0.35, 0.35))
+	HitSpark.spawn(get_parent(), combat_anchor(), Color(1, 0.5, 0.5))
+	shake_camera(3.0, 0.15)
 	if data.is_dead:
 		return
 	play_sound(hurt_sound)
@@ -324,6 +329,19 @@ func play_sound(effect: SoundEffect) -> void:
 ## combat wants the middle of what it has to hit.
 func combat_anchor() -> Vector2:
 	return $Hurtbox/CollisionShape2D.global_position
+
+## Jolts the camera by up to `strength` px, settling over `duration`.
+func shake_camera(strength: float, duration: float) -> void:
+	if camera == null: return
+	if _shake_tween and _shake_tween.is_valid():
+		_shake_tween.kill()
+	_shake_tween = create_tween()
+	var steps := 4
+	for i in steps:
+		var falloff := 1.0 - float(i) / steps
+		var jolt := Vector2(randf_range(-1, 1), randf_range(-1, 1)) * strength * falloff
+		_shake_tween.tween_property(camera, "offset", jolt, duration / (steps + 1))
+	_shake_tween.tween_property(camera, "offset", Vector2.ZERO, duration / (steps + 1))
 
 ## Feedback that a hit landed, separate from whether it staggered. Every hit
 ## flashes; only some of them interrupt.

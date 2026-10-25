@@ -11,6 +11,7 @@ func _ready() -> void:
 	$VBoxContainer/Quit.pressed.connect(on_quit_pressed)
 	audio_settings.back_pressed.connect(on_settings_back_pressed)
 	load_button.disabled = not SaveManager.has_save()
+	$Version.text = "v" + str(ProjectSettings.get_setting("application/config/version", ""))
 	load_button.tooltip_text = SaveManager.describe_save()
 	
 func on_play_pressed() -> void:

@@ -304,6 +304,7 @@ func cancel_attacks() -> void:
 
 func _on_damage_received(damage_amount: float, apply_hitstun: bool) -> void:
 	stats.health.remove(roundi(damage_amount))
+	_show_hit(roundi(damage_amount))
 	if data.is_dead:
 		return
 	play_sound(hurt_sound)
@@ -315,6 +316,12 @@ func _on_damage_received(damage_amount: float, apply_hitstun: bool) -> void:
 	data.hurt_seq += 1
 	# Getting hit drops the swing — but only when the stagger lands.
 	cancel_attacks()
+
+## Where hits are shown: the middle of the hurtbox, not the feet.
+func _show_hit(amount: int) -> void:
+	var at: Vector2 = $Hurtbox/CollisionShape2D.global_position
+	DamageNumber.spawn(get_parent(), at + Vector2(0, -14), amount, Color.WHITE)
+	HitSpark.spawn(get_parent(), at)
 
 ## Feedback that a hit landed, separate from whether it staggered. Every hit
 ## flashes; only some of them interrupt.
