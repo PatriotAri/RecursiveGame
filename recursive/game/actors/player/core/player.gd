@@ -267,6 +267,48 @@ func _on_knockback_received(direction: Vector2, strength: float, decay: float) -
 	var knockback := MovementModifier.create_impulse(&"knockback", direction, strength, decay)
 	data.modifiers.add(knockback)
 
+# --- save / load ------------------------------------------------------------
+
+## Everything about the player a save needs, as plain JSON-friendly values.
+## Items are stored by id; ItemDatabase turns them back into resources.
+func to_save_data() -> Dictionary:
+	var inventory := []
+	for stack in data.inventory.get_stacks():
+		inventory.append({"id": String(stack.item.id), "count": stack.count})
+	var equipment := {}
+	for slot_name in EquippableItem.Slot.keys():
+		var item := data.equipment.get_item(EquippableItem.Slot[slot_name])
+		if item: equipment[slot_name] = String(item.id)
+	return {
+		"position": [global_position.x, global_position.y],
+		"health": stats.health.current,
+		"stamina": stats.stamina.current,
+		"mana": stats.mana.current,
+		"inventory": inventory,
+		"equipment": equipment,
+	}
+
+## Restores to_save_data()'s output. Order matters: items first (you can only
+## equip what you hold), then equipment (it changes the stat maximums), then
+## current stat values, which are clamped to those maximums.
+func apply_save_data(save: Dictionary, items: ItemDatabase) -> void:
+	for entry in save.get("inventory", []):
+		var item := items.find(StringName(entry.get("id", "")))
+		if item == null:
+			push_warning("Save has unknown item '%s'; skipped." % entry.get("id"))
+			continue
+		data.inventory.add(item, int(entry.get("count", 1)))
+	var equipment: Dictionary = save.get("equipment", {})
+	for slot_name in equipment:
+		var item := items.find(StringName(equipment[slot_name])) as EquippableItem
+		if item: player_equipment_system.try_equip(data, item)
+	if save.has("position"):
+		var pos: Array = save["position"]
+		global_position = Vector2(pos[0], pos[1])
+	for stat_name in ["health", "stamina", "mana"]:
+		if save.has(stat_name):
+			stats.get(stat_name).set_current(int(save[stat_name]))
+
 ## Interactables call these as the player walks into and out of reach.
 func register_interactable(interactable: Interactable) -> void:
 	player_interaction_system.register(interactable)

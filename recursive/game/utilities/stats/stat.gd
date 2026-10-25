@@ -36,6 +36,11 @@ func remove(amount: int) -> void:
 	_blocked_for = regen_delay
 	_apply(current - amount)
 
+## Sets the value outright, clamped to 0..maximum. For restoring a save, not
+## for damage or healing — those go through add() and remove().
+func set_current(value: int) -> void:
+	_apply(value)
+
 func fill() -> void:
 	_apply(maximum)
 

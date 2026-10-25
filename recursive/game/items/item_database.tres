@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ItemDatabase" format=3]
+
+[ext_resource type="Script" uid="uid://bh4it52lgf67d" path="res://game/items/general/core/item.gd" id="1_lo86l"]
+[ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/apprentice_staff/apprentice_staff.tres" id="2_cpb4x"]
+[ext_resource type="Resource" uid="uid://pg3ucqn2nstc" path="res://game/items/drops/gold_sack/gold.tres" id="3_bl5w5"]
+[ext_resource type="Resource" uid="uid://dq1ckemgpbwtg" path="res://game/items/consumables/potions/health_potion/health_potion.tres" id="4_sgn0g"]
+[ext_resource type="Resource" uid="uid://dllv20s1l4hsa" path="res://game/items/equipment/weapons/tier_1/iron_sword/iron_sword.tres" id="5_8wg3i"]
+[ext_resource type="Resource" uid="uid://dy7pwlbk2gc3t" path="res://game/items/consumables/potions/mana_potion/mana_potion.tres" id="6_gahbu"]
+[ext_resource type="Resource" uid="uid://bj2cai01w6qai" path="res://game/items/drops/soul/soul.tres" id="7_7d7im"]
+[ext_resource type="Resource" uid="uid://f134er318bg1" path="res://game/items/consumables/potions/stamina_potion/stamina_potion.tres" id="8_m8yxe"]
+[ext_resource type="Resource" uid="uid://dryrs1y762okx" path="res://game/items/general/test_items/test_item.tres" id="9_qikdh"]
+[ext_resource type="Resource" uid="uid://bdjft7r36yvv0" path="res://game/items/general/test_items/test_item_weapon.tres" id="10_7k501"]
+[ext_resource type="Resource" uid="uid://gc75tdgl3xwr" path="res://game/items/equipment/weapons/test_weapon_01/test_weapon.tres" id="11_otpt3"]
+[ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/throwing_dagger/throwing_dagger.tres" id="12_s7l60"]
+[ext_resource type="Script" uid="uid://3j7e0er1segi" path="res://game/items/item_database.gd" id="13_11xws"]
+
+[resource]
+script = ExtResource("13_11xws")
+items = Array[ExtResource("1_lo86l")]([ExtResource("2_cpb4x"), ExtResource("3_bl5w5"), ExtResource("4_sgn0g"), ExtResource("5_8wg3i"), ExtResource("6_gahbu"), ExtResource("7_7d7im"), ExtResource("8_m8yxe"), ExtResource("9_qikdh"), ExtResource("10_7k501"), ExtResource("11_otpt3"), ExtResource("12_s7l60")])

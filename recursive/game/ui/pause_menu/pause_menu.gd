@@ -4,6 +4,8 @@ extends CanvasLayer
 @onready var controls_panel: Control = $Background/ControlsPanel
 @onready var menu_container: VBoxContainer = $Background/VBoxContainer
 @onready var audio_settings: AudioSettings = $Background/AudioSettings
+@onready var load_button: Button = $Background/VBoxContainer/Load
+@onready var status_label: Label = $Background/VBoxContainer/Status
 
 func _ready() -> void:
 	add_to_group(&"pause_menu")
@@ -18,6 +20,8 @@ func _ready() -> void:
 	$Background/VBoxContainer/Quit.pressed.connect(_on_quit_button_pressed)
 	$Background/VBoxContainer/Controls.pressed.connect(_on_controls_button_pressed)
 	$Background/VBoxContainer/Audio.pressed.connect(_on_audio_button_pressed)
+	$Background/VBoxContainer/Save.pressed.connect(_on_save_button_pressed)
+	load_button.pressed.connect(_on_load_button_pressed)
 	audio_settings.back_pressed.connect(_on_audio_back_pressed)
 	$Background/ControlsPanel/VBoxContainer/BackButton.pressed.connect(_on_controls_back_pressed)
 	controls_panel.visible = false
@@ -47,6 +51,8 @@ func _input(event: InputEvent) -> void:
 		
 func pause() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	status_label.text = ""
+	load_button.disabled = not SaveManager.has_save()
 	visible = true
 	get_tree().paused = true
 
@@ -83,3 +89,14 @@ func _on_audio_button_pressed() -> void:
 func _on_audio_back_pressed() -> void:
 	audio_settings.visible = false
 	menu_container.visible = true
+
+func _on_save_button_pressed() -> void:
+	if SaveManager.save_game():
+		status_label.text = "Game saved"
+		load_button.disabled = false
+	else:
+		status_label.text = "Couldn't save"
+
+func _on_load_button_pressed() -> void:
+	if not SaveManager.load_game():
+		status_label.text = "No save to load"

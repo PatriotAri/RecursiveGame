@@ -48,6 +48,16 @@ custom_minimum_size = Vector2(50, 10)
 layout_mode = 2
 text = "Resume"
 
+[node name="Save" type="Button" parent="Background/VBoxContainer"]
+custom_minimum_size = Vector2(50, 10)
+layout_mode = 2
+text = "Save"
+
+[node name="Load" type="Button" parent="Background/VBoxContainer"]
+custom_minimum_size = Vector2(50, 10)
+layout_mode = 2
+text = "Load"
+
 [node name="Controls" type="Button" parent="Background/VBoxContainer" unique_id=1327928369]
 custom_minimum_size = Vector2(50, 10)
 layout_mode = 2
@@ -65,6 +75,10 @@ text = "Main Menu"
 [node name="Quit" type="Button" parent="Background/VBoxContainer" unique_id=916747216]
 layout_mode = 2
 text = "Quit"
+
+[node name="Status" type="Label" parent="Background/VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 1
 
 [node name="ControlsPanel" type="Panel" parent="Background" unique_id=1164875978]
 layout_mode = 0

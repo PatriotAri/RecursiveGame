@@ -34,6 +34,10 @@ func get_spawn_position(spawn_name: StringName) -> Vector2:
 			if candidate == &"": continue
 			var marker := points.get_node_or_null(NodePath(String(candidate))) as Node2D
 			if marker: return marker.global_position
+		# A map with only named arrivals (FromLevel) still has somewhere to
+		# put a player who names none: the first one.
+		if points.get_child_count() > 0 and spawn_name == &"":
+			return (points.get_child(0) as Node2D).global_position
 	push_warning("Map %s: no spawn point '%s' or '%s'; using the origin." % [map_id, spawn_name, default_spawn])
 	return global_position
 

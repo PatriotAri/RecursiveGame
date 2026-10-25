@@ -41,6 +41,10 @@ label_settings = SubResource("LabelSettings_h5hxm")
 layout_mode = 2
 text = "Respawn"
 
+[node name="LoadSave" type="Button" parent="Background/VBoxContainer"]
+layout_mode = 2
+text = "Load Last Save"
+
 [node name="MainMenu" type="Button" parent="Background/VBoxContainer" unique_id=1443744558]
 layout_mode = 2
 text = "Main Menu"

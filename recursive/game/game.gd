@@ -29,7 +29,26 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	_build_fade()
 	player = GlobalPackedScenes.player_scene.instantiate()
-	_load_map(starting_map, &"")
+	var save := SaveManager.take_pending_load()
+	if save.is_empty():
+		_load_map(starting_map, &"")
+	else:
+		_load_from_save(save)
+
+## Rebuilds from save data: the saved map, then the player's state on top.
+## A map that no longer exists falls back to the starting map rather than
+## refusing the save outright.
+func _load_from_save(save: Dictionary) -> void:
+	var map_id := StringName(save.get("map_id", ""))
+	if registry == null or registry.find(map_id) == null:
+		push_warning("Game: saved map '%s' is gone; starting at '%s'." % [map_id, starting_map])
+		map_id = starting_map
+	_load_map(map_id, &"")
+	player.apply_save_data(save.get("player", {}), SaveManager.ITEMS)
+
+func map_display_name() -> String:
+	var data := registry.find(current_map_id) if registry else null
+	return data.display_name if data and data.display_name != "" else String(current_map_id)
 
 ## Fades out, swaps to `map_id`, places the player at `spawn_name`, fades in.
 ## Safe to call from inside physics callbacks (a door's body_entered).
