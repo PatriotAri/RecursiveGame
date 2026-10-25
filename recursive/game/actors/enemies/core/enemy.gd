@@ -70,6 +70,13 @@ var death_handled := false
 @export_group("Drop Tuning")
 @export var drop_table: DropTable
 
+@export_group("Sounds")
+## Given to the default melee attack. A type that registers its own attacks
+## sets AttackSpec.sound on each instead.
+@export var attack_sound: SoundEffect = preload("res://game/audio/sfx/enemy_attack.tres")
+@export var hurt_sound: SoundEffect = preload("res://game/audio/sfx/hit.tres")
+@export var death_sound: SoundEffect = preload("res://game/audio/sfx/enemy_death.tres")
+
 ## Which registered attack the state machine commits to. A type with several
 ## attacks can change this between swings.
 var primary_attack: StringName = &"melee"
@@ -145,6 +152,7 @@ func _register_attacks() -> void:
 	melee.knockback_strength = knockback_strength
 	melee.hitstun_chance = hitstun_chance
 	melee.knockback_chance = knockback_chance
+	melee.sound = attack_sound
 	hitbox_manager.register_attack(&"melee", melee)
 
 ## How close the target has to be before the state machine commits to an
@@ -167,6 +175,10 @@ func attack_duration(attack_name: StringName) -> float:
 	if spec == null: return 0.0
 	return spec.windup_time + spec.lifetime
 
+## Plays a sound at this enemy's position. Null is silent.
+func play_sound(effect: SoundEffect) -> void:
+	AudioManager.play_sfx(effect, global_position)
+
 ## Stops anything an attack left running. Called on stagger and on death.
 func cancel_attacks() -> void:
 	hitbox_manager.cancel_all()
@@ -177,6 +189,7 @@ func _on_damage_received(damage_amount: float, apply_hitstun: bool) -> void:
 	stats.health.remove(roundi(damage_amount))
 	if data.is_dead:
 		return
+	play_sound(hurt_sound)
 	_flash_damage()
 	if not apply_hitstun:
 		return
@@ -214,6 +227,7 @@ func _handle_death() -> void:
 	$Collision.set_deferred("disabled", true)
 	$Hurtbox.set_deferred("monitorable", false)
 	sprite.play("died")
+	play_sound(death_sound)
 	_try_spawn_drops()
 	await sprite.animation_finished
 	await get_tree().create_timer(0.5).timeout

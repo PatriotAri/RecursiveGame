@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://ckfkf6upo66tf" path="res://game/actors/player/hitboxes/sword_hitbox.tscn" id="2_qypl4"]
 [ext_resource type="Texture2D" uid="uid://fv1bc2vesq72" path="res://game/items/equipment/weapons/tier_1/iron_sword/Iron Sword.png" id="3_qvrjd"]
 [ext_resource type="Resource" uid="uid://d7sd3n0syog" path="res://game/items/equipment/weapons/tier_1/iron_sword/iron_sword_hold_offsets.tres" id="4_jkgb8"]
+[ext_resource type="Resource" path="res://game/audio/sfx/swing.tres" id="9_swing"]
 
 [sub_resource type="Resource" id="Resource_jkgb8"]
 script = ExtResource("1_nnr27")
@@ -19,6 +20,7 @@ knockback_chance = 0.05
 windup_time = 0.25
 lifetime = 0.5
 reach_radius = 24.0
+sound = ExtResource("9_swing")
 metadata/_custom_type_script = "uid://c1b7wypd2oh0i"
 
 [sub_resource type="Resource" id="Resource_ml6gl"]

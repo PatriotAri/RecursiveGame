@@ -27,6 +27,10 @@ const DIRECTIONS := ["right", "left", "up", "down",
 @export_group("Stamina")
 @export var attack_stamina_cost := 5
 
+@export_group("Feedback")
+## Played by whoever starts the attack, at the attacker. Null is silent.
+@export var sound: SoundEffect
+
 @export_group("Geometry")
 ## Radius of the collision shape inside `scene`. Stored here rather than read
 ## from the scene so a commit range can be computed without instancing one.

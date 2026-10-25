@@ -58,6 +58,12 @@ var death_handled := false
 #how long player is locked in hitstun
 @export var hurt_duration:= 0.12
 
+@export_group("Sounds")
+## Given to the unarmed attack. Weapons carry their own on AttackSpec.sound.
+@export var attack_sound: SoundEffect = preload("res://game/audio/sfx/swing.tres")
+@export var hurt_sound: SoundEffect = preload("res://game/audio/sfx/player_hurt.tres")
+@export var death_sound: SoundEffect = preload("res://game/audio/sfx/player_death.tres")
+
 @export_group("Movement")
 @export var walk_speed:= 100.0
 @export var run_speed:= 140.0
@@ -98,6 +104,7 @@ func _ready() -> void:
 	unarmed.hitstun_chance = 0.3
 	unarmed.knockback_chance = 0.3
 	unarmed.attack_stamina_cost = attack_stamina_cost
+	unarmed.sound = attack_sound
 	
 	player_hitbox_manager = HitboxManagerBase.new(self, HitboxManagerBase.LAYER_ENEMY_HURTBOX, func(): return data.facing_dir)
 	player_hitbox_manager.register_attack(&"unarmed", unarmed)
@@ -142,6 +149,8 @@ func _physics_process(delta: float) -> void:
 	player_attack_system.update(data, delta)
 	if not was_attacking and data.is_attacking:
 		stats.stamina.remove(current_attack_stamina_cost())
+		var spec := player_hitbox_manager.get_spec(data.current_attack)
+		if spec: play_sound(spec.sound)
 	player_state_machine.update(data)
 	player_attack_system.post_update(data)
 	player_movement_system.update(data, delta)
@@ -198,6 +207,7 @@ func _on_damage_received(damage_amount: float, apply_hitstun: bool) -> void:
 	stats.health.remove(roundi(damage_amount))
 	if data.is_dead:
 		return
+	play_sound(hurt_sound)
 	_flash_damage()
 	if not apply_hitstun:
 		return
@@ -218,6 +228,10 @@ func _on_knockback_received(direction: Vector2, strength: float, decay: float) -
 	var knockback := MovementModifier.create_impulse(&"knockback", direction, strength, decay)
 	data.modifiers.add(knockback)
 
+## Plays a sound at the player's position. Null is silent.
+func play_sound(effect: SoundEffect) -> void:
+	AudioManager.play_sfx(effect, global_position)
+
 ## The point other actors aim at. Movement wants our feet (global_position);
 ## combat wants the middle of what it has to hit.
 func combat_anchor() -> Vector2:
@@ -237,6 +251,7 @@ func _flash_damage() -> void:
 func _handle_death() -> void:
 	$Collision.set_deferred("disabled", true)
 	$Hurtbox.set_deferred("monitorable", false)
+	play_sound(death_sound)
 	player_state_machine.update(data)
 	player_animation_system.update(data)
 	await sprite.animation_finished

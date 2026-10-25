@@ -4,6 +4,7 @@ extends Area2D
 
 @export var item: Item
 @export var amount: int = 1
+@export var pickup_sound: SoundEffect = preload("res://game/audio/sfx/pickup.tres")
 
 func _ready() -> void:
 	if item == null:
@@ -18,5 +19,6 @@ func _on_body_entered(body: Node) -> void:
 	if not body.is_in_group(&"player"):
 		return
 	body.data.inventory.add(item, amount)
+	AudioManager.play_sfx(pickup_sound, global_position)
 	set_deferred("monitoring", false)
 	queue_free()

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="SoundEffect" format=3]
+
+[ext_resource type="Script" path="res://game/audio/core/sound_effect.gd" id="1_2ax8g"]
+[ext_resource type="AudioStream" path="res://game/audio/sfx/player_hurt.wav" id="2_dy3rk"]
+
+[resource]
+script = ExtResource("1_2ax8g")
+streams = Array[AudioStream]([ExtResource("2_dy3rk")])
+pitch_variance = 0.05
+max_instances = 2

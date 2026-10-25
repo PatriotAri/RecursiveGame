@@ -18,6 +18,7 @@ func try_use(data: PlayerData, item: ConsumableItem) -> bool:
 	if not data.inventory.remove(item.id, 1): return false
 	for effect in item.effects:
 		effect.apply(player.stats)
+	player.play_sound(item.use_sound)
 	return true
 
 ## An item with no effects, or whose every effect is already maxed out, is

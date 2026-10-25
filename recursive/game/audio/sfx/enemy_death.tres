@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="SoundEffect" format=3]
+
+[ext_resource type="Script" path="res://game/audio/core/sound_effect.gd" id="1_ootln"]
+[ext_resource type="AudioStream" path="res://game/audio/sfx/enemy_death.wav" id="2_buepp"]
+
+[resource]
+script = ExtResource("1_ootln")
+streams = Array[AudioStream]([ExtResource("2_buepp")])
+volume_db = -2.0
+pitch_variance = 0.1

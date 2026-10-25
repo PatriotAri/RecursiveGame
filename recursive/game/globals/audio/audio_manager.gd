@@ -14,11 +14,17 @@ const BUSES: Array[StringName] = [BUS_MASTER, BUS_MUSIC, BUS_SFX, BUS_UI]
 const SETTINGS_PATH := "user://settings.cfg"
 const SETTINGS_SECTION := "audio"
 
+## Positional sounds fade out past this many pixels from the camera.
+const SFX_MAX_DISTANCE := 900.0
+
 ## Two players so a new track can fade in while the old one fades out.
 var _music_a: AudioStreamPlayer
 var _music_b: AudioStreamPlayer
 var _music_current: AudioStreamPlayer
 var _music_tweens: Array[Tween] = []
+
+## SoundEffect -> how many of its players are still sounding.
+var _playing_counts: Dictionary = {}
 
 func _ready() -> void:
 	# Menus pause the tree; music and UI clicks shouldn't stop with it.
@@ -27,6 +33,8 @@ func _ready() -> void:
 	_music_b = _make_music_player()
 	_music_current = _music_a
 	load_settings()
+	# Every button in the game clicks without each menu wiring it up.
+	get_tree().node_added.connect(_on_node_added)
 
 # --- volume ---------------------------------------------------------------
 
@@ -71,6 +79,60 @@ func load_settings() -> void:
 	for bus in BUSES:
 		if config.has_section_key(SETTINGS_SECTION, String(bus)):
 			set_bus_volume(bus, float(config.get_value(SETTINGS_SECTION, String(bus))))
+
+# --- sound effects --------------------------------------------------------
+
+## Plays a one-shot. Pass a world position for a sound that should come from
+## somewhere (panned and quieter with distance); leave it out for one that
+## should always sound the same, like UI. Returns false if it was skipped.
+func play_sfx(effect: SoundEffect, at: Variant = null) -> bool:
+	if effect == null: return false
+	var stream := effect.pick()
+	if stream == null: return false
+	if effect.max_instances > 0 and _playing_counts.get(effect, 0) >= effect.max_instances:
+		return false
+	
+	var player: Node
+	if at is Vector2:
+		var p2d := AudioStreamPlayer2D.new()
+		p2d.max_distance = SFX_MAX_DISTANCE
+		p2d.position = at
+		p2d.stream = stream
+		p2d.volume_db = effect.volume_db
+		p2d.pitch_scale = effect.random_pitch()
+		p2d.bus = effect.bus
+		p2d.finished.connect(_on_sfx_finished.bind(p2d, effect))
+		player = p2d
+	else:
+		var p := AudioStreamPlayer.new()
+		p.stream = stream
+		p.volume_db = effect.volume_db
+		p.pitch_scale = effect.random_pitch()
+		p.bus = effect.bus
+		p.finished.connect(_on_sfx_finished.bind(p, effect))
+		player = p
+	
+	# World sounds stop with the game when it pauses; UI sounds don't, or
+	# clicking a pause-menu button would be silent.
+	player.process_mode = Node.PROCESS_MODE_ALWAYS if effect.bus == BUS_UI else Node.PROCESS_MODE_PAUSABLE
+	# Parented here rather than to whoever asked, so a sound outlives the
+	# enemy whose death it is.
+	add_child(player)
+	player.play()
+	_playing_counts[effect] = _playing_counts.get(effect, 0) + 1
+	return true
+
+func _on_sfx_finished(player: Node, effect: SoundEffect) -> void:
+	_playing_counts[effect] = maxi(_playing_counts.get(effect, 1) - 1, 0)
+	player.queue_free()
+
+func _on_node_added(node: Node) -> void:
+	var button := node as BaseButton
+	if button == null: return
+	# Opt-out per button with set_meta("silent", true).
+	button.pressed.connect(func():
+		if not button.get_meta(&"silent", false):
+			play_sfx(GlobalSounds.ui_click))
 
 # --- music ----------------------------------------------------------------
 

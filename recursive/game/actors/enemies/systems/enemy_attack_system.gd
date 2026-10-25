@@ -22,6 +22,8 @@ func update(delta: float) -> void:
 		# Timing comes from the attack itself, so a slow swing and a quick
 		# throw each hold the enemy for their own length.
 		attack_duration = body.attack_duration(body.primary_attack)
+		var spec := body.hitbox_manager.get_spec(body.primary_attack)
+		if spec: body.play_sound(spec.sound)
 		body.perform_attack(body.primary_attack)
 		return
 

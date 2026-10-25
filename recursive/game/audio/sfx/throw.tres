@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="SoundEffect" format=3]
+
+[ext_resource type="Script" path="res://game/audio/core/sound_effect.gd" id="1_74ess"]
+[ext_resource type="AudioStream" path="res://game/audio/sfx/throw.wav" id="2_1d0mj"]
+
+[resource]
+script = ExtResource("1_74ess")
+streams = Array[AudioStream]([ExtResource("2_1d0mj")])
+volume_db = -4.0
+pitch_variance = 0.12
