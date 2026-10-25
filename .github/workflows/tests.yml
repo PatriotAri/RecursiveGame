@@ -1,0 +1,46 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    env:
+      GODOT_VERSION: 4.6-stable
+      GODOT: ${{ github.workspace }}/.godot-bin/godot
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: .godot-bin
+          key: godot-${{ env.GODOT_VERSION }}-linux
+
+      - name: Download Godot
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p .godot-bin
+          curl -sSfL -o godot.zip "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q godot.zip -d .godot-bin
+          mv ".godot-bin/Godot_v${GODOT_VERSION}_linux.x86_64" .godot-bin/godot
+          rm godot.zip
+
+      - name: Tests
+        run: recursive/tests/run_tests.sh
+
+      - name: On-screen test
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb libgl1-mesa-dri
+          xvfb-run -a -s "-screen 0 1280x720x24" recursive/tests/run_tests.sh onscreen
+
+      - name: Performance budget
+        # The cap is loose for shared runners; the scaling ratio is the real check.
+        env:
+          PERF_CAP_MS: 150
+        run: recursive/tests/run_tests.sh perf_budget

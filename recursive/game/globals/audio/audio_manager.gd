@@ -11,7 +11,8 @@ const BUS_UI := &"UI"
 ## The order the settings menu lists them in.
 const BUSES: Array[StringName] = [BUS_MASTER, BUS_MUSIC, BUS_SFX, BUS_UI]
 
-const SETTINGS_PATH := "user://settings.cfg"
+## A var so tests can point it elsewhere; see TestBase.
+var settings_path := "user://settings.cfg"
 const SETTINGS_SECTION := "audio"
 
 ## Positional sounds fade out past this many pixels from the camera.
@@ -77,17 +78,17 @@ func _bus_index(bus: StringName) -> int:
 func save_settings() -> void:
 	var config := ConfigFile.new()
 	# Load first so saving audio doesn't wipe any other section in the file.
-	config.load(SETTINGS_PATH)
+	config.load(settings_path)
 	for bus in BUSES:
 		config.set_value(SETTINGS_SECTION, String(bus), get_bus_volume(bus))
-	var err := config.save(SETTINGS_PATH)
+	var err := config.save(settings_path)
 	if err != OK:
 		push_warning("AudioManager: couldn't save settings (error %d)." % err)
 
 func load_settings() -> void:
 	var config := ConfigFile.new()
 	# A missing file is the normal first-launch case, not an error.
-	if config.load(SETTINGS_PATH) != OK: return
+	if config.load(settings_path) != OK: return
 	for bus in BUSES:
 		if config.has_section_key(SETTINGS_SECTION, String(bus)):
 			set_bus_volume(bus, float(config.get_value(SETTINGS_SECTION, String(bus))))
