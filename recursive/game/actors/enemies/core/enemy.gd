@@ -12,7 +12,7 @@ signal died
 ## than one melee swing.
 ##
 ## Expected children: Sprite (AnimatedSprite2D), Collision, Hurtbox,
-## DetectionArea (EnemyDetectionSystem). PatrolZone is optional.
+## DetectionArea (EnemyDetectionSystem).
 
 #type casts DetectionArea as DetectionSystem, allows script to send signals
 @onready var detection_system: EnemyDetectionSystem = $DetectionArea as EnemyDetectionSystem
@@ -100,6 +100,12 @@ var death_handled := false
 
 #patrol variables
 @export_group("Patrol Tuning")
+## Size of the box, centred on the spawn point's surroundings, that patrol
+## points are picked from. Zero stands still. A plain value rather than an
+## Area2D: the old PatrolZone area was only ever read for its size, but sat
+## on the Environment layer overlapping every wall and every other zone —
+## measured as the single biggest physics cost with many enemies.
+@export var patrol_size:= Vector2(300, 275)
 @export var patrol_wait_time:= 3.5
 @export var patrol_timer:= 0.0
 @export var min_patrol_distance:= 40.0

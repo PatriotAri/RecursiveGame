@@ -96,13 +96,10 @@ func patrol(delta: float) -> void:
 		_move_toward(patrol_target, data.patrol_speed, delta)
 
 func pick_patrol_target() -> void:
-	if not body.has_node("PatrolZone"):
+	if body.patrol_size == Vector2.ZERO:
 		patrol_target = body.global_position
 		return
-
-	var zone:= body.get_node("PatrolZone")
-	var shape:= zone.get_node("CollisionShape2D").shape as RectangleShape2D
-	var half:= shape.size / 2.0
+	var half:= body.patrol_size / 2.0
 
 	for attempts in max_attempts:
 		var candidate:= body.global_position + Vector2(
