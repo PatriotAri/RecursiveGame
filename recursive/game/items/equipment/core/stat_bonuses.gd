@@ -9,6 +9,8 @@ extends Resource
 @export var max_mana := 0
 @export var walk_speed := 0.0
 @export var run_speed := 0.0
+## Armor points. See StatSystem.mitigate() for what a point is worth.
+@export var armor := 0
 
 ## Costs, so the sign is inverted from everything above: NEGATIVE is the
 ## good direction. A light weapon that makes swinging cheaper has
@@ -28,6 +30,7 @@ static func stat_total(bonuses: Array[StatBonuses]) -> StatBonuses:
 		sum.max_mana += bonus.max_mana
 		sum.walk_speed += bonus.walk_speed
 		sum.run_speed += bonus.run_speed
+		sum.armor += bonus.armor
 		sum.sprint_stamina_cost += bonus.sprint_stamina_cost
 		sum.attack_stamina_cost += bonus.attack_stamina_cost
 	return sum

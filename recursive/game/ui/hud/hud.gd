@@ -4,6 +4,7 @@ extends CanvasLayer
 @onready var stamina_bar: Control = $Bars/VBox/StaminaBar
 @onready var mana_bar: Control = $Bars/VBox/ManaBar
 @onready var spell_slot: Control = $Bars/VBox/SpellSlot
+@onready var armor_value: Label = $Bars/VBox/Armor/Value
 @onready var round_label: Label = $RoundLabel
 @onready var toast: Label = $Toast
 var _toast_tween: Tween
@@ -26,6 +27,8 @@ func _ready() -> void:
 	stamina_bar.bind(player.stats.stamina)
 	mana_bar.bind(player.stats.mana)
 	spell_slot.bind(player.player_spell_system)
+	player.armor_changed.connect(_on_armor_changed)
+	_on_armor_changed(player.stats.armor)
 	
 	gold_counter.bind(player.data.inventory)
 	soul_counter.bind(player.data.inventory)
@@ -36,6 +39,9 @@ func _ready() -> void:
 	if game:
 		game.map_changed.connect(_on_map_changed)
 		if game.current_map: _on_map_changed(game.current_map)
+
+func _on_armor_changed(armor: int) -> void:
+	armor_value.text = "%d  (-%d%% damage)" % [armor, roundi(100.0 - 100.0 * StatSystem.ARMOR_SCALE / (StatSystem.ARMOR_SCALE + armor))]
 
 ## A line of text in the corner that fades out on its own.
 func _show_toast(text: String) -> void:

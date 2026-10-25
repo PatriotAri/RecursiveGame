@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="EquippableItem" format=3]
+
+[ext_resource type="Script" uid="uid://v162jjr58mo1" path="res://game/items/equipment/core/stat_bonuses.gd" id="1_vdfnb"]
+[ext_resource type="Texture2D" uid="uid://dg26jdm4p6w6x" path="res://game/items/equipment/armor/tier_1/iron_helm/Iron Helm.png" id="2_3edkv"]
+[ext_resource type="Script" uid="uid://c12w1whtmqtq7" path="res://game/items/equipment/core/equippable_item.gd" id="3_srcch"]
+
+[sub_resource type="Resource" id="Resource_nhcc8"]
+script = ExtResource("1_vdfnb")
+armor = 3
+
+[resource]
+script = ExtResource("3_srcch")
+slot = 2
+bonuses = SubResource("Resource_nhcc8")
+id = &"iron_helm"
+display_name = "Iron Helm"
+description = "A plain iron helm. Dents are a feature.
++3 armor."
+icon = ExtResource("2_3edkv")
+category = 1

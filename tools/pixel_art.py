@@ -181,6 +181,34 @@ def sheet(frames, size):
         img.paste(render(grid, size), (i * size[0], 0))
     return img
 
+IRON_HELM = [
+    "....kkkkkk....",
+    "..kkssssssk...",
+    ".kssswwsssSk..",
+    ".kssswssssSSk.",
+    "kssssssssSSSk.",
+    "ksssssssSSSSk.",
+    "kSSSSSSSSSSSk.",
+    "kkkkkkkkkkkkk.",
+    "kSk..kkk..kSk.",
+    "kSk..kSk..kSk.",
+    "kSk..kSk..kSk.",
+    ".kk..kkk..kk..",
+]
+
+SHIELD_ICON = [
+    "kkkkkkkkkk",
+    "klllllllSk",
+    "klwlllllSk",
+    "klllllllSk",
+    "klllllllSk",
+    ".kllllllk.",
+    ".klllllSk.",
+    "..kllllk..",
+    "...kllk...",
+    "....kk....",
+]
+
 SPRITES = {
     "items/equipment/weapons/tier_1/throwing_dagger/Throwing Dagger.png": (THROWING_DAGGER, (32, 32)),
     # Tight canvas for the thrown version so its collision shape and sprite agree.
@@ -189,6 +217,8 @@ SPRITES = {
     "spells/fireball/Fireball Icon.png": (FIREBALL, (32, 32)),
     "items/equipment/weapons/tier_1/apprentice_staff/Apprentice Staff.png": (STAFF, (32, 32)),
     "actors/enemies/types/ranged/spitter/assets/acid_glob.png": (ACID_GLOB, (6, 6)),
+    "items/equipment/armor/tier_1/iron_helm/Iron Helm.png": (IRON_HELM, (32, 32)),
+    "ui/hud/armor/armor_icon.png": (SHIELD_ICON, (10, 10)),
     "actors/enemies/types/flyer/bat/assets/bat_shadow.png": (SHADOW, (14, 5)),
 }
 

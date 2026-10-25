@@ -6,6 +6,7 @@
 [node name="Grunt" instance=ExtResource("1_base")]
 script = ExtResource("2_script")
 max_health = 30
+armor = 3
 windup_time = 0.6
 lifetime = 0.15
 damage = 3.0

@@ -2,7 +2,7 @@ class_name EquippableItem
 
 extends Item
 
-enum Slot {WEAPON, ARMOR} #always append enum, never insert in middle
+enum Slot {WEAPON, ARMOR, HEAD} #always append enum, never insert in middle
 
 ## Where this goes on the body. Distinct from Item.category, which is about
 ## how the item is browsed — two helms and a chestplate are all ARMOR

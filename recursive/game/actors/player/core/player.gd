@@ -1,5 +1,8 @@
 extends CharacterBody2D
 
+## After equipment changes the armor total, for the HUD.
+signal armor_changed(armor: int)
+
 var data: PlayerData
 var stats: StatSystem
 
@@ -21,6 +24,7 @@ var player_hitbox_manager: HitboxManagerBase
 var _base_max_health: int
 var _base_max_stamina: int
 var _base_max_mana: int
+var _base_armor: int
 var _base_walk_speed: float
 var _base_run_speed: float
 var _base_sprint_stamina_cost: float
@@ -45,6 +49,10 @@ var death_handled := false
 @export var sprint_stamina_cost: float = 12.0
 @export var attack_stamina_cost: int = 4
 @export var exhaustion_recovery_ratio: float = 0.25
+
+@export_group("Armor")
+## Armor points before equipment.
+@export var armor: int = 0
 
 @export_group("Mana")
 @export var max_mana: int = 10
@@ -80,6 +88,7 @@ func _ready() -> void:
 	_base_max_health = max_health
 	_base_max_stamina = max_stamina
 	_base_max_mana = max_mana
+	_base_armor = armor
 	_base_walk_speed = walk_speed
 	_base_run_speed = run_speed
 	_base_sprint_stamina_cost = sprint_stamina_cost
@@ -95,6 +104,7 @@ func _ready() -> void:
 		Stat.new(max_stamina, stamina_regen_per_second, stamina_regen_delay),
 		Stat.new(max_mana, mana_regen_per_second, mana_regen_delay)
 	)
+	stats.armor = armor
 	stats.health.emptied.connect(_on_health_emptied)
 	stats.stamina.emptied.connect(_on_stamina_emptied)
 	
@@ -180,6 +190,8 @@ func apply_stat_bonuses(bonuses: StatBonuses) -> void:
 	stats.health.set_maximum(_base_max_health + bonuses.max_health)
 	stats.stamina.set_maximum(_base_max_stamina + bonuses.max_stamina)
 	stats.mana.set_maximum(_base_max_mana + bonuses.max_mana)
+	stats.armor = _base_armor + bonuses.armor
+	armor_changed.emit(stats.armor)
 	
 	data.walk_speed = _base_walk_speed + bonuses.walk_speed
 	data.run_speed = _base_run_speed + bonuses.run_speed
@@ -245,8 +257,8 @@ func _on_stamina_emptied() -> void:
 	data.is_exhausted = true
 
 func _on_damage_received(damage_amount: float, apply_hitstun: bool) -> void:
-	stats.health.remove(roundi(damage_amount))
-	DamageNumber.spawn(get_parent(), combat_anchor() + Vector2(0, -20), roundi(damage_amount), Color(1, 0.35, 0.35))
+	var dealt := stats.take_damage(damage_amount)
+	DamageNumber.spawn(get_parent(), combat_anchor() + Vector2(0, -20), dealt, Color(1, 0.35, 0.35))
 	HitSpark.spawn(get_parent(), combat_anchor(), Color(1, 0.5, 0.5))
 	shake_camera(3.0, 0.15)
 	if data.is_dead:

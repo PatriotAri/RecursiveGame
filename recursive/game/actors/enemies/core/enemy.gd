@@ -30,6 +30,8 @@ var death_handled := false
 
 @export_group("Stat Tuning")
 @export var max_health: int = 10
+## Armor points. See StatSystem.mitigate().
+@export var armor: int = 0
 
 #hitbox variables
 @export_group("Hitbox Type")
@@ -131,6 +133,7 @@ const REPATH_DISTANCE_SQ := 16.0 * 16.0
 
 func _ready() -> void:
 	stats = StatSystem.new(Stat.new(max_health))
+	stats.armor = armor
 	stats.health.emptied.connect(_on_health_emptied)
 
 	data = EnemyData.new()
@@ -320,8 +323,7 @@ func cancel_attacks() -> void:
 # --- damage / death ---------------------------------------------------------
 
 func _on_damage_received(damage_amount: float, apply_hitstun: bool) -> void:
-	stats.health.remove(roundi(damage_amount))
-	_show_hit(roundi(damage_amount))
+	_show_hit(stats.take_damage(damage_amount))
 	if data.is_dead:
 		return
 	play_sound(hurt_sound)
