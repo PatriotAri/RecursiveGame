@@ -25,6 +25,7 @@ var is_running:= false
 var attack_requested:= false
 var cast_requested:= false
 var cycle_spell_requested:= false
+var interact_requested:= false
 
 #read/written by StateMachine 
 var current_state: State = State.IDLE

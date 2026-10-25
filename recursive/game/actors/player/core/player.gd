@@ -10,6 +10,7 @@ var player_movement_system: PlayerMovementSystem
 var player_consumable_system: PlayerConsumableSystem
 var player_equipment_system: PlayerEquipmentSystem
 var player_spell_system: PlayerSpellSystem
+var player_interaction_system: PlayerInteractionSystem
 var player_animation_system: PlayerAnimationSystem
 var player_weapon_visual_system: PlayerWeaponVisualSystem
 
@@ -117,6 +118,7 @@ func _ready() -> void:
 	player_consumable_system = PlayerConsumableSystem.new(self)
 	player_weapon_visual_system = PlayerWeaponVisualSystem.new($Sprite/Weapon)
 	player_spell_system = PlayerSpellSystem.new(self)
+	player_interaction_system = PlayerInteractionSystem.new(self)
 	player_equipment_system = PlayerEquipmentSystem.new(self)
 	player_animation_system = PlayerAnimationSystem.new(sprite)
 	
@@ -139,6 +141,7 @@ func _physics_process(delta: float) -> void:
 			data.is_hurt = false
 	
 	player_spell_system.update(data, delta)
+	player_interaction_system.update(data)
 	_update_stamina(delta)
 	
 	if data.move_vector != Vector2.ZERO:
@@ -263,6 +266,13 @@ func _on_health_emptied() -> void:
 func _on_knockback_received(direction: Vector2, strength: float, decay: float) -> void:
 	var knockback := MovementModifier.create_impulse(&"knockback", direction, strength, decay)
 	data.modifiers.add(knockback)
+
+## Interactables call these as the player walks into and out of reach.
+func register_interactable(interactable: Interactable) -> void:
+	player_interaction_system.register(interactable)
+
+func unregister_interactable(interactable: Interactable) -> void:
+	player_interaction_system.unregister(interactable)
 
 ## Plays a sound at the player's position. Null is silent.
 func play_sound(effect: SoundEffect) -> void:

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="MapRegistry" format=3]
+
+[ext_resource type="Script" path="res://game/maps/core/map_data.gd" id="1_26ba6"]
+[ext_resource type="Script" path="res://game/maps/core/map_registry.gd" id="2_mna1h"]
+
+[sub_resource type="Resource" id="Resource_keaa4"]
+script = ExtResource("1_26ba6")
+id = &"test_level_01"
+display_name = "Test Level"
+scene_path = "res://game/maps/test_map/levels/test_level_01/test_level_01.tscn"
+
+[sub_resource type="Resource" id="Resource_tmvgk"]
+script = ExtResource("1_26ba6")
+id = &"test_shop"
+display_name = "Test Shop"
+scene_path = "res://game/maps/test_map/levels/test_shop/test_shop.tscn"
+
+[resource]
+script = ExtResource("2_mna1h")
+maps = Array[ExtResource("1_26ba6")]([SubResource("Resource_keaa4"), SubResource("Resource_tmvgk")])

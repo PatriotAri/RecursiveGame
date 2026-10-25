@@ -1,0 +1,27 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/components/rounds/round_button/round_button.gd" id="1_btn"]
+[ext_resource type="Texture2D" path="res://game/components/rounds/round_button/assets/round_button.png" id="2_idle"]
+[ext_resource type="Texture2D" path="res://game/components/rounds/round_button/assets/round_button_pressed.png" id="3_pressed"]
+[ext_resource type="Script" path="res://game/components/interaction/interactable.gd" id="4_inter"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_reach"]
+radius = 32.0
+
+[node name="RoundButton" type="Node2D"]
+script = ExtResource("1_btn")
+idle_texture = ExtResource("2_idle")
+pressed_texture = ExtResource("3_pressed")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_idle")
+offset = Vector2(0, -16)
+
+[node name="Interactable" type="Area2D" parent="."]
+script = ExtResource("4_inter")
+prompt = "Start Round"
+prompt_offset = Vector2(0, -36)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable"]
+position = Vector2(0, -8)
+shape = SubResource("CircleShape2D_reach")

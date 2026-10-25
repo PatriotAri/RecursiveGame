@@ -1,0 +1,75 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/components/shop/shop.gd" id="1_shop"]
+[ext_resource type="Texture2D" path="res://game/components/shop/assets/shop_counter.png" id="2_tex"]
+[ext_resource type="Script" path="res://game/components/interaction/interactable.gd" id="3_inter"]
+[ext_resource type="Script" path="res://game/components/shop/shop_entry.gd" id="4_entry"]
+[ext_resource type="Resource" uid="uid://dq1ckemgpbwtg" path="res://game/items/consumables/potions/health_potion/health_potion.tres" id="5_hp"]
+[ext_resource type="Resource" path="res://game/items/consumables/potions/stamina_potion/stamina_potion.tres" id="6_sp"]
+[ext_resource type="Resource" path="res://game/items/consumables/potions/mana_potion/mana_potion.tres" id="7_mp"]
+[ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/throwing_dagger/throwing_dagger.tres" id="8_dag"]
+[ext_resource type="Resource" uid="uid://dllv20s1l4hsa" path="res://game/items/equipment/weapons/tier_1/iron_sword/iron_sword.tres" id="9_sword"]
+[ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/apprentice_staff/apprentice_staff.tres" id="10_staff"]
+
+[sub_resource type="Resource" id="Resource_hp"]
+script = ExtResource("4_entry")
+item = ExtResource("5_hp")
+price = 8
+
+[sub_resource type="Resource" id="Resource_sp"]
+script = ExtResource("4_entry")
+item = ExtResource("6_sp")
+price = 6
+
+[sub_resource type="Resource" id="Resource_mp"]
+script = ExtResource("4_entry")
+item = ExtResource("7_mp")
+price = 8
+
+[sub_resource type="Resource" id="Resource_dag"]
+script = ExtResource("4_entry")
+item = ExtResource("8_dag")
+price = 3
+stock = 30
+
+[sub_resource type="Resource" id="Resource_sword"]
+script = ExtResource("4_entry")
+item = ExtResource("9_sword")
+price = 30
+stock = 1
+
+[sub_resource type="Resource" id="Resource_staff"]
+script = ExtResource("4_entry")
+item = ExtResource("10_staff")
+price = 45
+stock = 1
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_counter"]
+size = Vector2(64, 26)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_reach"]
+radius = 56.0
+
+[node name="Shop" type="Node2D"]
+script = ExtResource("1_shop")
+entries = Array[ExtResource("4_entry")]([SubResource("Resource_hp"), SubResource("Resource_sp"), SubResource("Resource_mp"), SubResource("Resource_dag"), SubResource("Resource_sword"), SubResource("Resource_staff")])
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_tex")
+offset = Vector2(0, -24)
+
+[node name="Counter" type="StaticBody2D" parent="." groups=["navigation_obstacles"]]
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Counter"]
+position = Vector2(0, -13)
+shape = SubResource("RectangleShape2D_counter")
+
+[node name="Interactable" type="Area2D" parent="."]
+script = ExtResource("3_inter")
+prompt = "Shop"
+prompt_offset = Vector2(0, -52)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable"]
+position = Vector2(0, -8)
+shape = SubResource("CircleShape2D_reach")

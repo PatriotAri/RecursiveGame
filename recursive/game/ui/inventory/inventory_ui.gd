@@ -122,7 +122,7 @@ func close() -> void:
 	_paused_by_me = false
 
 func _other_pause_holder_visible() -> bool:
-	for group in [&"death_screen", &"pause_menu"]:
+	for group in [&"death_screen", &"pause_menu", &"shop_ui"]:
 		var node := get_tree().get_first_node_in_group(group)
 		if node and node.visible:
 			return true

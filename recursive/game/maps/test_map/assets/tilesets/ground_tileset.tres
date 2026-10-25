@@ -1,0 +1,28 @@
+[gd_resource type="TileSet" format=3]
+
+[ext_resource type="Texture2D" path="res://game/maps/test_map/assets/textures/ground/test ground.png" id="1_sy3d1"]
+[ext_resource type="Texture2D" path="res://game/maps/test_map/assets/textures/ground/sand.png" id="2_sje3j"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_funwt"]
+texture = ExtResource("1_sy3d1")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+1:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_2gmtc"]
+texture = ExtResource("2_sje3j")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+
+[resource]
+tile_size = Vector2i(64, 64)
+sources/0 = SubResource("TileSetAtlasSource_funwt")
+sources/1 = SubResource("TileSetAtlasSource_2gmtc")

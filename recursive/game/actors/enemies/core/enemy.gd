@@ -2,6 +2,10 @@ class_name Enemy
 
 extends CharacterBody2D
 
+## Emitted once, on the killing blow — before the death animation, so a
+## round can count the kill without waiting for the corpse to fade.
+signal died
+
 ## Shared body for every enemy type. Owns the systems and the health, hurt,
 ## knockback and death plumbing. A type only describes itself: its exports in
 ## the scene, and _register_attacks() / perform_attack() when it needs more
@@ -324,7 +328,9 @@ func _flash_damage() -> void:
 	_flash_tween.tween_property(sprite, "modulate", Color.WHITE, 0.15)
 
 func _on_health_emptied() -> void:
+	if data.is_dead: return
 	data.is_dead = true
+	died.emit()
 
 func _on_knockback_received(direction: Vector2, strength: float, decay: float) -> void:
 	var knockback := MovementModifier.create_impulse(&"knockback", direction, strength, decay)

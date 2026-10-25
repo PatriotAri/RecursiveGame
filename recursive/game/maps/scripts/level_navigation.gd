@@ -14,6 +14,7 @@ extends NavigationRegion2D
 @export var agent_radius:= 12.0
 
 func _ready() -> void:
+	add_to_group(&"level_navigation")
 	if ground == null:
 		push_warning("%s: no ground layer assigned; navigation disabled." % name)
 		return

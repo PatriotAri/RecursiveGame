@@ -1,0 +1,43 @@
+[gd_scene format=4]
+
+[ext_resource type="Script" uid="uid://cfwy36bm1t0y1" path="res://game/maps/core/map.gd" id="1_ap2sf"]
+[ext_resource type="TileSet" path="res://game/maps/test_map/assets/tilesets/ground_tileset.tres" id="2_wmhri"]
+[ext_resource type="TileSet" path="res://game/maps/test_map/assets/tilesets/walls_tileset.tres" id="3_bic7h"]
+[ext_resource type="Script" uid="uid://bu3ha67fsw3t5" path="res://game/maps/scripts/level_navigation.gd" id="4_auyr8"]
+[ext_resource type="PackedScene" path="res://game/components/shop/shop.tscn" id="5_ncl4h"]
+[ext_resource type="PackedScene" path="res://game/components/doors/door.tscn" id="6_lr05c"]
+
+[node name="TestShop" type="Node2D" unique_id=1443636821]
+script = ExtResource("1_ap2sf")
+map_id = &"test_shop"
+
+[node name="Ground" type="TileMapLayer" parent="." unique_id=1580584432]
+tile_map_data = PackedByteArray("AAD7//3/AQABAAAAAAD7//7/AQABAAAAAAD7////AQABAAAAAAD7/wAAAQABAAAAAAD7/wEAAQABAAAAAAD7/wIAAQABAAAAAAD7/wMAAQABAAAAAAD8//3/AQABAAAAAAD8//7/AQABAAAAAAD8////AQABAAAAAAD8/wAAAQABAAAAAAD8/wEAAQABAAAAAAD8/wIAAQABAAAAAAD8/wMAAQABAAAAAAD9//3/AQABAAAAAAD9//7/AQABAAAAAAD9////AQABAAAAAAD9/wAAAQABAAAAAAD9/wEAAQABAAAAAAD9/wIAAQABAAAAAAD9/wMAAQABAAAAAAD+//3/AQABAAAAAAD+//7/AQABAAAAAAD+////AQABAAAAAAD+/wAAAQABAAAAAAD+/wEAAQABAAAAAAD+/wIAAQABAAAAAAD+/wMAAQABAAAAAAD///3/AQABAAAAAAD///7/AQABAAAAAAD/////AQABAAAAAAD//wAAAQABAAAAAAD//wEAAQABAAAAAAD//wIAAQABAAAAAAD//wMAAQABAAAAAAAAAP3/AQABAAAAAAAAAP7/AQABAAAAAAAAAP//AQABAAAAAAAAAAAAAQABAAAAAAAAAAEAAQABAAAAAAAAAAIAAQABAAAAAAAAAAMAAQABAAAAAAABAP3/AQABAAAAAAABAP7/AQABAAAAAAABAP//AQABAAAAAAABAAAAAQABAAAAAAABAAEAAQABAAAAAAABAAIAAQABAAAAAAABAAMAAQABAAAAAAACAP3/AQABAAAAAAACAP7/AQABAAAAAAACAP//AQABAAAAAAACAAAAAQABAAAAAAACAAEAAQABAAAAAAACAAIAAQABAAAAAAACAAMAAQABAAAAAAADAP3/AQABAAAAAAADAP7/AQABAAAAAAADAP//AQABAAAAAAADAAAAAQABAAAAAAADAAEAAQABAAAAAAADAAIAAQABAAAAAAADAAMAAQABAAAAAAAEAP3/AQABAAAAAAAEAP7/AQABAAAAAAAEAP//AQABAAAAAAAEAAAAAQABAAAAAAAEAAEAAQABAAAAAAAEAAIAAQABAAAAAAAEAAMAAQABAAAAAAA=")
+tile_set = ExtResource("2_wmhri")
+
+[node name="Walls" type="TileMapLayer" parent="." unique_id=169803011 groups=["navigation_obstacles"]]
+tile_map_data = PackedByteArray("AAD6//z/AAAAAAAAAAD6/wQAAAAAAAAAAAD7//z/AAAAAAAAAAD7/wQAAAAAAAAAAAD8//z/AAAAAAAAAAD8/wQAAAAAAAAAAAD9//z/AAAAAAAAAAD9/wQAAAAAAAAAAAD+//z/AAAAAAAAAAD+/wQAAAAAAAAAAAD///z/AAAAAAAAAAD//wQAAAAAAAAAAAAAAPz/AAAAAAAAAAABAPz/AAAAAAAAAAABAAQAAAAAAAAAAAACAPz/AAAAAAAAAAACAAQAAAAAAAAAAAADAPz/AAAAAAAAAAADAAQAAAAAAAAAAAAEAPz/AAAAAAAAAAAEAAQAAAAAAAAAAAAFAPz/AAAAAAAAAAAFAAQAAAAAAAAAAAD6//3/AAAAAAAAAAAFAP3/AAAAAAAAAAD6//7/AAAAAAAAAAAFAP7/AAAAAAAAAAD6////AAAAAAAAAAAFAP//AAAAAAAAAAD6/wAAAAAAAAAAAAAFAAAAAAAAAAAAAAD6/wEAAAAAAAAAAAAFAAEAAAAAAAAAAAD6/wIAAAAAAAAAAAAFAAIAAAAAAAAAAAD6/wMAAAAAAAAAAAAFAAMAAAAAAAAAAAA=")
+tile_set = ExtResource("3_bic7h")
+
+[node name="Navigation" type="NavigationRegion2D" parent="." unique_id=1334347395 node_paths=PackedStringArray("ground")]
+script = ExtResource("4_auyr8")
+ground = NodePath("../Ground")
+
+[node name="Y-sorted" type="Node2D" parent="." unique_id=853628696]
+z_index = 2
+y_sort_enabled = true
+
+[node name="Shop" parent="Y-sorted" unique_id=559817482 instance=ExtResource("5_ncl4h")]
+position = Vector2(0, -120)
+
+[node name="LevelDoor" parent="Y-sorted" unique_id=1873622112 instance=ExtResource("6_lr05c")]
+position = Vector2(32, 288)
+target_map = &"test_level_01"
+target_spawn = &"FromShop"
+
+[node name="SpawnPoints" type="Node2D" parent="." unique_id=338209084]
+
+[node name="FromLevel" type="Marker2D" parent="SpawnPoints" unique_id=1925241525]
+position = Vector2(32, 210)
+
+[node name="Default" type="Marker2D" parent="SpawnPoints" unique_id=1227780716]

@@ -11,3 +11,4 @@ func update(data: PlayerData) -> void:
 	data.attack_requested = Input.is_action_just_pressed("player_attack")
 	data.cast_requested = Input.is_action_just_pressed("player_cast")
 	data.cycle_spell_requested = Input.is_action_just_pressed("spell_next")
+	data.interact_requested = Input.is_action_just_pressed("interact")

@@ -1,0 +1,32 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/components/doors/door.gd" id="1_door"]
+[ext_resource type="Texture2D" path="res://game/components/doors/assets/door_closed.png" id="2_closed"]
+[ext_resource type="Texture2D" path="res://game/components/doors/assets/door_open.png" id="3_open"]
+[ext_resource type="Script" path="res://game/components/interaction/interactable.gd" id="4_inter"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_door"]
+size = Vector2(64, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_reach"]
+size = Vector2(128, 128)
+
+[node name="Door" type="StaticBody2D"]
+collision_mask = 0
+script = ExtResource("1_door")
+closed_texture = ExtResource("2_closed")
+open_texture = ExtResource("3_open")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_closed")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_door")
+
+[node name="Interactable" type="Area2D" parent="."]
+script = ExtResource("4_inter")
+prompt = "Open"
+prompt_offset = Vector2(0, -36)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable"]
+shape = SubResource("RectangleShape2D_reach")

@@ -9,7 +9,7 @@ the existing art uses.
 """
 import os
 
-from PIL import Image
+from PIL import Image, ImageDraw
 
 ROOT = os.path.join(os.path.dirname(__file__), "..", "recursive", "game")
 
@@ -192,6 +192,82 @@ SPRITES = {
     "actors/enemies/types/flyer/bat/assets/bat_shadow.png": (SHADOW, (14, 5)),
 }
 
+# --- larger props, drawn with shapes rather than grids ---------------------
+
+def C(ch):
+    return PALETTE[ch]
+
+
+def door_closed():
+    img = Image.new("RGBA", (64, 64), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    d.rectangle([0, 0, 63, 63], fill=C("d"))                 # stone frame
+    d.rectangle([6, 4, 57, 63], fill=C("k"))
+    d.rectangle([7, 5, 56, 63], fill=C("b"))                 # planks
+    for x in range(7, 57, 10):
+        d.line([x, 5, x, 63], fill=C("B"))
+    for y in (16, 46):
+        d.rectangle([7, y, 56, y + 3], fill=C("D"))          # iron bands
+        for x in (12, 32, 51):
+            d.point((x, y + 1), fill=C("l"))
+    d.rectangle([47, 30, 50, 34], fill=C("g"))               # handle
+    return img
+
+
+def door_open():
+    img = Image.new("RGBA", (64, 64), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    d.rectangle([0, 0, 63, 63], fill=C("d"))
+    d.rectangle([6, 4, 57, 63], fill=(30, 26, 24, 255))      # dark doorway
+    d.rectangle([6, 4, 12, 63], fill=C("k"))                 # door swung against the frame
+    d.rectangle([7, 5, 11, 63], fill=C("b"))
+    d.rectangle([7, 16, 11, 19], fill=C("D"))
+    d.rectangle([7, 46, 11, 49], fill=C("D"))
+    return img
+
+
+def round_button(pressed):
+    img = Image.new("RGBA", (32, 32), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    d.rectangle([6, 18, 25, 31], fill=C("k"))                # pedestal
+    d.rectangle([7, 19, 24, 31], fill=C("D"))
+    d.rectangle([7, 19, 24, 21], fill=C("l"))
+    top = 13 if not pressed else 16
+    d.ellipse([9, top, 22, top + 7], fill=C("k"))
+    d.ellipse([10, top + 1, 21, top + 6], fill=C("r") if not pressed else (110, 40, 40, 255))
+    if not pressed:
+        d.point((13, top + 2), fill=C("w"))
+    return img
+
+
+def shop_counter():
+    img = Image.new("RGBA", (64, 48), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    d.rectangle([0, 20, 63, 47], fill=C("k"))                # counter body
+    d.rectangle([1, 21, 62, 47], fill=C("b"))
+    d.rectangle([1, 21, 62, 25], fill=C("B"))
+    for x in range(8, 63, 12):
+        d.line([x, 26, x, 47], fill=C("B"))
+    d.ellipse([6, 12, 15, 21], fill=C("k"))                  # red potion
+    d.ellipse([7, 13, 14, 20], fill=C("r"))
+    d.rectangle([9, 9, 12, 12], fill=C("y"))
+    d.ellipse([20, 12, 29, 21], fill=C("k"))                 # blue potion
+    d.ellipse([21, 13, 28, 20], fill=C("C"))
+    d.rectangle([23, 9, 26, 12], fill=C("y"))
+    for i, (x, y) in enumerate([(40, 17), (45, 15), (50, 17), (43, 12), (48, 12)]):
+        d.ellipse([x, y, x + 5, y + 4], fill=C("G"))         # coin pile
+        d.ellipse([x, y - 1, x + 5, y + 3], fill=C("g"))
+    return img
+
+
+PROPS = {
+    "components/doors/assets/door_closed.png": door_closed,
+    "components/doors/assets/door_open.png": door_open,
+    "components/rounds/round_button/assets/round_button.png": lambda: round_button(False),
+    "components/rounds/round_button/assets/round_button_pressed.png": lambda: round_button(True),
+    "components/shop/assets/shop_counter.png": shop_counter,
+}
+
 SHEETS = {
     # idle/walk = frames 0-1, dead = frame 2.
     "actors/enemies/types/flyer/bat/assets/bat_sheet.png": ([BAT_UP, BAT_DOWN, BAT_DEAD], (32, 32)),
@@ -202,3 +278,5 @@ if __name__ == "__main__":
         save(render(grid, size), rel)
     for rel, (frames, size) in SHEETS.items():
         save(sheet(frames, size), rel)
+    for rel, draw in PROPS.items():
+        save(draw(), rel)
