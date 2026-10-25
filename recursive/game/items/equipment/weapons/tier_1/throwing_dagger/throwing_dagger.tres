@@ -1,0 +1,42 @@
+[gd_resource type="Resource" script_class="EquippableItem" format=3]
+
+[ext_resource type="Resource" path="res://game/audio/sfx/projectile_hit.tres" id="1_fnnd5"]
+[ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/throwing_dagger/throwing_dagger_launch_offsets.tres" id="2_2wud5"]
+[ext_resource type="PackedScene" path="res://game/items/equipment/weapons/tier_1/throwing_dagger/throwing_dagger_projectile.tscn" id="3_knf0v"]
+[ext_resource type="Script" path="res://game/components/hitbox/attack_spec.gd" id="4_pptqc"]
+[ext_resource type="Resource" path="res://game/audio/sfx/throw.tres" id="5_lft8c"]
+[ext_resource type="Texture2D" path="res://game/items/equipment/weapons/tier_1/throwing_dagger/Throwing Dagger.png" id="6_6nyhm"]
+[ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/iron_sword/iron_sword_hold_offsets.tres" id="7_coe0g"]
+[ext_resource type="Script" path="res://game/items/equipment/core/equippable_item.gd" id="8_0pvso"]
+
+[sub_resource type="Resource" id="Resource_0atfg"]
+script = ExtResource("4_pptqc")
+scene = ExtResource("3_knf0v")
+offsets = ExtResource("2_2wud5")
+damage = 6.0
+knockback_strength = 60.0
+hitstun_chance = 0.2
+knockback_chance = 0.3
+windup_time = 0.12
+lifetime = 0.18
+projectile_speed = 380.0
+projectile_range = 320.0
+impact_sound = ExtResource("1_fnnd5")
+ammo_id = &"throwing_dagger"
+attack_stamina_cost = 2
+sound = ExtResource("5_lft8c")
+reach_radius = 3.0
+
+[resource]
+script = ExtResource("8_0pvso")
+attack = SubResource("Resource_0atfg")
+held_texture = ExtResource("6_6nyhm")
+hold_offsets = ExtResource("7_coe0g")
+rest_angle_degrees = -90.0
+grip_offset = Vector2(0, -4)
+swing_arc_degrees = 60.0
+id = &"throwing_dagger"
+display_name = "Throwing Dagger"
+description = "Light and balanced for throwing. Every throw spends one — keep a stack handy."
+icon = ExtResource("6_6nyhm")
+category = 2

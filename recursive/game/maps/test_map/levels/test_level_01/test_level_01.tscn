@@ -12,6 +12,7 @@
 [ext_resource type="Resource" uid="uid://gc75tdgl3xwr" path="res://game/items/equipment/weapons/test_weapon_01/test_weapon.tres" id="11_hl04a"]
 [ext_resource type="PackedScene" uid="uid://nhtgaiby8a08" path="res://game/items/consumables/potions/mana_potion/mana_potion_pickup.tscn" id="11_mpxm6"]
 [ext_resource type="Resource" uid="uid://dllv20s1l4hsa" path="res://game/items/equipment/weapons/tier_1/iron_sword/iron_sword.tres" id="12_hl04a"]
+[ext_resource type="PackedScene" path="res://game/items/equipment/weapons/tier_1/throwing_dagger/throwing_dagger_pickup.tscn" id="13_dagger"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rcbyt"]
 texture = ExtResource("1_jgaso")
@@ -83,3 +84,7 @@ item = ExtResource("11_hl04a")
 [node name="IronSword" parent="Y-sorted" unique_id=1113682374 instance=ExtResource("6_wvw0b")]
 position = Vector2(-172, -56)
 item = ExtResource("12_hl04a")
+
+[node name="ThrowingDaggers" parent="Y-sorted" instance=ExtResource("13_dagger")]
+position = Vector2(80, -150)
+amount = 10

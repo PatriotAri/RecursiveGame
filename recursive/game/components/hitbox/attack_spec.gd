@@ -24,6 +24,23 @@ const DIRECTIONS := ["right", "left", "up", "down",
 @export var windup_time := 0.1
 @export var lifetime := 0.1
 
+@export_group("Projectile")
+## Only read when `scene` is a Projectile. For those, `lifetime` above is how
+## long the attacker stays committed after the throw — the projectile's own
+## flight is limited by range instead.
+@export var projectile_speed := 300.0
+@export var projectile_range := 300.0
+## Targets passed through before stopping. 0 = stops on the first.
+@export var projectile_pierce := 0
+@export var impact_sound: SoundEffect
+
+@export_group("Ammo")
+## Item id spent from the attacker's inventory on every use, if set. An
+## attack that can't pay is refused before it starts. An id rather than an
+## Item so a weapon can be its own ammo without its .tres referencing itself.
+@export var ammo_id: StringName = &""
+@export var ammo_cost := 1
+
 @export_group("Stamina")
 @export var attack_stamina_cost := 5
 

@@ -150,7 +150,11 @@ func _physics_process(delta: float) -> void:
 	if not was_attacking and data.is_attacking:
 		stats.stamina.remove(current_attack_stamina_cost())
 		var spec := player_hitbox_manager.get_spec(data.current_attack)
-		if spec: play_sound(spec.sound)
+		if spec:
+			_spend_ammo(spec)
+			play_sound(spec.sound)
+	elif was_attacking and not data.is_attacking:
+		_drop_weapon_if_out_of_ammo()
 	player_state_machine.update(data)
 	player_attack_system.post_update(data)
 	player_movement_system.update(data, delta)
@@ -197,8 +201,31 @@ func _update_stamina(delta: float) -> void:
 	# Refuse an unaffordable swing before the attack system sees the request,
 	# so the input isn't eaten and the animation never plays for free.
 	if data.attack_requested and not data.is_attacking:
-		if not stats.stamina.can_afford(current_attack_stamina_cost()):
+		if not can_afford_attack():
 			data.attack_requested = false
+
+## Stamina and, for attacks that use it, ammo.
+func can_afford_attack() -> bool:
+	if not stats.stamina.can_afford(current_attack_stamina_cost()):
+		return false
+	var spec := player_hitbox_manager.get_spec(data.current_attack)
+	if spec and spec.ammo_id != &"":
+		return data.inventory.get_count(spec.ammo_id) >= spec.ammo_cost
+	return true
+
+func _spend_ammo(spec: AttackSpec) -> void:
+	if spec.ammo_id == &"": return
+	data.inventory.remove(spec.ammo_id, spec.ammo_cost)
+
+## A weapon that is its own ammo (throwing daggers) is gone from the
+## inventory after the last throw. Waits for the throw to finish first:
+## unequipping cancels in-flight swings, which would take the last dagger's
+## projectile with it mid-windup.
+func _drop_weapon_if_out_of_ammo() -> void:
+	var weapon: EquippableItem = data.equipment.get_item(EquippableItem.Slot.WEAPON)
+	if weapon == null: return
+	if data.inventory.get_count(weapon.id) > 0: return
+	player_equipment_system.try_unequip(data, EquippableItem.Slot.WEAPON)
 
 func _on_stamina_emptied() -> void:
 	data.is_exhausted = true

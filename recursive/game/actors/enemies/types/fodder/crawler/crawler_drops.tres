@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://c2rn4u0yidyre" path="res://game/items/consumables/potions/health_potion/health_potion_pickup.tscn" id="4_3gmh8"]
 [ext_resource type="PackedScene" uid="uid://drxqjod7tqrpj" path="res://game/items/consumables/potions/stamina_potion/stamina_potion_pickup.tscn" id="5_aqrrp"]
 [ext_resource type="PackedScene" uid="uid://nhtgaiby8a08" path="res://game/items/consumables/potions/mana_potion/mana_potion_pickup.tscn" id="6_l6hj5"]
+[ext_resource type="PackedScene" path="res://game/items/equipment/weapons/tier_1/throwing_dagger/throwing_dagger_pickup.tscn" id="7_dagger"]
 
 [sub_resource type="Resource" id="Resource_gvfsy"]
 script = ExtResource("1_le2u5")
@@ -39,7 +40,14 @@ scene = ExtResource("6_l6hj5")
 chance = 0.05
 metadata/_custom_type_script = "uid://dysbiie00jqq2"
 
+[sub_resource type="Resource" id="Resource_dagger"]
+script = ExtResource("1_le2u5")
+scene = ExtResource("7_dagger")
+chance = 0.1
+max_amount = 3
+metadata/_custom_type_script = "uid://dysbiie00jqq2"
+
 [resource]
 script = ExtResource("2_pwjvn")
-entries = Array[ExtResource("1_le2u5")]([SubResource("Resource_gvfsy"), SubResource("Resource_fei2q"), SubResource("Resource_nv81u"), SubResource("Resource_1ap6o"), SubResource("Resource_3gmh8")])
+entries = Array[ExtResource("1_le2u5")]([SubResource("Resource_gvfsy"), SubResource("Resource_fei2q"), SubResource("Resource_nv81u"), SubResource("Resource_1ap6o"), SubResource("Resource_3gmh8"), SubResource("Resource_dagger")])
 metadata/_custom_type_script = "uid://cid1wrvokph52"

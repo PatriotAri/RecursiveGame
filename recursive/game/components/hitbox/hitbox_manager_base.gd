@@ -72,7 +72,17 @@ func spawn_hitbox(attack_name: StringName) -> HitboxBase:
 	hitbox.offsets = spec.offsets
 	hitbox.facing_provider = facing_provider
 	
-	body.add_child(hitbox)
+	var projectile := hitbox as Projectile
+	if projectile:
+		projectile.configure_flight(spec.projectile_speed, spec.projectile_range,
+			spec.projectile_pierce, spec.impact_sound)
+		projectile.thrower = body
+		# World space, beside the thrower rather than under it — a child would
+		# be dragged along by every step its thrower takes after letting go.
+		body.get_parent().add_child(projectile)
+		projectile.global_position = body.global_position + hitbox.position
+	else:
+		body.add_child(hitbox)
 	hitbox.begin_attack()
 
 	active_hitboxes.append(hitbox)
@@ -94,9 +104,20 @@ func cancel_all() -> void:
 	# Iterate a copy: cancel() queue_frees, which fires tree_exited, which
 	# erases from active_hitboxes.
 	for hitbox in active_hitboxes.duplicate():
-		if is_instance_valid(hitbox):
-			hitbox.cancel()
-	active_hitboxes.clear()
+		if not is_instance_valid(hitbox):
+			continue
+		# A projectile already in flight has left the hand. Getting hit
+		# shouldn't pluck it out of the air.
+		if hitbox is Projectile and hitbox.is_launched():
+			continue
+		hitbox.cancel()
+	# Rebuilt rather than cleared: launched projectiles are still in flight
+	# and still ours until they land.
+	var still_active: Array[HitboxBase] = []
+	for hitbox in active_hitboxes:
+		if is_instance_valid(hitbox) and not hitbox.is_queued_for_deletion():
+			still_active.append(hitbox)
+	active_hitboxes = still_active
 
 func on_hitbox_removed(hitbox: HitboxBase) -> void:
 	active_hitboxes.erase(hitbox)
