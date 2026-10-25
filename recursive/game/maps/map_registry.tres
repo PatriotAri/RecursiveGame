@@ -15,6 +15,18 @@ id = &"test_shop"
 display_name = "Test Shop"
 scene_path = "res://game/maps/test_map/levels/test_shop/test_shop.tscn"
 
+[sub_resource type="Resource" id="Resource_26ba6"]
+script = ExtResource("1_26ba6")
+id = &"w1_level_1"
+display_name = "World 1 — Level 1"
+scene_path = "res://game/maps/world_1/levels/level_1/level_1.tscn"
+
+[sub_resource type="Resource" id="Resource_mna1h"]
+script = ExtResource("1_26ba6")
+id = &"w1_rest"
+display_name = "World 1 — Rest Area"
+scene_path = "res://game/maps/world_1/levels/rest_area/rest_area.tscn"
+
 [resource]
 script = ExtResource("2_mna1h")
-maps = Array[ExtResource("1_26ba6")]([SubResource("Resource_keaa4"), SubResource("Resource_tmvgk")])
+maps = Array[ExtResource("1_26ba6")]([SubResource("Resource_keaa4"), SubResource("Resource_tmvgk"), SubResource("Resource_26ba6"), SubResource("Resource_mna1h")])

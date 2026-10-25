@@ -260,7 +260,51 @@ def shop_counter():
     return img
 
 
+def stone_floor():
+    """Three 64x64 floor variants side by side: plain, cracked, mossy."""
+    import random
+    rnd = random.Random(11)
+    img = Image.new("RGBA", (192, 64), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    base, mid, dark = (118, 112, 106, 255), (104, 98, 93, 255), (78, 73, 70, 255)
+    for v in range(3):
+        ox = v * 64
+        d.rectangle([ox, 0, ox + 63, 63], fill=base)
+        # 2x2 flagstones with mortar lines
+        for (x0, y0, x1, y1) in [(0, 0, 31, 31), (32, 0, 63, 31), (0, 32, 31, 63), (32, 32, 63, 63)]:
+            d.rectangle([ox + x0, y0, ox + x1, y1], outline=dark)
+            for _ in range(10):
+                px, py = rnd.randint(x0 + 2, x1 - 2), rnd.randint(y0 + 2, y1 - 2)
+                d.point((ox + px, py), fill=mid)
+        if v == 1:   # crack
+            pts = [(ox + 10, 6), (ox + 18, 15), (ox + 16, 24), (ox + 26, 34), (ox + 24, 44)]
+            d.line(pts, fill=dark, width=1)
+        if v == 2:   # moss
+            for _ in range(40):
+                px, py = rnd.randint(36, 60), rnd.randint(36, 60)
+                d.point((ox + px, py), fill=(84, 120, 70, 255))
+    return img
+
+
+def stone_wall():
+    img = Image.new("RGBA", (64, 64), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    d.rectangle([0, 0, 63, 63], fill=(58, 54, 60, 255))
+    brick, edge = (86, 80, 88, 255), (40, 36, 42, 255)
+    for row in range(4):
+        y = row * 16
+        off = 0 if row % 2 == 0 else -16
+        for col in range(-1, 3):
+            x = col * 32 + off
+            d.rectangle([x + 1, y + 1, x + 30, y + 14], fill=brick, outline=edge)
+            d.line([x + 2, y + 2, x + 29, y + 2], fill=(110, 104, 112, 255))
+    d.rectangle([0, 0, 63, 63], outline=(20, 18, 22, 255))
+    return img
+
+
 PROPS = {
+    "maps/world_1/assets/textures/stone_floor.png": stone_floor,
+    "maps/world_1/assets/textures/stone_wall.png": stone_wall,
     "components/doors/assets/door_closed.png": door_closed,
     "components/doors/assets/door_open.png": door_open,
     "components/rounds/round_button/assets/round_button.png": lambda: round_button(False),

@@ -9,6 +9,9 @@ extends StaticBody2D
 @export var starts_open:= false
 @export var locked:= false
 @export var lock_during_rounds:= true
+## Starts locked (set `locked` too) and opens up once the map's last round
+## is cleared — a level exit.
+@export var unlock_when_rounds_cleared:= false
 @export_group("Passage")
 ## Map id from the MapRegistry. Empty = an ordinary door.
 @export var target_map:= &""
@@ -85,12 +88,14 @@ func _rebake_navigation() -> void:
 			nav.bake()
 
 func _connect_rounds() -> void:
-	if not lock_during_rounds: return
 	var map := _find_map()
 	var rounds: RoundManager = map.get_round_manager() if map else null
 	if rounds == null: return
-	rounds.round_started.connect(_on_round_started)
-	rounds.round_completed.connect(_on_round_completed)
+	if lock_during_rounds:
+		rounds.round_started.connect(_on_round_started)
+		rounds.round_completed.connect(_on_round_completed)
+	if unlock_when_rounds_cleared:
+		rounds.all_rounds_completed.connect(set_locked.bind(false))
 
 func _on_round_started(_round: int) -> void:
 	_round_locked = true

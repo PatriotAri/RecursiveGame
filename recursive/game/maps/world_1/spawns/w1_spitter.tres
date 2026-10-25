@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="SpawnEntry" format=3]
+
+[ext_resource type="PackedScene" path="res://game/actors/enemies/types/ranged/spitter/core/spitter.tscn" id="1_1xuns"]
+[ext_resource type="Script" path="res://game/components/spawners/spawn_entry.gd" id="2_58yi0"]
+
+[resource]
+script = ExtResource("2_58yi0")
+scene = ExtResource("1_1xuns")
+min_round = 2

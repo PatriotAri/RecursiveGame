@@ -11,6 +11,7 @@
 [node name="Game" type="Node" unique_id=905991356]
 script = ExtResource("1_game")
 registry = ExtResource("1_reg")
+starting_map = &"w1_level_1"
 
 [node name="MapContainer" type="Node" parent="."]
 
