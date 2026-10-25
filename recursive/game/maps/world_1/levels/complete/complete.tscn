@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cfwy36bm1t0y1" path="res://game/maps/core/map.gd" id="1_4ctkc"]
 [ext_resource type="TileSet" path="res://game/maps/world_1/assets/tilesets/w1_ground_tileset.tres" id="2_67lvu"]
 [ext_resource type="TileSet" path="res://game/maps/world_1/assets/tilesets/w1_walls_tileset.tres" id="3_qwbbp"]
-[ext_resource type="Script" uid="uid://bu3ha67fsw3t5" path="res://game/maps/scripts/level_navigation.gd" id="4_bygpk"]
+[ext_resource type="Script" uid="uid://bu3ha67fsw3t5" path="res://game/maps/core/level_navigation.gd" id="4_bygpk"]
 [ext_resource type="PackedScene" path="res://game/components/interaction/menu_exit.tscn" id="5_fexa8"]
 
 [node name="World1Complete" type="Node2D" unique_id=642632638]

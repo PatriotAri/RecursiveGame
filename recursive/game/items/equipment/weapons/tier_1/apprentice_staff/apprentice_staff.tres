@@ -2,7 +2,7 @@
 
 [ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/iron_sword/iron_sword_attack_offsets.tres" id="1_m4ms3"]
 [ext_resource type="PackedScene" path="res://game/actors/player/hitboxes/sword_hitbox.tscn" id="2_vc6aa"]
-[ext_resource type="Script" path="res://game/components/hitbox/attack_spec.gd" id="3_3vjyt"]
+[ext_resource type="Script" path="res://game/components/combat/hitbox/attack_spec.gd" id="3_3vjyt"]
 [ext_resource type="Resource" path="res://game/audio/sfx/swing.tres" id="4_y862p"]
 [ext_resource type="Script" path="res://game/items/equipment/core/stat_bonuses.gd" id="5_jndu7"]
 [ext_resource type="Texture2D" path="res://game/items/equipment/weapons/tier_1/apprentice_staff/Apprentice Staff.png" id="6_lphck"]

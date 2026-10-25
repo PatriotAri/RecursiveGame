@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://game/components/projectile/projectile.gd" id="1_proj"]
+[ext_resource type="Script" path="res://game/components/combat/projectile/projectile.gd" id="1_proj"]
 [ext_resource type="Texture2D" path="res://game/items/equipment/weapons/tier_1/throwing_dagger/throwing_dagger_projectile.png" id="2_tex"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dagger"]

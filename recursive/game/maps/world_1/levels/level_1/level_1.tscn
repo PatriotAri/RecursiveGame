@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cfwy36bm1t0y1" path="res://game/maps/core/map.gd" id="1_cd7wc"]
 [ext_resource type="TileSet" path="res://game/maps/world_1/assets/tilesets/w1_ground_tileset.tres" id="2_bmxyg"]
 [ext_resource type="TileSet" path="res://game/maps/world_1/assets/tilesets/w1_walls_tileset.tres" id="3_bpmkr"]
-[ext_resource type="Script" uid="uid://bu3ha67fsw3t5" path="res://game/maps/scripts/level_navigation.gd" id="4_xid7f"]
+[ext_resource type="Script" uid="uid://bu3ha67fsw3t5" path="res://game/maps/core/level_navigation.gd" id="4_xid7f"]
 [ext_resource type="PackedScene" uid="uid://rrde2fa2vrkd" path="res://game/components/spawners/enemy_spawner.tscn" id="5_m723s"]
 [ext_resource type="Script" uid="uid://but50c0kmnb61" path="res://game/components/spawners/spawn_entry.gd" id="6_ktm6f"]
 [ext_resource type="Resource" path="res://game/maps/world_1/spawns/w1_crawler.tres" id="7_niyl3"]

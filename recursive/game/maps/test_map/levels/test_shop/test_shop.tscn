@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cfwy36bm1t0y1" path="res://game/maps/core/map.gd" id="1_ap2sf"]
 [ext_resource type="TileSet" path="res://game/maps/test_map/assets/tilesets/ground_tileset.tres" id="2_wmhri"]
 [ext_resource type="TileSet" path="res://game/maps/test_map/assets/tilesets/walls_tileset.tres" id="3_bic7h"]
-[ext_resource type="Script" uid="uid://bu3ha67fsw3t5" path="res://game/maps/scripts/level_navigation.gd" id="4_auyr8"]
+[ext_resource type="Script" uid="uid://bu3ha67fsw3t5" path="res://game/maps/core/level_navigation.gd" id="4_auyr8"]
 [ext_resource type="PackedScene" path="res://game/components/shop/shop.tscn" id="5_ncl4h"]
 [ext_resource type="PackedScene" path="res://game/components/doors/door.tscn" id="6_lr05c"]
 

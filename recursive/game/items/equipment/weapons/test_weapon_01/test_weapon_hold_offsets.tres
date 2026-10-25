@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="HitboxOffsetData" format=3 uid="uid://n50i5kp2n1su"]
 
-[ext_resource type="Script" uid="uid://cds4ae0je1k06" path="res://game/components/hitbox/hitbox_offset_data.gd" id="1_fpte7"]
+[ext_resource type="Script" uid="uid://cds4ae0je1k06" path="res://game/components/combat/hitbox/hitbox_offset_data.gd" id="1_fpte7"]
 
 [resource]
 script = ExtResource("1_fpte7")

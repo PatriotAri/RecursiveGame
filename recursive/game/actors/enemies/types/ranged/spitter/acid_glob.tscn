@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://game/components/projectile/projectile.gd" id="1_proj"]
+[ext_resource type="Script" path="res://game/components/combat/projectile/projectile.gd" id="1_proj"]
 [ext_resource type="Texture2D" path="res://game/actors/enemies/types/ranged/spitter/assets/acid_glob.png" id="2_tex"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_glob"]

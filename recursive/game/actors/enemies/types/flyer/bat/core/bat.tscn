@@ -3,9 +3,9 @@
 [ext_resource type="Script" path="res://game/actors/enemies/types/flyer/bat/core/bat.gd" id="1_bat"]
 [ext_resource type="Texture2D" path="res://game/actors/enemies/types/flyer/bat/assets/bat_sheet.png" id="2_sheet"]
 [ext_resource type="Texture2D" path="res://game/actors/enemies/types/flyer/bat/assets/bat_shadow.png" id="3_shadow"]
-[ext_resource type="Script" path="res://game/components/hurtbox/hurtbox_component.gd" id="4_hurt"]
+[ext_resource type="Script" path="res://game/components/combat/hurtbox/hurtbox_component.gd" id="4_hurt"]
 [ext_resource type="Script" path="res://game/actors/enemies/systems/enemy_detection_system.gd" id="5_detect"]
-[ext_resource type="PackedScene" uid="uid://dr8dgg3mtr20a" path="res://game/actors/enemies/types/fodder/crawler/hitboxes/CrawlerMeleeHitbox.tscn" id="6_hitbox"]
+[ext_resource type="PackedScene" uid="uid://dr8dgg3mtr20a" path="res://game/actors/enemies/shared/melee_hitbox.tscn" id="6_hitbox"]
 [ext_resource type="Resource" uid="uid://c6pny72mk8boe" path="res://game/actors/enemies/types/fodder/crawler/crawler_drops.tres" id="7_drops"]
 [ext_resource type="Resource" path="res://game/actors/enemies/types/flyer/bat/bat_melee_offsets.tres" id="8_offsets"]
 

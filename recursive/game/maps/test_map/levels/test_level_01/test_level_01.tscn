@@ -15,7 +15,7 @@
 [ext_resource type="PackedScene" path="res://game/items/equipment/weapons/tier_1/throwing_dagger/throwing_dagger_pickup.tscn" id="13_dagger"]
 [ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/apprentice_staff/apprentice_staff.tres" id="14_staff"]
 [ext_resource type="TileSet" path="res://game/maps/test_map/assets/tilesets/walls_tileset.tres" id="15_walls"]
-[ext_resource type="Script" uid="uid://bu3ha67fsw3t5" path="res://game/maps/scripts/level_navigation.gd" id="16_nav"]
+[ext_resource type="Script" uid="uid://bu3ha67fsw3t5" path="res://game/maps/core/level_navigation.gd" id="16_nav"]
 [ext_resource type="PackedScene" path="res://game/actors/enemies/types/ranged/spitter/core/spitter.tscn" id="17_spitter"]
 [ext_resource type="PackedScene" path="res://game/actors/enemies/types/flyer/bat/core/bat.tscn" id="18_bat"]
 [ext_resource type="PackedScene" path="res://game/actors/enemies/types/normal/grunt/core/grunt.tscn" id="19_grunt"]

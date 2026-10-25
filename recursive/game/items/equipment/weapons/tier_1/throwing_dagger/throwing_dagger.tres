@@ -3,7 +3,7 @@
 [ext_resource type="Resource" path="res://game/audio/sfx/projectile_hit.tres" id="1_fnnd5"]
 [ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/throwing_dagger/throwing_dagger_launch_offsets.tres" id="2_2wud5"]
 [ext_resource type="PackedScene" path="res://game/items/equipment/weapons/tier_1/throwing_dagger/throwing_dagger_projectile.tscn" id="3_knf0v"]
-[ext_resource type="Script" path="res://game/components/hitbox/attack_spec.gd" id="4_pptqc"]
+[ext_resource type="Script" path="res://game/components/combat/hitbox/attack_spec.gd" id="4_pptqc"]
 [ext_resource type="Resource" path="res://game/audio/sfx/throw.tres" id="5_lft8c"]
 [ext_resource type="Texture2D" path="res://game/items/equipment/weapons/tier_1/throwing_dagger/Throwing Dagger.png" id="6_6nyhm"]
 [ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/iron_sword/iron_sword_hold_offsets.tres" id="7_coe0g"]

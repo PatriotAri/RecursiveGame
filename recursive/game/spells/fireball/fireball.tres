@@ -2,7 +2,7 @@
 
 [ext_resource type="Resource" path="res://game/spells/fireball/fireball_launch_offsets.tres" id="1_1nqao"]
 [ext_resource type="PackedScene" path="res://game/spells/fireball/fireball_projectile.tscn" id="2_lb7aj"]
-[ext_resource type="Script" path="res://game/components/hitbox/attack_spec.gd" id="3_o7hku"]
+[ext_resource type="Script" path="res://game/components/combat/hitbox/attack_spec.gd" id="3_o7hku"]
 [ext_resource type="Resource" path="res://game/audio/sfx/fireball_cast.tres" id="4_gqmxr"]
 [ext_resource type="Texture2D" path="res://game/spells/fireball/Fireball Icon.png" id="5_f27eh"]
 [ext_resource type="Script" path="res://game/spells/core/spell.gd" id="6_p3mw5"]

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ckfkf6upo66tf"]
 
-[ext_resource type="Script" uid="uid://dqwfbq5vdmn6x" path="res://game/actors/player/hitboxes/player_melee_hitbox.gd" id="1_55owg"]
+[ext_resource type="Script" uid="uid://dlsjri3edk76e" path="res://game/components/combat/hitbox/hitbox_base.gd" id="1_55owg"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_q4o7l"]
 radius = 24.0

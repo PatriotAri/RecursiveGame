@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cfwy36bm1t0y1" path="res://game/maps/core/map.gd" id="1_5x0s4"]
 [ext_resource type="TileSet" path="res://game/maps/world_1/assets/tilesets/w1_ground_tileset.tres" id="2_pajve"]
 [ext_resource type="TileSet" path="res://game/maps/world_1/assets/tilesets/w1_walls_tileset.tres" id="3_ybvqj"]
-[ext_resource type="Script" uid="uid://bu3ha67fsw3t5" path="res://game/maps/scripts/level_navigation.gd" id="4_54xw0"]
+[ext_resource type="Script" uid="uid://bu3ha67fsw3t5" path="res://game/maps/core/level_navigation.gd" id="4_54xw0"]
 [ext_resource type="PackedScene" path="res://game/components/shop/shop.tscn" id="5_fgfrg"]
 [ext_resource type="PackedScene" path="res://game/components/doors/door.tscn" id="6_g0ade"]
 [ext_resource type="PackedScene" uid="uid://c2rn4u0yidyre" path="res://game/items/consumables/potions/health_potion/health_potion_pickup.tscn" id="7_ugj8q"]

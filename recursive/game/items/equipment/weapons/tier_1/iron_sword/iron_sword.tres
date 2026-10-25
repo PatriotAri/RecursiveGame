@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="EquippableItem" format=3 uid="uid://dllv20s1l4hsa"]
 
-[ext_resource type="Script" uid="uid://c1b7wypd2oh0i" path="res://game/components/hitbox/attack_spec.gd" id="1_nnr27"]
+[ext_resource type="Script" uid="uid://c1b7wypd2oh0i" path="res://game/components/combat/hitbox/attack_spec.gd" id="1_nnr27"]
 [ext_resource type="Resource" uid="uid://qbjwgx5ul8go" path="res://game/items/equipment/weapons/tier_1/iron_sword/iron_sword_attack_offsets.tres" id="1_x3xnj"]
 [ext_resource type="Script" uid="uid://c12w1whtmqtq7" path="res://game/items/equipment/core/equippable_item.gd" id="1_y2l73"]
 [ext_resource type="Script" uid="uid://v162jjr58mo1" path="res://game/items/equipment/core/stat_bonuses.gd" id="2_qvrjd"]
