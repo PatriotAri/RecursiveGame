@@ -17,78 +17,9 @@ var attack_system: EnemyAttackSystem
 var animation_system: EnemyAnimationSystem
 var hitbox_manager: HitboxManagerBase
 
-@export_group("Stat Tuning")
-@export var max_health: int = 10
-## Armor points. See StatSystem.mitigate().
-@export var armor: int = 0
-
-@export_group("Attack Tuning")
-## What a swing (or shot) is: hitbox or projectile scene, damage, timing,
-## sound. A resource like a weapon's, so attacks are tuned and shared as
-## data rather than as a dozen exports per enemy.
-@export var attack: AttackSpec
-## Pause between swings. Owed after a completed attack and after an
-## interrupted one.
-@export var attack_cooldown:= 1.5
-## Half-width of what this enemy is trying to hit — the player's hurtbox is
-## 32 wide, so 16. The narrow axis, so the derived range stays conservative.
-@export var target_radius:= 16.0
-## Grace period after the player leaves the detection shape before aggro drops.
-## Stops a target walking the boundary from flickering CHASE/PATROL every frame.
-@export var target_forget_delay:= 1.0
-## Once aggroed, the player has to get this far away before the forget
-## countdown even starts. Pathing round a wall routinely carries an enemy
-## out of its detection shape mid-chase; without this it would give up.
-@export var leash_distance:= 320.0
-## Only commit to an attack with a clear line to the target. For anything
-## that shoots — melee can't hit through a wall anyway.
-@export var needs_line_of_sight:= false
-## Backs away while cooling down if the player is closer than this. For
-## enemies that want to fight from range. 0 = holds position.
-@export var preferred_distance:= 0.0
-
-#movement variables
-@export_group("Movement Tuning")
-@export var patrol_speed:= 50.0
-@export var walk_speed:= 65.0
-@export var acceleration:= 500.0 #px/s^2
-@export var friction:= 600.0 #px/s^2
-
-#spacing variables
-@export_group("Spacing Tuning")
-## Other enemies closer than this get pushed apart, so a group doesn't
-## collapse into one stacked sprite.
-@export var spacing_radius:= 28.0
-## Push speed at full overlap, in px/s. Fades to zero at spacing_radius.
-@export var spacing_strength:= 60.0
-
-#flee variables
-@export_group("Flee Tuning")
-## Flees when health falls to this fraction with the player nearby.
-## 0 = never flees.
-@export_range(0.0, 1.0) var flee_health_ratio:= 0.0
-@export var flee_speed:= 110.0
-## Stops running once the player is this far away.
-@export var flee_safe_distance:= 220.0
-## A single flee gives up after this long...
-@export var flee_max_time:= 3.0
-## ...and can't start again until this much later.
-@export var flee_recover_time:= 2.5
-
-#patrol variables
-@export_group("Patrol Tuning")
-## Size of the box, centred on the spawn point's surroundings, that patrol
-## points are picked from. Zero stands still. A plain value rather than an
-## Area2D: the old PatrolZone area was only ever read for its size, but sat
-## on the Environment layer overlapping every wall and every other zone —
-## measured as the single biggest physics cost with many enemies.
-@export var patrol_size:= Vector2(300, 275)
-@export var patrol_wait_time:= 3.5
-@export var patrol_timer:= 0.0
-@export var min_patrol_distance:= 40.0
-
-@export_group("Drop Tuning")
-@export var drop_table: DropTable
+## The type's tuning: stats, attack, AI ranges, movement, flee, patrol,
+## drops. Shared by every enemy of the type and treated as read-only.
+@export var profile: EnemyProfile
 
 ## Which registered attack the state machine commits to. A type with several
 ## attacks can change this between swings.
@@ -108,20 +39,20 @@ var nav_agent: NavigationAgent2D
 const REPATH_DISTANCE_SQ := 16.0 * 16.0
 
 func _ready() -> void:
-	stats = StatSystem.new(Stat.new(max_health))
-	stats.armor = armor
+	stats = StatSystem.new(Stat.new(profile.max_health))
+	stats.armor = profile.armor
 
 	data = EnemyData.new()
 	_setup_actor(data)
-	data.patrol_speed = patrol_speed
-	data.walk_speed = walk_speed
-	data.acceleration = acceleration
-	data.friction = friction
+	data.patrol_speed = profile.patrol_speed
+	data.walk_speed = profile.walk_speed
+	data.acceleration = profile.acceleration
+	data.friction = profile.friction
 	
 	nav_agent = NavigationAgent2D.new()
 	nav_agent.path_desired_distance = 8.0
 	nav_agent.target_desired_distance = 8.0
-	nav_agent.radius = spacing_radius * 0.5
+	nav_agent.radius = profile.spacing_radius * 0.5
 	add_child(nav_agent)
 
 	hitbox_manager = HitboxManagerBase.new(self, HitboxManagerBase.LAYER_PLAYER_HURTBOX, func(): return data.facing_dir)
@@ -134,7 +65,7 @@ func _ready() -> void:
 	#injects data
 	detection_system.initialize(data, self)
 
-	state_machine = EnemyStateMachine.new(attack_cooldown)
+	state_machine = EnemyStateMachine.new(profile.attack_cooldown)
 	movement_system = EnemyMovementSystem.new(self, data)
 	attack_system = EnemyAttackSystem.new(self, data)
 	animation_system = EnemyAnimationSystem.new(sprite, data)
@@ -153,17 +84,17 @@ func _update_danger(delta: float) -> void:
 		data.flee_block_timer -= delta
 	if data.current_state == EnemyData.State.FLEE:
 		data.flee_timer += delta
-		if data.flee_timer >= flee_max_time:
+		if data.flee_timer >= profile.flee_max_time:
 			data.flee_timer = 0.0
-			data.flee_block_timer = flee_recover_time
+			data.flee_block_timer = profile.flee_recover_time
 	else:
 		data.flee_timer = 0.0
 	
-	data.in_danger = flee_health_ratio > 0.0 \
+	data.in_danger = profile.flee_health_ratio > 0.0 \
 		and data.flee_block_timer <= 0.0 \
 		and data.player_detected \
-		and stats.health.ratio() <= flee_health_ratio \
-		and global_position.distance_to(data.player_pos) < flee_safe_distance
+		and stats.health.ratio() <= profile.flee_health_ratio \
+		and global_position.distance_to(data.player_pos) < profile.flee_safe_distance
 
 # --- navigation -------------------------------------------------------------
 
@@ -214,11 +145,11 @@ func steering_velocity() -> Vector2:
 ## Push away from nearby enemies, as a velocity. Only the grid cells within
 ## spacing_radius are searched; see SpacingGrid.
 func spacing_velocity() -> Vector2:
-	if spacing_radius <= 0.0: return Vector2.ZERO
+	if profile.spacing_radius <= 0.0: return Vector2.ZERO
 	var push := Vector2.ZERO
 	var here := SpacingGrid.cell_of(global_position)
-	var reach := ceili(spacing_radius / SpacingGrid.CELL)
-	var radius_sq := spacing_radius * spacing_radius
+	var reach := ceili(profile.spacing_radius / SpacingGrid.CELL)
+	var radius_sq := profile.spacing_radius * profile.spacing_radius
 	var tree := get_tree()
 	for cy in range(here.y - reach, here.y + reach + 1):
 		for cx in range(here.x - reach, here.x + reach + 1):
@@ -235,8 +166,8 @@ func spacing_velocity() -> Vector2:
 					# direction rather than dividing by zero.
 					away = Vector2.RIGHT.rotated(randf() * TAU)
 					dist = 0.01
-				push += away / dist * (1.0 - dist / spacing_radius)
-	return push * spacing_strength
+				push += away / dist * (1.0 - dist / profile.spacing_radius)
+	return push * profile.spacing_strength
 
 # --- overridable ------------------------------------------------------------
 
@@ -244,10 +175,10 @@ func spacing_velocity() -> Vector2:
 ## registers `attack` as primary_attack, which is all most enemies need.
 ## Override to add more, and set primary_attack to the one to commit to.
 func _register_attacks() -> void:
-	if attack == null:
-		push_error("%s: no attack assigned." % name)
+	if profile.attack == null:
+		push_error("%s: its profile has no attack." % name)
 		return
-	hitbox_manager.register_attack(primary_attack, attack)
+	hitbox_manager.register_attack(primary_attack, profile.attack)
 
 ## How close the target has to be before the state machine commits to an
 ## attack. Override for attacks that don't come from a melee hitbox.
@@ -256,7 +187,7 @@ func _compute_attack_range() -> float:
 	if spec == null:
 		push_error("%s: primary attack '%s' isn't registered." % [name, primary_attack])
 		return 0.0
-	return spec.min_reach() + target_radius
+	return spec.min_reach() + profile.target_radius
 
 ## Starts the attack. Called once, on the frame the state machine enters
 ## ATTACK. Override for anything that isn't a hitbox swing.
@@ -295,5 +226,5 @@ func _handle_death() -> void:
 	queue_free()
 
 func _try_spawn_drops() -> void:
-	if drop_table == null: return
-	drop_table.roll(get_parent(), global_position)
+	if profile.drop_table == null: return
+	profile.drop_table.roll(get_parent(), global_position)

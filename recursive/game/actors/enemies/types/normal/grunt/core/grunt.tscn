@@ -3,18 +3,11 @@
 [ext_resource type="PackedScene" uid="uid://bmonh3sf35441" path="res://game/actors/enemies/types/fodder/crawler/core/crawler.tscn" id="1_base"]
 [ext_resource type="Script" path="res://game/actors/enemies/types/normal/grunt/core/grunt.gd" id="2_script"]
 
-[ext_resource type="Resource" path="res://game/actors/enemies/types/normal/grunt/grunt_melee_attack.tres" id="93_attack"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/normal/grunt/grunt_profile.tres" id="94_profile"]
 [node name="Grunt" instance=ExtResource("1_base")]
 script = ExtResource("2_script")
-max_health = 30
-armor = 3
 hurt_duration = 0.1
-attack_cooldown = 1.2
-patrol_speed = 40.0
-walk_speed = 55.0
-spacing_radius = 36.0
-flee_health_ratio = 0.0
-attack = ExtResource("93_attack")
+profile = ExtResource("94_profile")
 
 [node name="Sprite" parent="." index="0"]
 self_modulate = Color(1, 0.55, 0.5, 1)

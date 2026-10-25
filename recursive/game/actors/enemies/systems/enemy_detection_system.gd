@@ -26,8 +26,8 @@ func initialize(data_ref: EnemyData, body_ref: Enemy) -> void:
 	body = body_ref
 	
 	attack_range = body.attack_range
-	forget_delay = body.target_forget_delay
-	leash_distance_sq = body.leash_distance * body.leash_distance
+	forget_delay = body.profile.target_forget_delay
+	leash_distance_sq = body.profile.leash_distance * body.profile.leash_distance
 	
 	max_range_sq = attack_range * attack_range
 
@@ -100,7 +100,7 @@ func update_attack_range() -> void:
 	# Anchor to anchor. Measuring our torso against the player's feet made the
 	# 31px shape offset eat most of the range budget on the horizontal axis.
 	data.in_attack_range = detection_anchor().distance_squared_to(data.player_anchor) <= max_range_sq \
-		and (not body.needs_line_of_sight or _has_line_of_sight())
+		and (not body.profile.needs_line_of_sight or _has_line_of_sight())
 
 ## True when no wall sits between us and the player.
 func _has_line_of_sight() -> bool:

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EnemyProfile" format=3]
+
+[ext_resource type="Resource" path="res://game/actors/enemies/types/ranged/spitter/spitter_spit_attack.tres" id="1_di8t7"]
+[ext_resource type="Resource" uid="uid://c6pny72mk8boe" path="res://game/actors/enemies/types/fodder/crawler/crawler_drops.tres" id="2_wqwhw"]
+[ext_resource type="Script" uid="uid://bmk8idkhdjy7w" path="res://game/actors/enemies/core/enemy_profile.gd" id="3_ljl6i"]
+
+[resource]
+script = ExtResource("3_ljl6i")
+max_health = 8
+attack = ExtResource("1_di8t7")
+attack_cooldown = 1.8
+needs_line_of_sight = true
+preferred_distance = 100.0
+walk_speed = 55.0
+drop_table = ExtResource("2_wqwhw")

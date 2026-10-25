@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EnemyProfile" format=3]
+
+[ext_resource type="Resource" path="res://game/actors/enemies/types/flyer/bat/bat_melee_attack.tres" id="1_iwii6"]
+[ext_resource type="Resource" uid="uid://c6pny72mk8boe" path="res://game/actors/enemies/types/fodder/crawler/crawler_drops.tres" id="2_5lu51"]
+[ext_resource type="Script" uid="uid://bmk8idkhdjy7w" path="res://game/actors/enemies/core/enemy_profile.gd" id="3_f48fr"]
+
+[resource]
+script = ExtResource("3_f48fr")
+max_health = 6
+attack = ExtResource("1_iwii6")
+attack_cooldown = 1.4
+patrol_speed = 60.0
+walk_speed = 90.0
+acceleration = 700.0
+spacing_radius = 22.0
+patrol_size = Vector2(320, 260)
+drop_table = ExtResource("2_5lu51")

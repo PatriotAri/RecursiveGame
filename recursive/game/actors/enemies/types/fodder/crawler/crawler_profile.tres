@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="EnemyProfile" format=3]
+
+[ext_resource type="Resource" path="res://game/actors/enemies/types/fodder/crawler/crawler_melee_attack.tres" id="1_ipk7e"]
+[ext_resource type="Resource" uid="uid://c6pny72mk8boe" path="res://game/actors/enemies/types/fodder/crawler/crawler_drops.tres" id="2_nsiul"]
+[ext_resource type="Script" uid="uid://bmk8idkhdjy7w" path="res://game/actors/enemies/core/enemy_profile.gd" id="3_mg2c2"]
+
+[resource]
+script = ExtResource("3_mg2c2")
+attack = ExtResource("1_ipk7e")
+flee_health_ratio = 0.5
+drop_table = ExtResource("2_nsiul")

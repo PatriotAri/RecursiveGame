@@ -21,9 +21,9 @@ func _init(body_ref: Enemy, data_ref: EnemyData) -> void:
 	body = body_ref
 	data = data_ref
 
-	patrol_wait_time = body.patrol_wait_time
-	patrol_timer = body.patrol_timer
-	min_patrol_distance = body.min_patrol_distance
+	patrol_wait_time = body.profile.patrol_wait_time
+	patrol_timer = 0.0
+	min_patrol_distance = body.profile.min_patrol_distance
 
 	pick_patrol_target() #sets patrol point on spawn
 
@@ -90,10 +90,10 @@ func patrol(delta: float) -> void:
 		_move_toward(patrol_target, data.patrol_speed, delta)
 
 func pick_patrol_target() -> void:
-	if body.patrol_size == Vector2.ZERO:
+	if body.profile.patrol_size == Vector2.ZERO:
 		patrol_target = body.global_position
 		return
-	var half:= body.patrol_size / 2.0
+	var half:= body.profile.patrol_size / 2.0
 
 	for attempts in max_attempts:
 		var candidate:= body.global_position + Vector2(
@@ -123,7 +123,7 @@ func flee(delta: float) -> void:
 	if away == Vector2.ZERO:
 		away = Vector2.RIGHT
 	var goal := body.closest_walkable(body.global_position + away.normalized() * FLEE_LOOKAHEAD)
-	_move_toward(goal, body.flee_speed, delta)
+	_move_toward(goal, body.profile.flee_speed, delta)
 
 func attack(delta: float) -> void:
 	if data.player_detected:
@@ -136,7 +136,7 @@ func attack_cooldown(delta: float) -> void:
 		return
 	# A ranged enemy steps back out of reach between shots.
 	var away := body.global_position - data.player_pos
-	if body.preferred_distance > 0.0 and away.length() < body.preferred_distance:
+	if body.profile.preferred_distance > 0.0 and away.length() < body.profile.preferred_distance:
 		var goal := body.closest_walkable(body.global_position + away.normalized() * FLEE_LOOKAHEAD)
 		_move_toward(goal, data.walk_speed, delta)
 	else:

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EnemyProfile" format=3]
+
+[ext_resource type="Resource" path="res://game/actors/enemies/types/normal/grunt/grunt_melee_attack.tres" id="1_mpti0"]
+[ext_resource type="Resource" uid="uid://c6pny72mk8boe" path="res://game/actors/enemies/types/fodder/crawler/crawler_drops.tres" id="2_lb83n"]
+[ext_resource type="Script" uid="uid://bmk8idkhdjy7w" path="res://game/actors/enemies/core/enemy_profile.gd" id="3_i5c5y"]
+
+[resource]
+script = ExtResource("3_i5c5y")
+max_health = 30
+armor = 3
+attack = ExtResource("1_mpti0")
+attack_cooldown = 1.2
+patrol_speed = 40.0
+walk_speed = 55.0
+spacing_radius = 36.0
+drop_table = ExtResource("2_lb83n")
