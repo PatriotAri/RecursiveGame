@@ -1,0 +1,139 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/actors/enemies/types/flyer/bat/core/bat.gd" id="1_bat"]
+[ext_resource type="Texture2D" path="res://game/actors/enemies/types/flyer/bat/assets/bat_sheet.png" id="2_sheet"]
+[ext_resource type="Texture2D" path="res://game/actors/enemies/types/flyer/bat/assets/bat_shadow.png" id="3_shadow"]
+[ext_resource type="Script" path="res://game/components/hurtbox/hurtbox_component.gd" id="4_hurt"]
+[ext_resource type="Script" path="res://game/actors/enemies/systems/enemy_detection_system.gd" id="5_detect"]
+[ext_resource type="PackedScene" uid="uid://dr8dgg3mtr20a" path="res://game/actors/enemies/types/fodder/crawler/hitboxes/CrawlerMeleeHitbox.tscn" id="6_hitbox"]
+[ext_resource type="Resource" uid="uid://c6pny72mk8boe" path="res://game/actors/enemies/types/fodder/crawler/crawler_drops.tres" id="7_drops"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/flyer/bat/bat_melee_offsets.tres" id="8_offsets"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_up"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_down"]
+atlas = ExtResource("2_sheet")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dead"]
+atlas = ExtResource("2_sheet")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_bat"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_up")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_down")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_up")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_down")
+}],
+"loop": true,
+"name": &"attack",
+"speed": 16.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_down")
+}],
+"loop": false,
+"name": &"hurt",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dead")
+}, {
+"duration": 3.0,
+"texture": SubResource("AtlasTexture_dead")
+}],
+"loop": false,
+"name": &"died",
+"speed": 6.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_body"]
+radius = 6.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hurt"]
+radius = 9.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_detect"]
+radius = 180.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_patrol"]
+size = Vector2(320, 260)
+
+[node name="Bat" type="CharacterBody2D" groups=["enemy"]]
+collision_layer = 4
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("1_bat")
+max_health = 6
+melee_hitbox = ExtResource("6_hitbox")
+melee_offsets = ExtResource("8_offsets")
+windup_time = 0.25
+lifetime = 0.15
+damage = 1.0
+knockback_strength = 40.0
+attack_cooldown = 1.4
+target_radius = 16.0
+patrol_speed = 60.0
+walk_speed = 90.0
+acceleration = 700.0
+spacing_radius = 22.0
+drop_table = ExtResource("7_drops")
+
+[node name="Shadow" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.35)
+texture = ExtResource("3_shadow")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_bat")
+animation = &"idle"
+autoplay = "idle"
+offset = Vector2(0, -28)
+
+[node name="Collision" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_body")
+
+[node name="Hurtbox" type="Area2D" parent="."]
+visible = false
+collision_layer = 32
+collision_mask = 0
+script = ExtResource("4_hurt")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -28)
+shape = SubResource("CircleShape2D_hurt")
+
+[node name="DetectionArea" type="Area2D" parent="."]
+visible = false
+collision_layer = 4
+collision_mask = 2
+script = ExtResource("5_detect")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
+position = Vector2(0, -28)
+shape = SubResource("CircleShape2D_detect")
+
+[node name="PatrolZone" type="Area2D" parent="."]
+visible = false
+collision_layer = 0
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PatrolZone"]
+shape = SubResource("RectangleShape2D_patrol")

@@ -116,6 +116,71 @@ STAFF = [
     "....k....",
 ]
 
+ACID_GLOB = [
+    "..ee..",
+    ".eEEe.",
+    "eEwEEe",
+    "eEEEEe",
+    ".eEEe.",
+    "..ee..",
+]
+
+BAT_UP = [
+    "k..................k",
+    "kk................kk",
+    "kPk..............kPk",
+    "kPPk....k..k....kPPk",
+    ".kPPk...kkkk...kPPk.",
+    ".kPPPk.kPPPPk.kPPPk.",
+    "..kPPPkPrPPrPkPPPk..",
+    "..kPPPPPPPPPPPPPPk..",
+    "...kPPPkPPPPkPPPk...",
+    "....kkk.kPPk.kkk....",
+    ".........kk.........",
+]
+
+BAT_DOWN = [
+    "........k..k........",
+    "........kkkk........",
+    ".......kPPPPk.......",
+    "......kPrPPrPk......",
+    "...kkkPPPPPPPPkkk...",
+    "..kPPPPkPPPPkPPPPk..",
+    ".kPPPPk.kPPk.kPPPPk.",
+    "kPPPPk...kk...kPPPPk",
+    "kPPk............kPPk",
+    "kPk..............kPk",
+    "kk................kk",
+]
+
+BAT_DEAD = [
+    "....................",
+    "....................",
+    "........k..k........",
+    "........kkkk........",
+    ".......kPPPPk.......",
+    "......kPkPPkPk......",
+    "......kPPPPPPk......",
+    ".....kPPkPPkPPk.....",
+    ".....kPk.kk.kPk.....",
+    "......k......k......",
+    "....................",
+]
+
+SHADOW = [
+    "....dddddd....",
+    "..dddddddddd..",
+    ".dddddddddddd.",
+    "..dddddddddd..",
+    "....dddddd....",
+]
+
+def sheet(frames, size):
+    img = Image.new("RGBA", (size[0] * len(frames), size[1]), (0, 0, 0, 0))
+    for i, grid in enumerate(frames):
+        img.paste(render(grid, size), (i * size[0], 0))
+    return img
+
 SPRITES = {
     "items/equipment/weapons/tier_1/throwing_dagger/Throwing Dagger.png": (THROWING_DAGGER, (32, 32)),
     # Tight canvas for the thrown version so its collision shape and sprite agree.
@@ -123,8 +188,17 @@ SPRITES = {
     "spells/fireball/fireball.png": (FIREBALL, (10, 10)),
     "spells/fireball/Fireball Icon.png": (FIREBALL, (32, 32)),
     "items/equipment/weapons/tier_1/apprentice_staff/Apprentice Staff.png": (STAFF, (32, 32)),
+    "actors/enemies/types/ranged/spitter/assets/acid_glob.png": (ACID_GLOB, (6, 6)),
+    "actors/enemies/types/flyer/bat/assets/bat_shadow.png": (SHADOW, (14, 5)),
+}
+
+SHEETS = {
+    # idle/walk = frames 0-1, dead = frame 2.
+    "actors/enemies/types/flyer/bat/assets/bat_sheet.png": ([BAT_UP, BAT_DOWN, BAT_DEAD], (32, 32)),
 }
 
 if __name__ == "__main__":
     for rel, (grid, size) in SPRITES.items():
         save(render(grid, size), rel)
+    for rel, (frames, size) in SHEETS.items():
+        save(sheet(frames, size), rel)

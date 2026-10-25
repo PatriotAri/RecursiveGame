@@ -14,6 +14,9 @@
 [ext_resource type="Resource" uid="uid://dllv20s1l4hsa" path="res://game/items/equipment/weapons/tier_1/iron_sword/iron_sword.tres" id="12_hl04a"]
 [ext_resource type="TileSet" path="res://game/maps/test_map/assets/tilesets/walls_tileset.tres" id="15_walls"]
 [ext_resource type="Script" path="res://game/maps/scripts/level_navigation.gd" id="16_nav"]
+[ext_resource type="PackedScene" path="res://game/actors/enemies/types/ranged/spitter/core/spitter.tscn" id="17_spitter"]
+[ext_resource type="PackedScene" path="res://game/actors/enemies/types/flyer/bat/core/bat.tscn" id="18_bat"]
+[ext_resource type="PackedScene" path="res://game/actors/enemies/types/normal/grunt/core/grunt.tscn" id="19_grunt"]
 [ext_resource type="PackedScene" path="res://game/items/equipment/weapons/tier_1/throwing_dagger/throwing_dagger_pickup.tscn" id="13_dagger"]
 [ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/apprentice_staff/apprentice_staff.tres" id="14_staff"]
 
@@ -101,3 +104,16 @@ amount = 10
 [node name="ApprenticeStaff" parent="Y-sorted" instance=ExtResource("6_wvw0b")]
 position = Vector2(-20, -190)
 item = ExtResource("14_staff")
+
+[node name="SpitterSpawner" parent="Y-sorted" instance=ExtResource("3_hek21")]
+position = Vector2(-300, -250)
+enemy_scene = ExtResource("17_spitter")
+
+[node name="BatSpawner" parent="Y-sorted" instance=ExtResource("3_hek21")]
+position = Vector2(440, -260)
+enemy_scene = ExtResource("18_bat")
+spawn_count = 2
+
+[node name="GruntSpawner" parent="Y-sorted" instance=ExtResource("3_hek21")]
+position = Vector2(-260, 380)
+enemy_scene = ExtResource("19_grunt")

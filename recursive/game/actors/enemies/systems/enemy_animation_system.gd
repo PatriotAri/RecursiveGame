@@ -27,14 +27,25 @@ func _resolve_animation() -> StringName:
 	var dir:= data.facing_dir if data.facing_dir != Vector2.ZERO else Vector2.DOWN
 	var dir_str:= FacingHelper.facing_to_string(dir)
 	
+	var state: String
 	match data.current_state:
 		EnemyData.State.DIED:
 			return "died"
 		EnemyData.State.HURT:
-			return "hurt_" + dir_str
+			state = "hurt"
 		EnemyData.State.ATTACK:
-			return "attack_" + dir_str
+			state = "attack"
 		EnemyData.State.CHASE, EnemyData.State.PATROL, EnemyData.State.FLEE:
-			return "walk_" + dir_str
+			state = "walk"
 		_:
-			return "idle_" + dir_str
+			state = "idle"
+	return _first_existing([state + "_" + dir_str, state, "idle_" + dir_str, "idle"])
+
+## Not every enemy is drawn in eight directions for every state. A bat with
+## one "idle" flap loop is a complete set: anything missing falls back to the
+## undirected name, then to idle, instead of erroring.
+func _first_existing(names: Array) -> StringName:
+	for anim in names:
+		if sprite.sprite_frames.has_animation(anim):
+			return anim
+	return names[0]

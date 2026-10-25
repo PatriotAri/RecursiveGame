@@ -57,6 +57,12 @@ var death_handled := false
 ## countdown even starts. Pathing round a wall routinely carries an enemy
 ## out of its detection shape mid-chase; without this it would give up.
 @export var leash_distance:= 320.0
+## Only commit to an attack with a clear line to the target. For anything
+## that shoots — melee can't hit through a wall anyway.
+@export var needs_line_of_sight:= false
+## Backs away while cooling down if the player is closer than this. For
+## enemies that want to fight from range. 0 = holds position.
+@export var preferred_distance:= 0.0
 
 #movement variables
 @export_group("Movement Tuning")
@@ -219,6 +225,11 @@ func has_navigation() -> bool:
 	# Iteration 0 means the map has never synced — no region baked yet.
 	return map.is_valid() and NavigationServer2D.map_get_iteration_id(map) > 0 \
 		and not NavigationServer2D.map_get_regions(map).is_empty()
+
+## Everything added on top of the enemy's own locomotion each frame, besides
+## knockback. Spacing by default; override to add more (a flyer's flutter).
+func steering_velocity() -> Vector2:
+	return spacing_velocity()
 
 ## Push away from nearby enemies, as a velocity.
 func spacing_velocity() -> Vector2:

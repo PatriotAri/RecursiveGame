@@ -60,7 +60,7 @@ func update(delta: float) -> void:
 # Single exit point for movement, so the impulse and spacing push are applied
 # once per frame no matter which state ran.
 func _commit() -> void:
-	body.velocity = locomotion + data.modifiers.get_impulse_sum() + body.spacing_velocity()
+	body.velocity = locomotion + data.modifiers.get_impulse_sum() + body.steering_velocity()
 	body.move_and_slide()
 
 func idle(delta: float) -> void:
@@ -140,10 +140,19 @@ func attack(delta: float) -> void:
 	idle(delta) #stands still, attack system spawns hitbox and does timing
 
 func attack_cooldown(delta: float) -> void:
-	# Tracks while waiting — only the swing itself is committed.
-	if data.player_detected:
-		data.facing_dir = (data.player_pos - body.global_position).normalized()
-	idle(delta)
+	if not data.player_detected:
+		idle(delta)
+		return
+	# A ranged enemy steps back out of reach between shots.
+	var away := body.global_position - data.player_pos
+	if body.preferred_distance > 0.0 and away.length() < body.preferred_distance:
+		var goal := body.closest_walkable(body.global_position + away.normalized() * FLEE_LOOKAHEAD)
+		_move_toward(goal, data.walk_speed, delta)
+	else:
+		idle(delta)
+	# Tracks while waiting — only the swing itself is committed. Set after
+	# moving, so backing off doesn't turn its back on the player.
+	data.facing_dir = -away.normalized()
 
 func _on_state_changed(from: EnemyData.State, to: EnemyData.State) -> void:
 	if to == EnemyData.State.PATROL:

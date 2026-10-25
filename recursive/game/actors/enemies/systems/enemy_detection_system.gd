@@ -98,7 +98,13 @@ func clear_target() -> void:
 func update_attack_range() -> void:
 	# Anchor to anchor. Measuring our torso against the player's feet made the
 	# 31px shape offset eat most of the range budget on the horizontal axis.
-	data.in_attack_range = detection_anchor().distance_squared_to(data.player_anchor) <= max_range_sq
+	data.in_attack_range = detection_anchor().distance_squared_to(data.player_anchor) <= max_range_sq \
+		and (not body.needs_line_of_sight or _has_line_of_sight())
+
+## True when no wall sits between us and the player.
+func _has_line_of_sight() -> bool:
+	var query := PhysicsRayQueryParameters2D.create(detection_anchor(), data.player_anchor, 1)
+	return get_world_2d().direct_space_state.intersect_ray(query).is_empty()
 
 func _player_anchor() -> Vector2:
 	if player.has_method("combat_anchor"):
