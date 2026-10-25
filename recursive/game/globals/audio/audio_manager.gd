@@ -26,6 +26,18 @@ var _music_tweens: Array[Tween] = []
 ## SoundEffect -> how many of its players are still sounding.
 var _playing_counts: Dictionary = {}
 
+## Most one-shots sounding at once. Past it a new sound is skipped rather than
+## another player made — a wave of hits shouldn't grow the node count.
+const MAX_VOICES := 48
+
+## Stopped players kept as children, ready for the next sound, instead of a
+## node made and freed for every hit.
+var _idle_2d: Array[AudioStreamPlayer2D] = []
+var _idle_flat: Array[AudioStreamPlayer] = []
+var _voice_count:= 0
+## player -> the SoundEffect it is sounding, for max_instances.
+var _voice_effect: Dictionary = {}
+
 func _ready() -> void:
 	# Menus pause the tree; music and UI clicks shouldn't stop with it.
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -94,37 +106,70 @@ func play_sfx(effect: SoundEffect, at: Variant = null) -> bool:
 	
 	var player: Node
 	if at is Vector2:
-		var p2d := AudioStreamPlayer2D.new()
-		p2d.max_distance = SFX_MAX_DISTANCE
+		var p2d := _voice_2d()
+		if p2d == null: return false
 		p2d.position = at
 		p2d.stream = stream
 		p2d.volume_db = effect.volume_db
 		p2d.pitch_scale = effect.random_pitch()
 		p2d.bus = effect.bus
-		p2d.finished.connect(_on_sfx_finished.bind(p2d, effect))
 		player = p2d
 	else:
-		var p := AudioStreamPlayer.new()
+		var p := _voice_flat()
+		if p == null: return false
 		p.stream = stream
 		p.volume_db = effect.volume_db
 		p.pitch_scale = effect.random_pitch()
 		p.bus = effect.bus
-		p.finished.connect(_on_sfx_finished.bind(p, effect))
 		player = p
 	
 	# World sounds stop with the game when it pauses; UI sounds don't, or
 	# clicking a pause-menu button would be silent.
 	player.process_mode = Node.PROCESS_MODE_ALWAYS if effect.bus == BUS_UI else Node.PROCESS_MODE_PAUSABLE
-	# Parented here rather than to whoever asked, so a sound outlives the
-	# enemy whose death it is.
-	add_child(player)
 	player.play()
+	_voice_effect[player] = effect
 	_playing_counts[effect] = _playing_counts.get(effect, 0) + 1
 	return true
 
-func _on_sfx_finished(player: Node, effect: SoundEffect) -> void:
-	_playing_counts[effect] = maxi(_playing_counts.get(effect, 1) - 1, 0)
-	player.queue_free()
+func _voice_2d() -> AudioStreamPlayer2D:
+	if not _idle_2d.is_empty():
+		return _idle_2d.pop_back()
+	if _voice_count >= MAX_VOICES: return null
+	var p2d := AudioStreamPlayer2D.new()
+	p2d.max_distance = SFX_MAX_DISTANCE
+	_add_voice(p2d)
+	return p2d
+
+func _voice_flat() -> AudioStreamPlayer:
+	if not _idle_flat.is_empty():
+		return _idle_flat.pop_back()
+	if _voice_count >= MAX_VOICES: return null
+	var p := AudioStreamPlayer.new()
+	_add_voice(p)
+	return p
+
+func _add_voice(player: Node) -> void:
+	_voice_count += 1
+	player.finished.connect(_on_sfx_finished.bind(player))
+	# Parented here rather than to whoever asked, so a sound outlives the
+	# enemy whose death it is.
+	add_child(player)
+
+func _on_sfx_finished(player: Node) -> void:
+	var effect: SoundEffect = _voice_effect.get(player)
+	_voice_effect.erase(player)
+	if effect:
+		_playing_counts[effect] = maxi(_playing_counts.get(effect, 1) - 1, 0)
+	# Dropped so an idle player doesn't keep a stream loaded.
+	player.stream = null
+	if player is AudioStreamPlayer2D:
+		_idle_2d.append(player)
+	else:
+		_idle_flat.append(player)
+
+## How many one-shot players exist, sounding or idle. For tests.
+func voice_count() -> int:
+	return _voice_count
 
 func _on_node_added(node: Node) -> void:
 	var button := node as BaseButton

@@ -49,12 +49,13 @@ func spawn_hitbox(attack_name: StringName) -> HitboxBase:
 		push_error("Attack '%s' on %s has no scene assigned." % [attack_name, body.name])
 		return null
 
-	var instance := spec.scene.instantiate()
+	var instance := Pools.acquire(spec.scene)
 	var hitbox := instance as HitboxBase
 	if hitbox == null:
 		push_error("Attack '%s' on %s: scene root is not a HitboxBase." % [attack_name, body.name])
 		instance.queue_free()
 		return null
+	hitbox.reset()
 
 	var facing := get_facing()
 
@@ -86,7 +87,9 @@ func spawn_hitbox(attack_name: StringName) -> HitboxBase:
 	hitbox.begin_attack()
 
 	active_hitboxes.append(hitbox)
-	hitbox.tree_exited.connect(on_hitbox_removed.bind(hitbox))
+	# One-shot: the same hitbox comes back from the pool for later swings,
+	# each of which connects again.
+	hitbox.tree_exited.connect(on_hitbox_removed.bind(hitbox), CONNECT_ONE_SHOT)
 
 	return hitbox
 
@@ -101,8 +104,8 @@ func has_active_hitbox(attack_name: StringName) -> bool:
 
 ## Kills every in-flight swing. Phase 3 calls this on hitstun, Phase 4 on death.
 func cancel_all() -> void:
-	# Iterate a copy: cancel() queue_frees, which fires tree_exited, which
-	# erases from active_hitboxes.
+	# Iterate a copy: cancel() leads (deferred) to tree_exited, which erases
+	# from active_hitboxes.
 	for hitbox in active_hitboxes.duplicate():
 		if not is_instance_valid(hitbox):
 			continue
@@ -115,7 +118,7 @@ func cancel_all() -> void:
 	# and still ours until they land.
 	var still_active: Array[HitboxBase] = []
 	for hitbox in active_hitboxes:
-		if is_instance_valid(hitbox) and not hitbox.is_queued_for_deletion():
+		if is_instance_valid(hitbox) and not hitbox.is_released():
 			still_active.append(hitbox)
 	active_hitboxes = still_active
 

@@ -25,6 +25,9 @@ var facing_provider: Callable
 var _elapsed:= 0.0
 var _active:= false
 var _hit_ids:= {}
+## True from cancel() until the pool hands this hitbox out again. Pooled
+## hitboxes are never freed, so this replaces is_queued_for_deletion().
+var _released:= false
 
 func _ready() -> void:
 	if damage <= 0.0:
@@ -42,10 +45,27 @@ func get_target_layer() -> void:
 	if target_layer > 0:
 		collision_mask = target_layer
 
+## Clears everything one swing left behind, so a pooled hitbox starts the
+## next one fresh. Called by the manager before the spawn properties are set.
+## _ready() only runs the first time, so per-swing setup belongs here.
+func reset() -> void:
+	_elapsed = 0.0
+	_active = false
+	_released = false
+	_hit_ids.clear()
+	monitoring = false
+	monitorable = false
+	set_physics_process(false)
+
+func is_released() -> bool:
+	return _released
+
 # Starts the windup clock. Ticked rather than awaited: an awaited timer
 # resumes on a freed instance if the swing is cancelled mid-windup. A tick
 # just stops, and can be cancelled on demand.
 func begin_attack() -> void:
+	# Spawn properties are set after reset(), so the mask is re-derived here.
+	get_target_layer()
 	_elapsed = 0.0
 	_active = false
 	set_physics_process(true)
@@ -79,18 +99,25 @@ func _activate() -> void:
 	monitoring = true
 	monitorable = true
 
-## Ends the swing immediately. Safe at any point, including from inside a
-## damage callback.
+## Ends the swing immediately and hands the hitbox back to Pools. Safe at
+## any point, including from inside a damage callback.
 func cancel() -> void:
-	if is_queued_for_deletion():
+	if _released:
 		return
+	_released = true
 	_active = false
 	set_physics_process(false)
 	# Deferred because cancel() is reachable from inside an area_entered
-	# callback, where Area2D refuses direct monitoring changes.
+	# callback, where Area2D refuses direct monitoring changes and removal.
 	set_deferred("monitoring", false)
 	set_deferred("monitorable", false)
-	queue_free()
+	_return_to_pool.call_deferred()
+
+func _return_to_pool() -> void:
+	var parent := get_parent()
+	if parent:
+		parent.remove_child(self)
+	Pools.release(self)
 
 func get_knockback_direction() -> Vector2:
 	return knockback_direction.normalized()

@@ -94,8 +94,8 @@ func _handle_death() -> void:
 
 func _on_damage_received(amount: float, apply_hitstun: bool) -> void:
 	var dealt := stats.take_damage(amount)
-	DamageNumber.spawn(get_parent(), combat_anchor() + Vector2(0, -16), dealt, damage_number_color)
-	HitSpark.spawn(get_parent(), combat_anchor(), hit_spark_color)
+	Effects.damage_number(combat_anchor() + Vector2(0, -16), dealt, damage_number_color)
+	Effects.hit_spark(combat_anchor(), hit_spark_color)
 	_on_hit(dealt)
 	if actor_data.is_dead:
 		return

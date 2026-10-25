@@ -58,10 +58,19 @@ func change_map(map_id: StringName, spawn_name: StringName = &"") -> void:
 		push_error("Game: no map '%s' in the registry." % map_id)
 		return
 	_changing = true
+	# Loaded on a worker thread while the screen fades, so the fade doesn't
+	# hitch on a big map; usually it's done by the time the screen is black.
+	var path := registry.find(map_id).scene_path
+	var threaded := ResourceLoader.load_threaded_request(path) == OK
 	var tween := create_tween()
 	tween.tween_property(_fade, "color:a", 1.0, fade_time)
 	await tween.finished
-	_load_map(map_id, spawn_name)
+	var scene: PackedScene = null
+	if threaded:
+		while ResourceLoader.load_threaded_get_status(path) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+			await get_tree().process_frame
+		scene = ResourceLoader.load_threaded_get(path) as PackedScene
+	_load_map(map_id, spawn_name, scene)
 	if current_map.autosave_on_enter:
 		SaveManager.save_game()
 	tween = create_tween()
@@ -69,12 +78,15 @@ func change_map(map_id: StringName, spawn_name: StringName = &"") -> void:
 	await tween.finished
 	_changing = false
 
-func _load_map(map_id: StringName, spawn_name: StringName) -> void:
+## `scene` is the map already loaded, if the caller has it; otherwise it is
+## loaded here, blocking.
+func _load_map(map_id: StringName, spawn_name: StringName, scene: PackedScene = null) -> void:
 	var data := registry.find(map_id) if registry else null
 	if data == null:
 		push_error("Game: no map '%s' in the registry." % map_id)
 		return
-	var scene := load(data.scene_path) as PackedScene
+	if scene == null:
+		scene = load(data.scene_path) as PackedScene
 	var map := scene.instantiate() as Map if scene else null
 	if map == null:
 		push_error("Game: '%s' isn't a scene with a Map root." % data.scene_path)

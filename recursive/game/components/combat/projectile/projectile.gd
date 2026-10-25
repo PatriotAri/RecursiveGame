@@ -41,6 +41,14 @@ var _hits_left:= 0
 func _ready() -> void:
 	super()
 	body_entered.connect(_on_body_entered)
+
+func reset() -> void:
+	super()
+	_direction = Vector2.RIGHT
+	_travelled = 0.0
+	_launched = false
+	_hits_left = 0
+	thrower = null
 	# Hidden until it actually leaves the hand — during windup it would just
 	# be a dagger floating in front of the thrower.
 	visible = false
@@ -116,13 +124,13 @@ func _on_body_entered(_body: Node) -> void:
 	_impact()
 
 func _impact() -> void:
-	if is_queued_for_deletion(): return
+	if _released: return
 	AudioManager.play_sfx(impact_sound, global_position)
 	impacted.emit(global_position)
 	_on_impact()
 	cancel()
 
 ## Override for anything that should happen where it lands — an explosion,
-## a dropped item. Called before the projectile frees itself.
+## a dropped item. Called before the projectile returns to the pool.
 func _on_impact() -> void:
 	pass

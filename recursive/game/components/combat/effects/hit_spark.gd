@@ -2,16 +2,13 @@ class_name HitSpark
 
 extends CPUParticles2D
 
-## A short burst of sparks where a hit lands. Spawn with HitSpark.spawn().
+## A short burst of sparks where a hit lands. Pooled by the Effects
+## autoload — burst() restarts the same node every time.
 
-static func spawn(parent: Node, at: Vector2, color := Color.WHITE) -> void:
-	if parent == null: return
-	var spark := HitSpark.new()
-	spark.color = color
-	spark.z_index = 40
-	parent.add_child(spark)
-	spark.global_position = at
-	spark.emitting = true
+signal done(spark: HitSpark)
+
+## One fade curve shared by every spark, instead of a new Gradient per hit.
+static var _fade: Gradient
 
 func _init() -> void:
 	one_shot = true
@@ -26,9 +23,16 @@ func _init() -> void:
 	damping_max = 160.0
 	scale_amount_min = 1.5
 	scale_amount_max = 2.5
-	# Fades out over its life rather than popping off.
-	var fade := Gradient.new()
-	fade.set_color(0, Color.WHITE)
-	fade.set_color(1, Color(1, 1, 1, 0))
-	color_ramp = fade
-	finished.connect(queue_free)
+	emitting = false
+	if _fade == null:
+		# Fades out over its life rather than popping off.
+		_fade = Gradient.new()
+		_fade.set_color(0, Color.WHITE)
+		_fade.set_color(1, Color(1, 1, 1, 0))
+	color_ramp = _fade
+	finished.connect(func(): done.emit(self))
+
+func burst(at: Vector2, tint: Color) -> void:
+	global_position = at
+	color = tint
+	restart()

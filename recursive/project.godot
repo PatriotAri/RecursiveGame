@@ -21,6 +21,8 @@ config/icon="res://icon.svg"
 AudioManager="*res://game/globals/audio/audio_manager.gd"
 SaveManager="*res://game/globals/save/save_manager.gd"
 Menus="*res://game/globals/menus/menus.gd"
+Pools="*res://game/globals/pools/pools.gd"
+Effects="*res://game/globals/effects/effects.gd"
 
 [gui]
 
