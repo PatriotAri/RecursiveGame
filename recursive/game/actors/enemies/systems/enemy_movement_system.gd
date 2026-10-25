@@ -64,7 +64,7 @@ func idle(delta: float) -> void:
 ## Accelerates toward `target` along a path round walls (or straight, with no
 ## navmesh) and faces the way it's going.
 func _move_toward(target: Vector2, speed: float, delta: float) -> void:
-	var next := body.next_path_position(target)
+	var next := body.navigation.next_path_position(target)
 	var direction := next - body.global_position
 	if direction.length_squared() < 0.01:
 		idle(delta)
@@ -102,7 +102,7 @@ func pick_patrol_target() -> void:
 		)
 		# Snapped onto the navmesh, so a point picked inside a wall becomes
 		# the nearest reachable spot instead of somewhere to grind against.
-		candidate = body.closest_walkable(candidate)
+		candidate = body.navigation.closest_walkable(candidate)
 		if body.global_position.distance_to(candidate) >= min_patrol_distance:
 			patrol_target = candidate
 			return
@@ -122,7 +122,7 @@ func flee(delta: float) -> void:
 	var away := body.global_position - data.player_pos
 	if away == Vector2.ZERO:
 		away = Vector2.RIGHT
-	var goal := body.closest_walkable(body.global_position + away.normalized() * FLEE_LOOKAHEAD)
+	var goal := body.navigation.closest_walkable(body.global_position + away.normalized() * FLEE_LOOKAHEAD)
 	_move_toward(goal, body.profile.flee_speed, delta)
 
 func attack(delta: float) -> void:
@@ -137,7 +137,7 @@ func attack_cooldown(delta: float) -> void:
 	# A ranged enemy steps back out of reach between shots.
 	var away := body.global_position - data.player_pos
 	if body.profile.preferred_distance > 0.0 and away.length() < body.profile.preferred_distance:
-		var goal := body.closest_walkable(body.global_position + away.normalized() * FLEE_LOOKAHEAD)
+		var goal := body.navigation.closest_walkable(body.global_position + away.normalized() * FLEE_LOOKAHEAD)
 		_move_toward(goal, data.walk_speed, delta)
 	else:
 		idle(delta)

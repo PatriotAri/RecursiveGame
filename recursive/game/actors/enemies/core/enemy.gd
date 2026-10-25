@@ -30,13 +30,8 @@ var attack_range:= 0.0
 
 var data: EnemyData
 
-## Paths around walls. Created in code so enemy scenes need no extra node;
-## with no navmesh in the level, movement falls back to straight lines.
-var nav_agent: NavigationAgent2D
-
-## Re-query the path only when the target has moved this far. Chasing a
-## moving player otherwise asks for a new path every single frame.
-const REPATH_DISTANCE_SQ := 16.0 * 16.0
+## Paths round walls; see EnemyNavigation.
+var navigation: EnemyNavigation
 
 func _ready() -> void:
 	stats = StatSystem.new(Stat.new(profile.max_health))
@@ -49,11 +44,7 @@ func _ready() -> void:
 	data.acceleration = profile.acceleration
 	data.friction = profile.friction
 	
-	nav_agent = NavigationAgent2D.new()
-	nav_agent.path_desired_distance = 8.0
-	nav_agent.target_desired_distance = 8.0
-	nav_agent.radius = profile.spacing_radius * 0.5
-	add_child(nav_agent)
+	navigation = EnemyNavigation.new(self)
 
 	hitbox_manager = HitboxManagerBase.new(self, HitboxManagerBase.LAYER_PLAYER_HURTBOX, func(): return data.facing_dir)
 	_register_attacks()
@@ -65,77 +56,24 @@ func _ready() -> void:
 	#injects data
 	detection_system.initialize(data, self)
 
-	state_machine = EnemyStateMachine.new(profile.attack_cooldown)
+	state_machine = EnemyStateMachine.new(self)
 	movement_system = EnemyMovementSystem.new(self, data)
 	attack_system = EnemyAttackSystem.new(self, data)
 	animation_system = EnemyAnimationSystem.new(sprite, data)
 
 func _actor_process(delta: float) -> void:
 	detection_system.update(delta)
-	_update_danger(delta)
 	state_machine.update(data, delta)
 	movement_system.update(delta)
 	attack_system.update(delta)
 	animation_system.update(attack_system.attack_duration)
 
-## Decides whether this enemy wants to run, and keeps the flee timers.
-func _update_danger(delta: float) -> void:
-	if data.flee_block_timer > 0.0:
-		data.flee_block_timer -= delta
-	if data.current_state == EnemyData.State.FLEE:
-		data.flee_timer += delta
-		if data.flee_timer >= profile.flee_max_time:
-			data.flee_timer = 0.0
-			data.flee_block_timer = profile.flee_recover_time
-	else:
-		data.flee_timer = 0.0
-	
-	data.in_danger = profile.flee_health_ratio > 0.0 \
-		and data.flee_block_timer <= 0.0 \
-		and data.player_detected \
-		and stats.health.ratio() <= profile.flee_health_ratio \
-		and global_position.distance_to(data.player_pos) < profile.flee_safe_distance
-
 # --- navigation -------------------------------------------------------------
 
-## Where to head next on the way to `target`: the next corner of a path
-## around walls, or `target` itself when there's no navmesh to path on.
-func next_path_position(target: Vector2) -> Vector2:
-	if not uses_pathfinding() or not has_navigation():
-		return target
-	if nav_agent.target_position.distance_squared_to(target) > REPATH_DISTANCE_SQ:
-		nav_agent.target_position = target
-	if nav_agent.is_navigation_finished():
-		return target
-	var next := nav_agent.get_next_path_position()
-	# No path (the query found nothing): head straight for the target. Seen
-	# once in testing as an enemy frozen in place for the rest of a fight,
-	# returning its own position as the next point forever.
-	if nav_agent.get_current_navigation_path().is_empty():
-		return target
-	return next
-
-## The nearest walkable point to `point`, for picking destinations that
-## aren't inside a wall. Unchanged when there's no navmesh.
-func closest_walkable(point: Vector2) -> Vector2:
-	if not has_navigation():
-		return point
-	return NavigationServer2D.map_get_closest_point(nav_agent.get_navigation_map(), point)
-
-## Whether this enemy routes round walls. A flyer doesn't, but still wants
-## has_navigation() for picking destinations on the floor.
+## Whether this enemy routes round walls. A flyer doesn't, but its
+## navigation still snaps patrol points onto the floor.
 func uses_pathfinding() -> bool:
 	return true
-
-func has_navigation() -> bool:
-	var map := nav_agent.get_navigation_map()
-	# Iteration 0 means the map has never synced.
-	if not map.is_valid() or NavigationServer2D.map_get_iteration_id(map) == 0:
-		return false
-	# A region sits on the map from the moment the level loads, before its
-	# navmesh is baked into it. Until there's a polygon to stand on, there's
-	# nothing to path over or snap to.
-	return NavigationServer2D.map_get_closest_point_owner(map, global_position).is_valid()
 
 ## Everything added on top of the enemy's own locomotion each frame, besides
 ## knockback. Spacing by default; override to add more (a flyer's flutter).

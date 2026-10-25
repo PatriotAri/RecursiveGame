@@ -74,4 +74,4 @@ func _spawn_standalone_player() -> void:
 	var player := GlobalPackedScenes.player_scene.instantiate()
 	get_entity_root().add_child(player)
 	player.global_position = get_spawn_position(default_spawn)
-	player.set_camera_limits(get_bounds())
+	player.camera.set_limits(get_bounds())

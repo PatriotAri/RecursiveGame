@@ -17,6 +17,7 @@ var player_spell_system: PlayerSpellSystem
 var player_interaction_system: PlayerInteractionSystem
 var player_animation_system: PlayerAnimationSystem
 var player_weapon_visual_system: PlayerWeaponVisualSystem
+var player_cost_system: PlayerCostSystem
 
 var player_hitbox_manager: HitboxManagerBase
 
@@ -30,9 +31,7 @@ var _base_walk_speed: float
 var _base_run_speed: float
 var _base_sprint_stamina_cost: float
 
-var _shake_tween : Tween
-
-@onready var camera: Camera2D = $tempcam
+@onready var camera: CameraRig = $tempcam
 
 @export_category("Stat Tuning")
 @export_group("Health")
@@ -90,7 +89,6 @@ func _ready() -> void:
 		Stat.new(max_mana, mana_regen_per_second, mana_regen_delay)
 	)
 	stats.armor = armor
-	stats.stamina.emptied.connect(_on_stamina_emptied)
 	_setup_actor(data)
 	
 	player_hitbox_manager = HitboxManagerBase.new(self, HitboxManagerBase.LAYER_ENEMY_HURTBOX, func(): return data.facing_dir)
@@ -106,12 +104,13 @@ func _ready() -> void:
 	player_interaction_system = PlayerInteractionSystem.new(self)
 	player_equipment_system = PlayerEquipmentSystem.new(self)
 	player_animation_system = PlayerAnimationSystem.new(sprite)
+	player_cost_system = PlayerCostSystem.new(self)
 
 func _actor_process(delta: float) -> void:
 	player_input_system.update(data)
 	player_spell_system.update(data, delta)
 	player_interaction_system.update(data)
-	_update_stamina(delta)
+	player_cost_system.update(data, delta)
 	
 	if data.move_vector != Vector2.ZERO:
 		var current_angle := data.facing_dir.angle()
@@ -125,13 +124,11 @@ func _actor_process(delta: float) -> void:
 	if not was_attacking and data.is_attacking:
 		var spec := player_hitbox_manager.get_spec(data.active_attack)
 		if spec:
-			stats.stamina.remove(stamina_cost_of(spec))
-			stats.mana.remove(spec.mana_cost)
-			_spend_ammo(spec)
+			player_cost_system.charge(spec)
 			play_sound(spec.sound)
 		player_spell_system.on_attack_started(data.active_attack)
 	elif was_attacking and not data.is_attacking:
-		_drop_weapon_if_out_of_ammo()
+		player_cost_system.on_attack_finished(data)
 	player_state_machine.update(data)
 	player_attack_system.post_update(data)
 	player_movement_system.update(data, delta)
@@ -158,64 +155,9 @@ func apply_stat_bonuses(bonuses: StatBonuses) -> void:
 	data.sprint_stamina_cost = maxf(_base_sprint_stamina_cost + bonuses.sprint_stamina_cost, 0.0)
 	data.attack_stamina_modifier = bonuses.attack_stamina_cost
 
-## What one use of an attack costs in stamina, after equipment. Computed per
-## swing rather than stored, because it depends on which weapon is equipped.
-func stamina_cost_of(spec: AttackSpec) -> int:
-	if spec == null: return 0
-	return maxi(spec.attack_stamina_cost + data.attack_stamina_modifier, 0)
-
-func _update_stamina(delta: float) -> void:
-	if data.is_exhausted and stats.stamina.ratio() >= exhaustion_recovery_ratio:
-		data.is_exhausted = false
-
-	# Intent alone isn't enough — holding run while standing still costs nothing.
-	var sprinting := data.is_running and data.move_vector != Vector2.ZERO
-	if data.is_exhausted or (sprinting and stats.stamina.is_empty()):
-		data.is_running = false
-		sprinting = false
-	if sprinting:
-		stats.stamina.drain(data.sprint_stamina_cost, delta)
-
-	# Refuse an unaffordable swing before the attack system sees the request,
-	# so the input isn't eaten and the animation never plays for free.
-	if not data.is_attacking:
-		if data.attack_requested and not can_afford_attack(data.current_attack):
-			data.attack_requested = false
-		if data.cast_requested and not can_afford_attack(data.current_spell_attack):
-			data.cast_requested = false
-
-## Stamina, mana and, for attacks that use it, ammo.
-func can_afford_attack(attack_name: StringName) -> bool:
-	var spec := player_hitbox_manager.get_spec(attack_name)
-	if spec == null: return false
-	if not stats.stamina.can_afford(stamina_cost_of(spec)):
-		return false
-	if not stats.mana.can_afford(spec.mana_cost):
-		return false
-	if spec.ammo_id != &"":
-		return data.inventory.get_count(spec.ammo_id) >= spec.ammo_cost
-	return true
-
-func _spend_ammo(spec: AttackSpec) -> void:
-	if spec.ammo_id == &"": return
-	data.inventory.remove(spec.ammo_id, spec.ammo_cost)
-
-## A weapon that is its own ammo (throwing daggers) is gone from the
-## inventory after the last throw. Waits for the throw to finish first:
-## unequipping cancels in-flight swings, which would take the last dagger's
-## projectile with it mid-windup.
-func _drop_weapon_if_out_of_ammo() -> void:
-	var weapon: EquippableItem = data.equipment.get_item(EquippableItem.Slot.WEAPON)
-	if weapon == null: return
-	if data.inventory.get_count(weapon.id) > 0: return
-	player_equipment_system.try_unequip(data, EquippableItem.Slot.WEAPON)
-
-func _on_stamina_emptied() -> void:
-	data.is_exhausted = true
-
 ## Every hit jolts the camera, staggering or not.
 func _on_hit(_dealt: int) -> void:
-	shake_camera(3.0, 0.15)
+	camera.shake(3.0, 0.15)
 
 ## An interrupted swing takes its hitbox with it.
 func _on_staggered() -> void:
@@ -270,29 +212,6 @@ func register_interactable(interactable: Interactable) -> void:
 
 func unregister_interactable(interactable: Interactable) -> void:
 	player_interaction_system.unregister(interactable)
-
-## Stops the camera at the edges of `bounds`. An empty rect lifts the limits.
-func set_camera_limits(bounds: Rect2) -> void:
-	if camera == null: return
-	if bounds.size == Vector2.ZERO:
-		bounds = Rect2(-10000000, -10000000, 20000000, 20000000)
-	camera.limit_left = floori(bounds.position.x)
-	camera.limit_top = floori(bounds.position.y)
-	camera.limit_right = ceili(bounds.end.x)
-	camera.limit_bottom = ceili(bounds.end.y)
-
-## Jolts the camera by up to `strength` px, settling over `duration`.
-func shake_camera(strength: float, duration: float) -> void:
-	if camera == null: return
-	if _shake_tween and _shake_tween.is_valid():
-		_shake_tween.kill()
-	_shake_tween = create_tween()
-	var steps := 4
-	for i in steps:
-		var falloff := 1.0 - float(i) / steps
-		var jolt := Vector2(randf_range(-1, 1), randf_range(-1, 1)) * strength * falloff
-		_shake_tween.tween_property(camera, "offset", jolt, duration / (steps + 1))
-	_shake_tween.tween_property(camera, "offset", Vector2.ZERO, duration / (steps + 1))
 
 func _handle_death() -> void:
 	super()

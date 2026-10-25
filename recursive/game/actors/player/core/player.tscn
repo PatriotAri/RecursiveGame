@@ -11,6 +11,7 @@
 [ext_resource type="Resource" path="res://game/audio/sfx/player_hurt.tres" id="90_hurt"]
 [ext_resource type="Resource" path="res://game/audio/sfx/player_death.tres" id="91_death"]
 [ext_resource type="Resource" path="res://game/actors/player/hitboxes/unarmed_attack.tres" id="93_attack"]
+[ext_resource type="Script" uid="uid://14ia7l0otbd2" path="res://game/actors/player/camera/camera_rig.gd" id="95_camera"]
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_iwgb0"]
 radius = 6.0
 height = 26.0
@@ -983,6 +984,7 @@ shape = SubResource("CapsuleShape2D_iwgb0")
 
 [node name="tempcam" type="Camera2D" parent="." unique_id=18391302]
 zoom = Vector2(2, 2)
+script = ExtResource("95_camera")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=1921922611]
 position = Vector2(0, -32)

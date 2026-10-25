@@ -1,11 +1,15 @@
 class_name EnemyStateMachine
 
+var body: Enemy
 var attack_cooldown_duration := 1.5
 
-func _init(cooldown_duration := 1.5) -> void:
-	attack_cooldown_duration = cooldown_duration
+func _init(body_ref: Enemy) -> void:
+	body = body_ref
+	attack_cooldown_duration = body.profile.attack_cooldown
 
 func update(data: EnemyData, delta: float) -> void:
+	_update_danger(data, delta)
+
 	# Ticks in every state. The old version only counted down while
 	# ATTACK_COOLDOWN was current, so any interruption threw the cooldown
 	# away — and being hit mid-swing is the normal case, not the edge case.
@@ -20,6 +24,25 @@ func update(data: EnemyData, delta: float) -> void:
 		data.state_just_changed = true
 	else:
 		data.state_just_changed = false
+
+## Decides whether the enemy wants to run, and keeps the flee timers.
+func _update_danger(data: EnemyData, delta: float) -> void:
+	var profile := body.profile
+	if data.flee_block_timer > 0.0:
+		data.flee_block_timer -= delta
+	if data.current_state == EnemyData.State.FLEE:
+		data.flee_timer += delta
+		if data.flee_timer >= profile.flee_max_time:
+			data.flee_timer = 0.0
+			data.flee_block_timer = profile.flee_recover_time
+	else:
+		data.flee_timer = 0.0
+	
+	data.in_danger = profile.flee_health_ratio > 0.0 \
+		and data.flee_block_timer <= 0.0 \
+		and data.player_detected \
+		and body.stats.health.ratio() <= profile.flee_health_ratio \
+		and body.global_position.distance_to(data.player_pos) < profile.flee_safe_distance
 
 func _resolve_state(data: EnemyData) -> EnemyData.State:
 	if data.current_state == EnemyData.State.DIED or data.is_dead:
