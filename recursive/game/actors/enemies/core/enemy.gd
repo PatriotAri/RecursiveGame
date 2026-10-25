@@ -187,7 +187,7 @@ func _physics_process(delta: float) -> void:
 	state_machine.update(data, delta)
 	movement_system.update(delta)
 	attack_system.update(delta)
-	animation_system.update()
+	animation_system.update(attack_system.attack_duration)
 
 ## Decides whether this enemy wants to run, and keeps the flee timers.
 func _update_danger(delta: float) -> void:
@@ -218,7 +218,13 @@ func next_path_position(target: Vector2) -> Vector2:
 		nav_agent.target_position = target
 	if nav_agent.is_navigation_finished():
 		return target
-	return nav_agent.get_next_path_position()
+	var next := nav_agent.get_next_path_position()
+	# No path (the query found nothing): head straight for the target. Seen
+	# once in testing as an enemy frozen in place for the rest of a fight,
+	# returning its own position as the next point forever.
+	if nav_agent.get_current_navigation_path().is_empty():
+		return target
+	return next
 
 ## The nearest walkable point to `point`, for picking destinations that
 ## aren't inside a wall. Unchanged when there's no navmesh.
@@ -234,9 +240,13 @@ func uses_pathfinding() -> bool:
 
 func has_navigation() -> bool:
 	var map := nav_agent.get_navigation_map()
-	# Iteration 0 means the map has never synced — no region baked yet.
-	return map.is_valid() and NavigationServer2D.map_get_iteration_id(map) > 0 \
-		and not NavigationServer2D.map_get_regions(map).is_empty()
+	# Iteration 0 means the map has never synced.
+	if not map.is_valid() or NavigationServer2D.map_get_iteration_id(map) == 0:
+		return false
+	# A region sits on the map from the moment the level loads, before its
+	# navmesh is baked into it. Until there's a polygon to stand on, there's
+	# nothing to path over or snap to.
+	return NavigationServer2D.map_get_closest_point_owner(map, global_position).is_valid()
 
 ## Everything added on top of the enemy's own locomotion each frame, besides
 ## knockback. Spacing by default; override to add more (a flyer's flutter).
@@ -371,6 +381,8 @@ func _handle_death() -> void:
 	# Stop being a wall, and stop eating the player's attacks.
 	$Collision.set_deferred("disabled", true)
 	$Hurtbox.set_deferred("monitorable", false)
+	# A swing's tuned speed would otherwise carry into the death animation.
+	sprite.speed_scale = 1.0
 	sprite.play("died")
 	play_sound(death_sound)
 	_try_spawn_drops()

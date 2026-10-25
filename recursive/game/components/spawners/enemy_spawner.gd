@@ -170,7 +170,9 @@ func pick_position(existing: Array[Vector2]) -> Vector2:
 ## inside a wall.
 func _walkable(point: Vector2) -> Vector2:
 	var map := get_world_2d().navigation_map
-	if NavigationServer2D.map_get_iteration_id(map) == 0 or NavigationServer2D.map_get_regions(map).is_empty():
+	# No polygon yet (the level's navmesh hasn't been baked in): leave it be.
+	if NavigationServer2D.map_get_iteration_id(map) == 0 \
+			or not NavigationServer2D.map_get_closest_point_owner(map, point).is_valid():
 		return point
 	return NavigationServer2D.map_get_closest_point(map, point)
 
