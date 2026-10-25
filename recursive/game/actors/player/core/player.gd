@@ -149,7 +149,7 @@ func _physics_process(delta: float) -> void:
 	if data.move_vector != Vector2.ZERO:
 		var current_angle := data.facing_dir.angle()
 		var target_angle := data.move_vector.angle()
-		var t := 1.0 - exp(-data.facing_turn_speed * delta)
+		var t := 1.0 - exp(-data.turn_speed * delta)
 		var new_angle := lerp_angle(current_angle, target_angle, t)
 		data.facing_dir = Vector2.from_angle(new_angle)
 	

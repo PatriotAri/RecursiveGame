@@ -209,7 +209,7 @@ func _update_danger(delta: float) -> void:
 ## Where to head next on the way to `target`: the next corner of a path
 ## around walls, or `target` itself when there's no navmesh to path on.
 func next_path_position(target: Vector2) -> Vector2:
-	if not has_navigation():
+	if not uses_pathfinding() or not has_navigation():
 		return target
 	if nav_agent.target_position.distance_squared_to(target) > REPATH_DISTANCE_SQ:
 		nav_agent.target_position = target
@@ -223,6 +223,11 @@ func closest_walkable(point: Vector2) -> Vector2:
 	if not has_navigation():
 		return point
 	return NavigationServer2D.map_get_closest_point(nav_agent.get_navigation_map(), point)
+
+## Whether this enemy routes round walls. A flyer doesn't, but still wants
+## has_navigation() for picking destinations on the floor.
+func uses_pathfinding() -> bool:
+	return true
 
 func has_navigation() -> bool:
 	var map := nav_agent.get_navigation_map()

@@ -16,8 +16,10 @@ extends Enemy
 
 var _flutter_phase:= randf() * TAU
 
-func has_navigation() -> bool:
-	# Straight lines only — that's the point of flying.
+func uses_pathfinding() -> bool:
+	# Straight lines only — that's the point of flying. Patrol points still
+	# snap to the navmesh, so an idle bat can't drift off past the walls
+	# where nothing can reach it and its round never ends.
 	return false
 
 func steering_velocity() -> Vector2:

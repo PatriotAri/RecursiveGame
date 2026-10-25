@@ -8,7 +8,10 @@ func _init(sprite_ref: AnimatedSprite2D) -> void:
 	sprite = sprite_ref
 
 func update(data: PlayerData) -> void:
-	var animation_name:= _base_animation(data)
+	# Through _resolve_animation, so a weapon's animation_prefix is actually
+	# used once its art exists. Calling _base_animation here skipped it, which
+	# left every weapon on the unarmed set no matter what was drawn.
+	var animation_name:= _resolve_animation(data)
 	
 	# A second hit during hitstun resolves to the same animation name, so the
 	# name check below won't replay it. The counter catches that case.

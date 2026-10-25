@@ -16,8 +16,8 @@ var hurt_timer:= 0.0
 #bumped on every hit so the animation can tell a rehit from a held state
 var hurt_seq:= 0
 
-#!!!rename to turn speed!!!
-var facing_turn_speed:= 35.0
+## How fast facing swings round to the movement direction.
+var turn_speed:= 35.0
 
 #read/written by InputSystem (player intent)
 var move_vector:= Vector2.ZERO
