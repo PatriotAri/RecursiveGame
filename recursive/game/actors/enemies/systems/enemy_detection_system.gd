@@ -7,7 +7,7 @@ var data: EnemyData
 var body: Enemy
 
 #defaults player ref to null(empty)
-var player: CharacterBody2D = null
+var player: Player = null
 
 var attack_range: float
 var forget_delay: float
@@ -72,8 +72,9 @@ func update(delta: float) -> void:
 # so inside this function `body` meant the player, not the enemy.
 func _on_body_entered(entered: Node) -> void:
 	#if player enters detection area then
-	if entered.is_in_group(&"player"):
-		player = entered as CharacterBody2D
+	var entered_player := entered as Player
+	if entered_player:
+		player = entered_player
 		_player_inside = true
 		data.player_detected = true
 
@@ -107,6 +108,4 @@ func _has_line_of_sight() -> bool:
 	return get_world_2d().direct_space_state.intersect_ray(query).is_empty()
 
 func _player_anchor() -> Vector2:
-	if player.has_method("combat_anchor"):
-		return player.combat_anchor()
-	return player.global_position
+	return player.combat_anchor()

@@ -1,5 +1,7 @@
 class_name EnemyData
 
+extends ActorData
+
 enum State {
 	IDLE,
 	CHASE,
@@ -10,14 +12,6 @@ enum State {
 	DIED,
 	FLEE, #always append, never insert in the middle
 }
-
-var is_hurt:= false
-var is_dead:= false
-
-#hitstun, ticked down in enemy.gd — replaces the old animation_finished hook
-var hurt_timer:= 0.0
-#bumped on every hit so the animation can tell a re-hit from a held state
-var hurt_seq:= 0
 
 #read/written by DetectionSystem
 var player_detected:= false
@@ -38,9 +32,6 @@ var attack_cooldown_timer:= 0.0
 #read/written by movement system, seeded from Enemy's exports
 var patrol_speed:= 50.0
 var walk_speed:= 65.0
-var facing_dir:= Vector2.ZERO
-var acceleration:= 500.0 #px/s^2
-var friction:= 600.0 #px/s^2
 
 #read/written by Enemy, read by state machine
 ## Low on health with the player close. Only ever true for a type that flees.
@@ -50,6 +41,3 @@ var flee_timer:= 0.0
 ## After giving up, fleeing is blocked until this runs out — a cornered
 ## enemy turns and fights instead of pressing into the wall forever.
 var flee_block_timer:= 0.0
-
-#movement modifiers (knockback, slows, dashes, etc.)
-var modifiers := MovementModifierStack.new()

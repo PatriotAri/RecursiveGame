@@ -1,32 +1,21 @@
 class_name Enemy
 
-extends CharacterBody2D
+extends Actor
 
-## Emitted once, on the killing blow — before the death animation, so a
-## round can count the kill without waiting for the corpse to fade.
-signal died
-
-## Shared body for every enemy type. Owns the systems and the health, hurt,
-## knockback and death plumbing. A type only describes itself: its exports in
-## the scene, and _register_attacks() / perform_attack() when it needs more
-## than one melee swing.
+## Shared body for every enemy type. Owns the AI systems; hits, hitstun,
+## knockback and death come from Actor. A type only describes itself: its
+## exports in the scene, and _register_attacks() / perform_attack() when it
+## needs more than one melee swing.
 ##
-## Expected children: Sprite (AnimatedSprite2D), Collision, Hurtbox,
-## DetectionArea (EnemyDetectionSystem).
+## Expected children: Actor's, plus DetectionArea (EnemyDetectionSystem).
 
 #type casts DetectionArea as DetectionSystem, allows script to send signals
 @onready var detection_system: EnemyDetectionSystem = $DetectionArea as EnemyDetectionSystem
-@onready var sprite: AnimatedSprite2D = $Sprite
 var state_machine: EnemyStateMachine
 var movement_system: EnemyMovementSystem
 var attack_system: EnemyAttackSystem
 var animation_system: EnemyAnimationSystem
 var hitbox_manager: HitboxManagerBase
-
-#health component
-var stats: StatSystem
-var _flash_tween: Tween
-var death_handled := false
 
 @export_group("Stat Tuning")
 @export var max_health: int = 10
@@ -47,9 +36,6 @@ var death_handled := false
 @export var knockback_strength:= 50.0
 @export_range(0.0, 1.0) var hitstun_chance:= 0.3
 @export_range(0.0, 1.0) var knockback_chance:= 0.3
-## How long the enemy is locked in hitstun. Was implicitly the hurt
-## animation's length; now independent of it.
-@export var hurt_duration:= 0.2
 ## Pause between swings. Owed after a completed attack and after an
 ## interrupted one.
 @export var attack_cooldown:= 1.5
@@ -117,8 +103,6 @@ var death_handled := false
 ## Given to the default melee attack. A type that registers its own attacks
 ## sets AttackSpec.sound on each instead.
 @export var attack_sound: SoundEffect = preload("res://game/audio/sfx/enemy_attack.tres")
-@export var hurt_sound: SoundEffect = preload("res://game/audio/sfx/hit.tres")
-@export var death_sound: SoundEffect = preload("res://game/audio/sfx/enemy_death.tres")
 
 ## Which registered attack the state machine commits to. A type with several
 ## attacks can change this between swings.
@@ -140,9 +124,9 @@ const REPATH_DISTANCE_SQ := 16.0 * 16.0
 func _ready() -> void:
 	stats = StatSystem.new(Stat.new(max_health))
 	stats.armor = armor
-	stats.health.emptied.connect(_on_health_emptied)
 
 	data = EnemyData.new()
+	_setup_actor(data)
 	data.patrol_speed = patrol_speed
 	data.walk_speed = walk_speed
 	data.acceleration = acceleration
@@ -161,9 +145,6 @@ func _ready() -> void:
 	# Must be computed before the detection system initialises below.
 	attack_range = _compute_attack_range()
 
-	$Hurtbox._on_damage_received = _on_damage_received
-	$Hurtbox.knockback_received.connect(_on_knockback_received)
-
 	#injects data
 	detection_system.initialize(data, self)
 
@@ -172,22 +153,7 @@ func _ready() -> void:
 	attack_system = EnemyAttackSystem.new(self, data)
 	animation_system = EnemyAnimationSystem.new(sprite, data)
 
-func _physics_process(delta: float) -> void:
-	if data.is_dead:
-		if not death_handled:
-			death_handled = true
-			_handle_death()
-		return
-
-	stats.update(delta)
-
-	# Hitstun is a timer now. Ticked before the state machine so is_hurt is
-	# current when the state resolves this frame.
-	if data.hurt_timer > 0.0:
-		data.hurt_timer -= delta
-		if data.hurt_timer <= 0.0:
-			data.is_hurt = false
-
+func _actor_process(delta: float) -> void:
 	detection_system.update(delta)
 	_update_danger(delta)
 	state_machine.update(data, delta)
@@ -325,69 +291,26 @@ func attack_duration(attack_name: StringName) -> float:
 	if spec == null: return 0.0
 	return spec.windup_time + spec.lifetime
 
-## Plays a sound at this enemy's position. Null is silent.
-func play_sound(effect: SoundEffect) -> void:
-	AudioManager.play_sfx(effect, global_position)
-
 ## Stops anything an attack left running. Called on stagger and on death.
 func cancel_attacks() -> void:
 	hitbox_manager.cancel_all()
 
 # --- damage / death ---------------------------------------------------------
 
-func _on_damage_received(damage_amount: float, apply_hitstun: bool) -> void:
-	_show_hit(stats.take_damage(damage_amount))
-	if data.is_dead:
-		return
-	play_sound(hurt_sound)
-	_flash_damage()
-	if not apply_hitstun:
-		return
-	data.is_hurt = true
-	data.hurt_timer = hurt_duration
-	data.hurt_seq += 1
-	# Getting hit drops the swing — but only when the stagger lands.
+## Getting hit drops the swing — but only when the stagger lands.
+func _on_staggered() -> void:
 	cancel_attacks()
-
-## Where hits are shown: the middle of the hurtbox, not the feet.
-func _show_hit(amount: int) -> void:
-	var at: Vector2 = $Hurtbox/CollisionShape2D.global_position
-	DamageNumber.spawn(get_parent(), at + Vector2(0, -14), amount, Color.WHITE)
-	HitSpark.spawn(get_parent(), at)
-
-## Feedback that a hit landed, separate from whether it staggered. Every hit
-## flashes; only some of them interrupt.
-func _flash_damage() -> void:
-	# A second hit mid-flash would otherwise leave two tweens fighting over
-	# modulate, and the sprite can end up stuck tinted.
-	if _flash_tween and _flash_tween.is_valid():
-		_flash_tween.kill()
-	sprite.modulate = Color(1, 0.3, 0.3)
-	_flash_tween = create_tween()
-	_flash_tween.tween_property(sprite, "modulate", Color.WHITE, 0.15)
-
-func _on_health_emptied() -> void:
-	if data.is_dead: return
-	data.is_dead = true
-	died.emit()
-
-func _on_knockback_received(direction: Vector2, strength: float, decay: float) -> void:
-	var knockback := MovementModifier.create_impulse(&"knockback", direction, strength, decay)
-	data.modifiers.add(knockback)
 
 func _handle_death() -> void:
-	set_physics_process(false)
-	# Hitboxes are children with their own _physics_process — killing this
-	# node's processing doesn't stop theirs. A swing started before the
-	# killing blow would still land from the corpse.
+	# Hitboxes are children with their own _physics_process — this node's
+	# death doesn't stop theirs. A swing started before the killing blow
+	# would still land from the corpse.
 	cancel_attacks()
-	# Stop being a wall, and stop eating the player's attacks.
-	$Collision.set_deferred("disabled", true)
-	$Hurtbox.set_deferred("monitorable", false)
+	# Stops being a wall and being hittable, and plays the death sound.
+	super()
 	# A swing's tuned speed would otherwise carry into the death animation.
 	sprite.speed_scale = 1.0
 	sprite.play("died")
-	play_sound(death_sound)
 	_try_spawn_drops()
 	await sprite.animation_finished
 	await get_tree().create_timer(0.5).timeout

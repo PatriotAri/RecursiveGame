@@ -21,7 +21,7 @@ const TAB_ALL := -1
 @onready var mana_bar: Control = %ManaBar
 
 var inventory: Inventory
-var player: Node
+var player: Player
 
 var _tab_group := ButtonGroup.new()
 var _displayed_id: StringName = &""
@@ -36,22 +36,21 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_setup_tabs()
 	
-	player = get_tree().get_first_node_in_group(&"player")
+	player = get_tree().get_first_node_in_group(&"player") as Player
 	if player == null:
 		# The level instances the player during its own _ready(), so node
 		# order decides whether it exists yet. Hud waits the same way.
 		await get_tree().process_frame
-		player = get_tree().get_first_node_in_group(&"player")
+		player = get_tree().get_first_node_in_group(&"player") as Player
 	
-	if player and "data" in player:
-		bind(player.data.inventory)
-		player.data.equipment.equipment_changed.connect(_on_equipment_changed)
-	else:
+	if player == null:
 		push_warning("InventoryUi: no player found to bind to.")
-	if player and "stats" in player:
-		health_bar.bind(player.stats.health)
-		stamina_bar.bind(player.stats.stamina)
-		mana_bar.bind(player.stats.mana)
+		return
+	bind(player.data.inventory)
+	player.data.equipment.equipment_changed.connect(_on_equipment_changed)
+	health_bar.bind(player.stats.health)
+	stamina_bar.bind(player.stats.stamina)
+	mana_bar.bind(player.stats.mana)
 		
 func bind(inventory_ref: Inventory) -> void:
 	if inventory != null and inventory.changed.is_connected(_on_inventory_changed):

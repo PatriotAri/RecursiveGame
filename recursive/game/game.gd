@@ -16,7 +16,7 @@ signal map_changed(map: Map)
 
 var current_map: Map
 var current_map_id: StringName
-var player: CharacterBody2D
+var player: Player
 
 var _fade: ColorRect
 var _changing:= false
@@ -28,7 +28,7 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	_build_fade()
-	player = GlobalPackedScenes.player_scene.instantiate()
+	player = GlobalPackedScenes.player_scene.instantiate() as Player
 	var save := SaveManager.take_pending_load()
 	if save.is_empty():
 		_load_map(starting_map, &"")

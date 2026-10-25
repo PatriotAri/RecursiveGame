@@ -4,12 +4,12 @@ class_name PlayerInteractionSystem
 ## key. Interactables add and remove themselves as the player walks in and
 ## out of their shapes.
 
-var player: CharacterBody2D
+var player: Player
 
 var _in_reach: Array[Interactable] = []
 var _focused: Interactable
 
-func _init(player_ref: CharacterBody2D) -> void:
+func _init(player_ref: Player) -> void:
 	player = player_ref
 
 func register(interactable: Interactable) -> void:

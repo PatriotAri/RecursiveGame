@@ -104,7 +104,7 @@ func _on_area_entered(area: Area2D) -> void:
 	super(area)
 	if not _active or already_hit:
 		return
-	if not area.has_method("receive_damage"):
+	if not (area is Hurtbox):
 		return
 	if _hits_left <= 0:
 		_impact()

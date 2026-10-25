@@ -43,6 +43,12 @@ func get_spawn_position(spawn_name: StringName) -> Vector2:
 	push_warning("Map %s: no spawn point '%s' or '%s'; using the origin." % [map_id, spawn_name, default_spawn])
 	return global_position
 
+## The Map a node belongs to, or null outside one.
+static func of(node: Node) -> Map:
+	while node and not (node is Map):
+		node = node.get_parent()
+	return node as Map
+
 ## The world-space rectangle covered by the map's floor and walls, for
 ## keeping the camera from showing the void beyond them.
 func get_bounds() -> Rect2:

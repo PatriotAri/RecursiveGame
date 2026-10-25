@@ -11,9 +11,7 @@ var patrol_target:= Vector2.ZERO
 var min_patrol_distance: float
 var max_attempts:= 10
 var arrival_threshold:= 5.0
-# The enemy's own intent-driven velocity. Impulses are layered onto
-# body.velocity for one frame only and never stored back here.
-var locomotion := Vector2.ZERO
+var locomotion:= Locomotion.new()
 
 ## How far ahead a fleeing enemy aims each frame. Far enough that the path
 ## bends round walls, near enough that it keeps re-aiming as the player moves.
@@ -33,10 +31,7 @@ func update(delta: float) -> void:
 	data.modifiers.update(delta)
 
 	#velocity override takes full control
-	if data.modifiers.has_velocity_override():
-		locomotion = data.modifiers.get_velocity_override()
-		body.velocity = locomotion
-		body.move_and_slide()
+	if locomotion.run_override(body, data.modifiers):
 		return
 
 	#reads the flag set by state machine
@@ -60,11 +55,10 @@ func update(delta: float) -> void:
 # Single exit point for movement, so the impulse and spacing push are applied
 # once per frame no matter which state ran.
 func _commit() -> void:
-	body.velocity = locomotion + data.modifiers.get_impulse_sum() + body.steering_velocity()
-	body.move_and_slide()
+	locomotion.commit(body, data.modifiers, body.steering_velocity())
 
 func idle(delta: float) -> void:
-	locomotion = locomotion.move_toward(Vector2.ZERO, data.friction * delta)
+	locomotion.brake(data.friction, delta)
 	_commit()
 
 ## Accelerates toward `target` along a path round walls (or straight, with no
@@ -78,7 +72,7 @@ func _move_toward(target: Vector2, speed: float, delta: float) -> void:
 	direction = direction.normalized()
 	data.facing_dir = direction
 	var target_velocity := direction * speed * data.modifiers.get_speed_scale()
-	locomotion = locomotion.move_toward(target_velocity, data.acceleration * delta)
+	locomotion.accelerate(target_velocity, data.acceleration, delta)
 	_commit()
 
 func patrol(delta: float) -> void:

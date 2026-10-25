@@ -103,9 +103,10 @@ func _on_area_entered(area: Area2D) -> void:
 	if _hit_ids.has(id):
 		return
 	_hit_ids[id] = true
-	if area.has_method("receive_damage"):
+	var hurtbox := area as Hurtbox
+	if hurtbox:
 		# Rolled per target rather than per swing, so one swing into a cluster
 		# can stagger some of them and not others.
 		var stun := randf() < hitstun_chance
 		var knock := randf() < knockback_chance
-		area.receive_damage(damage, self, stun, knock)
+		hurtbox.receive_damage(damage, self, stun, knock)

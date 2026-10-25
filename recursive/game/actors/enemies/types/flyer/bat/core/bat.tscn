@@ -9,6 +9,8 @@
 [ext_resource type="Resource" uid="uid://c6pny72mk8boe" path="res://game/actors/enemies/types/fodder/crawler/crawler_drops.tres" id="7_drops"]
 [ext_resource type="Resource" path="res://game/actors/enemies/types/flyer/bat/bat_melee_offsets.tres" id="8_offsets"]
 
+[ext_resource type="Resource" path="res://game/audio/sfx/hit.tres" id="90_hurt"]
+[ext_resource type="Resource" path="res://game/audio/sfx/enemy_death.tres" id="91_death"]
 [sub_resource type="AtlasTexture" id="AtlasTexture_up"]
 atlas = ExtResource("2_sheet")
 region = Rect2(0, 0, 32, 32)
@@ -93,6 +95,8 @@ walk_speed = 90.0
 acceleration = 700.0
 spacing_radius = 22.0
 drop_table = ExtResource("7_drops")
+hurt_sound = ExtResource("90_hurt")
+death_sound = ExtResource("91_death")
 patrol_size = Vector2(320, 260)
 
 [node name="Shadow" type="Sprite2D" parent="."]

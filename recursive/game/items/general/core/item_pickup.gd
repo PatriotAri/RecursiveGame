@@ -32,9 +32,10 @@ func _draw() -> void:
 	draw_circle(Vector2.ZERO, 8.0, Color(0, 0, 0, 0.3))
 
 func _on_body_entered(body: Node) -> void:
-	if not body.is_in_group(&"player"):
+	var player := body as Player
+	if player == null:
 		return
-	body.data.inventory.add(item, amount)
+	player.data.inventory.add(item, amount)
 	AudioManager.play_sfx(pickup_sound, global_position)
 	set_deferred("monitoring", false)
 	queue_free()

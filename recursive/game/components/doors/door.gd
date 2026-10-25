@@ -88,7 +88,7 @@ func _rebake_navigation() -> void:
 			nav.bake()
 
 func _connect_rounds() -> void:
-	var map := _find_map()
+	var map := Map.of(self)
 	var rounds: RoundManager = map.get_round_manager() if map else null
 	if rounds == null: return
 	if lock_during_rounds:
@@ -106,12 +106,6 @@ func _on_round_started(_round: int) -> void:
 func _on_round_completed(_round: int) -> void:
 	_round_locked = false
 	_update_prompt()
-
-func _find_map() -> Map:
-	var node: Node = self
-	while node and not (node is Map):
-		node = node.get_parent()
-	return node as Map
 
 func _update_prompt() -> void:
 	if interactable == null: return

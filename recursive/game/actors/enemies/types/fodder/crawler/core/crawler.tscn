@@ -12,6 +12,8 @@
 [ext_resource type="Texture2D" uid="uid://8fraly8w6dfe" path="res://game/actors/enemies/types/fodder/crawler/assets/Slime_IDLE.png" id="8_03f4h"]
 [ext_resource type="Texture2D" uid="uid://cfp7knntoir16" path="res://game/actors/enemies/types/fodder/crawler/assets/Slime_WALK.png" id="9_oftu5"]
 
+[ext_resource type="Resource" path="res://game/audio/sfx/hit.tres" id="90_hurt"]
+[ext_resource type="Resource" path="res://game/audio/sfx/enemy_death.tres" id="91_death"]
 [sub_resource type="AtlasTexture" id="AtlasTexture_sjx0v"]
 atlas = ExtResource("2_oftu5")
 region = Rect2(0, 0, 64, 64)
@@ -601,6 +603,8 @@ lifetime = 0.1
 damage = 1.0
 flee_health_ratio = 0.5
 drop_table = ExtResource("4_kc0vh")
+hurt_sound = ExtResource("90_hurt")
+death_sound = ExtResource("91_death")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=7471093]
 sprite_frames = SubResource("SpriteFrames_vlhhy")

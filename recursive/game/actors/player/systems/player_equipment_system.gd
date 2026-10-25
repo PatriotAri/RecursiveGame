@@ -1,8 +1,8 @@
 class_name PlayerEquipmentSystem
 
-var player: CharacterBody2D
+var player: Player
 
-func _init(player_ref: CharacterBody2D) -> void:
+func _init(player_ref: Player) -> void:
 	player = player_ref
 
 func can_equip(data: PlayerData, item: EquippableItem) -> bool:

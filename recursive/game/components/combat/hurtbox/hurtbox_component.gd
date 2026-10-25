@@ -1,19 +1,18 @@
+class_name Hurtbox
+
 extends Area2D
 
-var _on_damage_received: Callable
+## Where an actor can be hit. Hitboxes find it on their target layer and call
+## receive_damage(); the owning actor listens to the signals.
 
+signal damaged(amount: float, apply_hitstun: bool)
 signal knockback_received(direction: Vector2, strength: float, decay: float)
 
-#gets damage received from opposition hitbox, passes it to the HealthComponent
 func receive_damage(damage: float, attacker: Area2D, apply_hitstun := true, apply_knockback := true) -> void:
-	if _on_damage_received:
-		_on_damage_received.call(damage, apply_hitstun)
-	
+	damaged.emit(damage, apply_hitstun)
 	if not apply_knockback:
 		return
-	if attacker.has_method("get_knockback_direction"):
-		var direction: Vector2 = attacker.get_knockback_direction()
-		var strength:float = attacker.knockback_strength
-		var decay: float = attacker.knockback_decay
-		if strength > 0.0:
-			knockback_received.emit(direction, strength, decay)
+	var hitbox := attacker as HitboxBase
+	if hitbox == null or hitbox.knockback_strength <= 0.0:
+		return
+	knockback_received.emit(hitbox.get_knockback_direction(), hitbox.knockback_strength, hitbox.knockback_decay)

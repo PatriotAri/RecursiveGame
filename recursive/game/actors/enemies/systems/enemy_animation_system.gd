@@ -1,34 +1,20 @@
 class_name EnemyAnimationSystem
 
-var sprite: AnimatedSprite2D
+extends ActorAnimator
+
 var data: EnemyData
 
-var _last_hurt_seq:= -1
-
 func _init(sprite_ref: AnimatedSprite2D, data_ref: EnemyData) -> void:
-	sprite = sprite_ref
+	super(sprite_ref)
 	data = data_ref
 	
 ## `attack_duration` is the swing's full length; the attack animation is
 ## stretched or squeezed to match it.
 func update(attack_duration := 0.0) -> void:
-	var animation_name:= _resolve_animation()
-	if data.current_state == EnemyData.State.ATTACK:
-		sprite.speed_scale = AnimationTiming.speed_to_fit(sprite.sprite_frames, animation_name, attack_duration)
-	else:
-		sprite.speed_scale = 1.0
-	
-	# A second hit during hitstun resolves to the same animation name, so the
-	# name check below won't replay it. The counter catches that case.
-	var restart:= data.current_state == EnemyData.State.HURT \
-		and data.hurt_seq != _last_hurt_seq
-	_last_hurt_seq = data.hurt_seq
-	
-	if sprite.animation != animation_name or restart:
-		sprite.play(animation_name)
-		if restart:
-			sprite.frame = 0
-		
+	play_state(_resolve_animation(), data.hurt_seq,
+		data.current_state == EnemyData.State.HURT,
+		data.current_state == EnemyData.State.ATTACK, attack_duration)
+
 func _resolve_animation() -> StringName:
 	var dir:= data.facing_dir if data.facing_dir != Vector2.ZERO else Vector2.DOWN
 	var dir_str:= FacingHelper.facing_to_string(dir)

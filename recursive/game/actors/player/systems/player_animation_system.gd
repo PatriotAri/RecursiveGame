@@ -1,5 +1,7 @@
 class_name PlayerAnimationSystem
 
+extends ActorAnimator
+
 ## Drives the player's sprite layers. The body ($Sprite) is the master: it
 ## picks the animation, owns the timing, and is what "animation finished"
 ## means. Feet, Arms and Head are children of it that play the same
@@ -15,10 +17,8 @@ class_name PlayerAnimationSystem
 ## in the scene); the rest draw over it in this order.
 const LAYERS: Array[StringName] = [&"Feet", &"Arms", &"Head"]
 
-var sprite: AnimatedSprite2D
 var layers: Array[AnimatedSprite2D] = []
 
-var _last_hurt_seq:= -1
 ## The scene's own frames per layer, restored when equipment stops
 ## overriding them.
 var _default_frames: Dictionary = {}
@@ -26,7 +26,7 @@ var _base_name:= ""
 var _armed_name:= ""
 
 func _init(sprite_ref: AnimatedSprite2D) -> void:
-	sprite = sprite_ref
+	super(sprite_ref)
 	for layer_name in LAYERS:
 		var layer := sprite.get_node_or_null(NodePath(String(layer_name))) as AnimatedSprite2D
 		if layer == null: continue
@@ -50,23 +50,9 @@ func set_layer_frames(layer_name: StringName, frames: SpriteFrames) -> void:
 func update(data: PlayerData, attack_duration := 0.0) -> void:
 	_base_name = _base_animation(data)
 	_armed_name = data.animation_prefix + "_" + _base_name if data.animation_prefix != "" else ""
-	var animation_name:= _resolve_for(sprite.sprite_frames)
-	
-	# A second hit during hitstun resolves to the same animation name, so the
-	# name check below won't replay it. The counter catches that case.
-	var restart:= data.current_state == PlayerData.State.HURT \
-		and data.hurt_seq != _last_hurt_seq
-	_last_hurt_seq = data.hurt_seq
-	
-	if data.current_state == PlayerData.State.ATTACK:
-		sprite.speed_scale = AnimationTiming.speed_to_fit(sprite.sprite_frames, animation_name, attack_duration)
-	else:
-		sprite.speed_scale = 1.0
-	
-	if animation_name != sprite.animation or restart:
-		sprite.play(animation_name)
-		if restart:
-			sprite.frame = 0
+	play_state(_resolve_for(sprite.sprite_frames), data.hurt_seq,
+		data.current_state == PlayerData.State.HURT,
+		data.current_state == PlayerData.State.ATTACK, attack_duration)
 	_sync_layers()
 
 #Applies the current stance to the unarmed animation name, where art for it

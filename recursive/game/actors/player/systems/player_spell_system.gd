@@ -8,13 +8,13 @@ class_name PlayerSpellSystem
 ## Emitted when the castable set or the selection changes, for the HUD.
 signal spells_changed
 
-var player: CharacterBody2D
+var player: Player
 
 var _spells: Array[Spell] = []
 var _selected := 0
 var _cooldowns: Dictionary = {}  # Spell.id -> seconds left
 
-func _init(player_ref: CharacterBody2D) -> void:
+func _init(player_ref: Player) -> void:
 	player = player_ref
 
 ## Rebuilds the castable set from the equipped weapon. Called by

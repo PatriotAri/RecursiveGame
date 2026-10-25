@@ -1,5 +1,7 @@
 class_name PlayerData
 
+extends ActorData
+
 enum State {
 	IDLE,
 	WALK,
@@ -7,14 +9,6 @@ enum State {
 	HURT,
 	DIED,
 }
-
-var is_hurt:= false
-var is_dead:= false
-
-#hitstun, ticked down in player.gd - replaces the old animation_finished hook
-var hurt_timer:= 0.0
-#bumped on every hit so the animation can tell a rehit from a held state
-var hurt_seq:= 0
 
 ## How fast facing swings round to the movement direction.
 var turn_speed:= 35.0
@@ -29,7 +23,6 @@ var interact_requested:= false
 
 #read/written by StateMachine 
 var current_state: State = State.IDLE
-var facing_dir:= Vector2.DOWN
 var facing_string: String = "S"
 
 #read/written by ModifierSystem
@@ -39,13 +32,6 @@ var run_speed: float
 #stamina costs — derived from base + equipment, read by player.gd
 var sprint_stamina_cost: float
 var attack_stamina_modifier: int = 0
-
-#acceleration/deceleration
-var acceleration: float
-var friction: float
-
-#movement modifiers (knockback, slows, dashes, etc.)
-var modifiers:= MovementModifierStack.new()
 
 #read/written by AttackSystem
 var is_attacking:= false
@@ -70,3 +56,7 @@ var inventory := Inventory.new()
 
 #equipment
 var equipment := Equipment.new()
+
+func _init() -> void:
+	# The player starts facing the camera; enemies start facing nowhere.
+	facing_dir = Vector2.DOWN

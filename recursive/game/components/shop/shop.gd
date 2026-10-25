@@ -28,7 +28,7 @@ func _on_interacted(player: Node) -> void:
 	if ui == null:
 		push_warning("%s: no ShopUi in the tree." % name)
 		return
-	ui.open(self, player)
+	ui.open(self, player as Player)
 
 func stock_left(index: int) -> int:
 	return _stock[index]

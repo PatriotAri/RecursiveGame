@@ -71,9 +71,11 @@ static func _key_text() -> String:
 	return "?"
 
 func _on_body_entered(body: Node) -> void:
-	if body.has_method("register_interactable"):
-		body.register_interactable(self)
+	var player := body as Player
+	if player:
+		player.register_interactable(self)
 
 func _on_body_exited(body: Node) -> void:
-	if body.has_method("unregister_interactable"):
-		body.unregister_interactable(self)
+	var player := body as Player
+	if player:
+		player.unregister_interactable(self)

@@ -1,10 +1,11 @@
-extends CharacterBody2D
+class_name Player
+
+extends Actor
 
 ## After equipment changes the armor total, for the HUD.
 signal armor_changed(armor: int)
 
 var data: PlayerData
-var stats: StatSystem
 
 var player_input_system: PlayerInputSystem
 var player_state_machine: PlayerStateMachine
@@ -29,11 +30,8 @@ var _base_walk_speed: float
 var _base_run_speed: float
 var _base_sprint_stamina_cost: float
 
-var _flash_tween : Tween
 var _shake_tween : Tween
-var death_handled := false
 
-@onready var sprite: AnimatedSprite2D = $Sprite
 @onready var camera: Camera2D = $tempcam
 
 @export_category("Stat Tuning")
@@ -66,15 +64,9 @@ var death_handled := false
 @export var damage:= 10.0
 @export var unarmed_offsets: HitboxOffsetData
 
-@export_group("Combat Feel")
-#how long player is locked in hitstun
-@export var hurt_duration:= 0.12
-
 @export_group("Sounds")
 ## Given to the unarmed attack. Weapons carry their own on AttackSpec.sound.
 @export var attack_sound: SoundEffect = preload("res://game/audio/sfx/swing.tres")
-@export var hurt_sound: SoundEffect = preload("res://game/audio/sfx/player_hurt.tres")
-@export var death_sound: SoundEffect = preload("res://game/audio/sfx/player_death.tres")
 
 @export_group("Movement")
 @export var walk_speed:= 100.0
@@ -105,8 +97,8 @@ func _ready() -> void:
 		Stat.new(max_mana, mana_regen_per_second, mana_regen_delay)
 	)
 	stats.armor = armor
-	stats.health.emptied.connect(_on_health_emptied)
 	stats.stamina.emptied.connect(_on_stamina_emptied)
+	_setup_actor(data)
 	
 	var unarmed := AttackSpec.new()
 	unarmed.scene = GlobalPackedScenes.player_unarmed_hitbox
@@ -133,25 +125,9 @@ func _ready() -> void:
 	player_interaction_system = PlayerInteractionSystem.new(self)
 	player_equipment_system = PlayerEquipmentSystem.new(self)
 	player_animation_system = PlayerAnimationSystem.new(sprite)
-	
-	$Hurtbox._on_damage_received = _on_damage_received
-	$Hurtbox.knockback_received.connect(_on_knockback_received)
 
-func _physics_process(delta: float) -> void:
-	if data.is_dead:
-		if not death_handled:
-			death_handled = true
-			_handle_death()
-		return
-	stats.update(delta)
+func _actor_process(delta: float) -> void:
 	player_input_system.update(data)
-	
-	#hitstun is a timer now, ticks before the state machine
-	if data.hurt_timer > 0.0:
-		data.hurt_timer -= delta
-		if data.hurt_timer <= 0.0:
-			data.is_hurt = false
-	
 	player_spell_system.update(data, delta)
 	player_interaction_system.update(data)
 	_update_stamina(delta)
@@ -256,33 +232,14 @@ func _drop_weapon_if_out_of_ammo() -> void:
 func _on_stamina_emptied() -> void:
 	data.is_exhausted = true
 
-func _on_damage_received(damage_amount: float, apply_hitstun: bool) -> void:
-	var dealt := stats.take_damage(damage_amount)
-	DamageNumber.spawn(get_parent(), combat_anchor() + Vector2(0, -20), dealt, Color(1, 0.35, 0.35))
-	HitSpark.spawn(get_parent(), combat_anchor(), Color(1, 0.5, 0.5))
+## Every hit jolts the camera, staggering or not.
+func _on_hit(_dealt: int) -> void:
 	shake_camera(3.0, 0.15)
-	if data.is_dead:
-		return
-	play_sound(hurt_sound)
-	_flash_damage()
-	if not apply_hitstun:
-		return
-	# Re-arming the timer on every hit is what kills the permanent freeze:
-	# the old code waited on an animation_finished that never fires when the
-	# hurt state is re-entered without the animation name changing.
-	data.is_hurt = true
-	data.hurt_timer = hurt_duration
-	data.hurt_seq += 1
-	# An interrupted swing takes its hitbox with it.
+
+## An interrupted swing takes its hitbox with it.
+func _on_staggered() -> void:
 	player_attack_system.cancel(data)
 	player_hitbox_manager.cancel_all()
-
-func _on_health_emptied() -> void:
-	data.is_dead = true
-
-func _on_knockback_received(direction: Vector2, strength: float, decay: float) -> void:
-	var knockback := MovementModifier.create_impulse(&"knockback", direction, strength, decay)
-	data.modifiers.add(knockback)
 
 # --- save / load ------------------------------------------------------------
 
@@ -333,15 +290,6 @@ func register_interactable(interactable: Interactable) -> void:
 func unregister_interactable(interactable: Interactable) -> void:
 	player_interaction_system.unregister(interactable)
 
-## Plays a sound at the player's position. Null is silent.
-func play_sound(effect: SoundEffect) -> void:
-	AudioManager.play_sfx(effect, global_position)
-
-## The point other actors aim at. Movement wants our feet (global_position);
-## combat wants the middle of what it has to hit.
-func combat_anchor() -> Vector2:
-	return $Hurtbox/CollisionShape2D.global_position
-
 ## Stops the camera at the edges of `bounds`. An empty rect lifts the limits.
 func set_camera_limits(bounds: Rect2) -> void:
 	if camera == null: return
@@ -365,21 +313,8 @@ func shake_camera(strength: float, duration: float) -> void:
 		_shake_tween.tween_property(camera, "offset", jolt, duration / (steps + 1))
 	_shake_tween.tween_property(camera, "offset", Vector2.ZERO, duration / (steps + 1))
 
-## Feedback that a hit landed, separate from whether it staggered. Every hit
-## flashes; only some of them interrupt.
-func _flash_damage() -> void:
-	# A second hit mid-flash would otherwise leave two tweens fighting over
-	# modulate, and the sprite can end up stuck tinted.
-	if _flash_tween and _flash_tween.is_valid():
-		_flash_tween.kill()
-	sprite.modulate = Color(1, 0.3, 0.3)
-	_flash_tween = create_tween()
-	_flash_tween.tween_property(sprite, "modulate", Color.WHITE, 0.15)
-
 func _handle_death() -> void:
-	$Collision.set_deferred("disabled", true)
-	$Hurtbox.set_deferred("monitorable", false)
-	play_sound(death_sound)
+	super()
 	player_state_machine.update(data)
 	player_animation_system.update(data)
 	await sprite.animation_finished

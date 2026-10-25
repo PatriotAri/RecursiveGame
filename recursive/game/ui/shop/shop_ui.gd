@@ -19,7 +19,7 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	close_button.pressed.connect(close)
 
-func open(shop_ref: Shop, player: Node) -> void:
+func open(shop_ref: Shop, player: Player) -> void:
 	if visible: return
 	shop = shop_ref
 	inventory = player.data.inventory

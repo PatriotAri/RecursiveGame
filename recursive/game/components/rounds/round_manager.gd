@@ -70,13 +70,15 @@ func remaining() -> int:
 
 func _on_enemy_spawned(enemy: Node) -> void:
 	_alive.append(enemy)
-	if enemy.has_signal(&"died"):
-		enemy.died.connect(_check)
+	var actor := enemy as Actor
+	if actor:
+		actor.died.connect(_check)
 	enemy.tree_exited.connect(_check)
 	_check()
 
 func _is_dead(enemy: Node) -> bool:
-	return "data" in enemy and enemy.data != null and enemy.data.is_dead
+	var actor := enemy as Actor
+	return actor != null and actor.actor_data != null and actor.actor_data.is_dead
 
 func _check() -> void:
 	if not is_inside_tree(): return

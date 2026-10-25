@@ -6,7 +6,7 @@ extends RefCounted
 const LAYER_PLAYER_HURTBOX := 16   # layer 5
 const LAYER_ENEMY_HURTBOX := 32    # layer 6
 
-var body: CharacterBody2D
+var body: Actor
 var target_layer: int
 
 ## Returns the actor's current facing. Supplied by the actor, so this class
@@ -16,7 +16,7 @@ var facing_provider: Callable
 var active_hitboxes: Array[HitboxBase] = []
 var attack_registry: Dictionary = {}
 
-func _init(body_ref: CharacterBody2D, layer: int, facing_source: Callable) -> void:
+func _init(body_ref: Actor, layer: int, facing_source: Callable) -> void:
 	body = body_ref
 	target_layer = layer
 	facing_provider = facing_source

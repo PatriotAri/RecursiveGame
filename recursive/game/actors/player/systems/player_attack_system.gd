@@ -1,6 +1,6 @@
 class_name PlayerAttackSystem
 
-var player: CharacterBody2D
+var player: Player
 var player_hitbox_manager: HitboxManagerBase
 
 var attack_timer:= 0.0
@@ -8,7 +8,7 @@ var attack_duration:= 0.0
 
 var pending_spawn:= false
 
-func _init(player_ref: CharacterBody2D, hb_ref: HitboxManagerBase) -> void:
+func _init(player_ref: Player, hb_ref: HitboxManagerBase) -> void:
 	player = player_ref
 	player_hitbox_manager = hb_ref
 	# unarmed is the permanent fallback, so it's the one attack that must

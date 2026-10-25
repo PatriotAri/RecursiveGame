@@ -16,11 +16,11 @@ var _rounds: RoundManager
 
 func _ready() -> void:
 	SaveManager.saved.connect(_show_toast.bind("Game saved"))
-	var player := get_tree().get_first_node_in_group(&"player")
+	var player := get_tree().get_first_node_in_group(&"player") as Player
 	if player == null:
 		await get_tree().process_frame
-		player = get_tree().get_first_node_in_group(&"player")
-	if player == null or not ("stats" in player):
+		player = get_tree().get_first_node_in_group(&"player") as Player
+	if player == null:
 		push_warning("Hud: no player found to bind to.")
 		return
 	health_bar.bind(player.stats.health)
@@ -35,7 +35,7 @@ func _ready() -> void:
 	
 	# The map was loaded before this ran, so bind to it now and follow every
 	# later map change.
-	var game := get_tree().get_first_node_in_group(&"game")
+	var game := get_tree().get_first_node_in_group(&"game") as Game
 	if game:
 		game.map_changed.connect(_on_map_changed)
 		if game.current_map: _on_map_changed(game.current_map)

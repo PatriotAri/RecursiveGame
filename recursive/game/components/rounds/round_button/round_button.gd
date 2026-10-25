@@ -18,10 +18,8 @@ func _ready() -> void:
 	_connect.call_deferred()
 
 func _connect() -> void:
-	var node: Node = self
-	while node and not (node is Map):
-		node = node.get_parent()
-	rounds = (node as Map).get_round_manager() if node else null
+	var map := Map.of(self)
+	rounds = map.get_round_manager() if map else null
 	if rounds == null:
 		push_warning("%s: no RoundManager in this map." % name)
 		interactable.enabled = false
