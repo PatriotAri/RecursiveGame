@@ -13,7 +13,7 @@ func _ready() -> void:
 	interactable.interacted.connect(_on_interacted)
 
 func _on_interacted(_player: Node) -> void:
-	get_tree().paused = false
+	Menus.reset()
 	# Deferred: this runs inside the player's _physics_process, and
 	# change_scene_to_file() pulls the current scene out of the tree on the
 	# spot — the player would finish its frame (move_and_slide) outside it.

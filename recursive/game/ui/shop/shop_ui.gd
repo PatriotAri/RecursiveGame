@@ -1,7 +1,6 @@
 extends CanvasLayer
 
-## The buy screen for whichever Shop opened it. Pauses the game while open,
-## the same way the inventory does, and only releases a pause it took.
+## The buy screen for whichever Shop opened it. Pausing is Menus' job.
 
 @onready var title: Label = %Title
 @onready var gold_label: Label = %Gold
@@ -11,7 +10,6 @@ extends CanvasLayer
 
 var shop: Shop
 var inventory: Inventory
-var _paused_by_me:= false
 
 func _ready() -> void:
 	add_to_group(&"shop_ui")
@@ -25,38 +23,23 @@ func open(shop_ref: Shop, player: Player) -> void:
 	inventory = player.data.inventory
 	if not inventory.changed.is_connected(_on_inventory_changed):
 		inventory.changed.connect(_on_inventory_changed)
-	visible = true
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	if not get_tree().paused:
-		get_tree().paused = true
-		_paused_by_me = true
+	Menus.open(self)
 	title.text = shop.shop_name
 	_rebuild()
 
 func close() -> void:
 	if not visible: return
-	visible = false
 	if inventory and inventory.changed.is_connected(_on_inventory_changed):
 		inventory.changed.disconnect(_on_inventory_changed)
-	if _paused_by_me and not _other_pause_holder_visible():
-		get_tree().paused = false
-		Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED_HIDDEN)
-	_paused_by_me = false
+	Menus.close(self)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not visible: return
-	# Interact again walks away from the counter; pause is handled by the
-	# pause menu, which closes this first.
+	# Interact again walks away from the counter; the pause key goes through
+	# Menus, which closes this as the top menu.
 	if event.is_action_pressed(&"interact"):
 		close()
 		get_viewport().set_input_as_handled()
-
-func _other_pause_holder_visible() -> bool:
-	for group in [&"death_screen", &"pause_menu", &"inventory_ui"]:
-		var node := get_tree().get_first_node_in_group(group)
-		if node and node.visible:
-			return true
-	return false
 
 func _on_inventory_changed(_item: Item, _count: int) -> void:
 	_rebuild()

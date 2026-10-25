@@ -27,8 +27,6 @@ var _tab_group := ButtonGroup.new()
 var _displayed_id: StringName = &""
 var _active_tab: int = TAB_ALL
 var _dirty := true
-## True only while this menu owns the pause it took in open().
-var _paused_by_me := false
 
 func _ready() -> void:
 	add_to_group(&"inventory_ui")
@@ -94,38 +92,19 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not event.is_action_pressed(&"inventory"): return
 	if visible:
 		close()
-	elif _can_open():
+	elif not Menus.any_open():
+		# Only from play — not stacked on top of the pause menu or a shop.
 		open()
 	get_viewport().set_input_as_handled()
 
-func _can_open() -> bool:
-	return not get_tree().paused and not _other_pause_holder_visible()
-
 func open() -> void:
-	visible = true
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	if not get_tree().paused:
-		get_tree().paused = true
-		_paused_by_me = true
+	Menus.open(self)
 	if _dirty: _rebuild()
 	_focus_selected_or_first()
 
+## Menus keeps the game paused if anything else is still open.
 func close() -> void:
-	visible = false
-	# Only release the pause we took ourselves, and only if nothing else still
-	# needs the game frozen. Unconditionally unpausing resumed the game
-	# underneath the death screen if the inventory was open when you died.
-	if _paused_by_me and not _other_pause_holder_visible():
-		get_tree().paused = false
-		Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED_HIDDEN)
-	_paused_by_me = false
-
-func _other_pause_holder_visible() -> bool:
-	for group in [&"death_screen", &"pause_menu", &"shop_ui"]:
-		var node := get_tree().get_first_node_in_group(group)
-		if node and node.visible:
-			return true
-	return false
+	Menus.close(self)
 
 # --- list ---------------------------------------------------------------
 

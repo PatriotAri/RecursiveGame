@@ -56,7 +56,7 @@ func load_game() -> bool:
 	var data := read_save()
 	if data.is_empty(): return false
 	_pending = data
-	get_tree().paused = false
+	Menus.reset()
 	get_tree().change_scene_to_file(GAME_SCENE)
 	return true
 

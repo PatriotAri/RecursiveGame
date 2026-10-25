@@ -9,8 +9,8 @@ extends CanvasLayer
 
 func _ready() -> void:
 	add_to_group(&"pause_menu")
+	Menus.pause_menu = self
 	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED_HIDDEN)
-	set_process_input(true)
 	#starts the pause menu hidden
 	visible = false
 	#processes the node even when paused
@@ -26,49 +26,23 @@ func _ready() -> void:
 	$Background/ControlsPanel/VBoxContainer/BackButton.pressed.connect(_on_controls_back_pressed)
 	controls_panel.visible = false
 	
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("pause"):
-		var death_screen := get_tree().get_first_node_in_group(&"death_screen")
-		if death_screen and death_screen.visible:
-			get_viewport().set_input_as_handled()
-			return
-		var inventory_ui :=  get_tree().get_first_node_in_group(&"inventory_ui")
-		if inventory_ui and inventory_ui.visible:
-			inventory_ui.close()
-			get_viewport().set_input_as_handled()
-			return
-		var shop_ui := get_tree().get_first_node_in_group(&"shop_ui")
-		if shop_ui and shop_ui.visible:
-			shop_ui.close()
-			get_viewport().set_input_as_handled()
-			return
-		if get_tree().paused:
-			resume()
-		else:
-			pause()
-			#consumes input so nothing else reacts
-		get_viewport().set_input_as_handled()
-		
-func pause() -> void:
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+## Opened by Menus when the pause key is pressed with nothing else open.
+func open() -> void:
 	status_label.text = ""
 	load_button.disabled = not SaveManager.has_save()
-	visible = true
-	get_tree().paused = true
+	Menus.open(self)
 
-func resume() -> void:
-	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED_HIDDEN)
+func close() -> void:
 	controls_panel.visible = false
 	audio_settings.visible = false
 	menu_container.visible = true
-	visible = false
-	get_tree().paused = false
-	
+	Menus.close(self)
+
 func _on_resume_button_pressed() -> void:
-	resume()
+	close()
 
 func _on_main_menu_button_pressed() -> void:
-	get_tree().paused = false
+	Menus.reset()
 	get_tree().change_scene_to_file("res://main.tscn")
 	
 func _on_quit_button_pressed() -> void:
