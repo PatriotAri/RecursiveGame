@@ -1,0 +1,17 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/ui/hud/spell_slot/spell_slot.gd" id="1_slot"]
+
+[node name="SpellSlot" type="HBoxContainer"]
+visible = false
+script = ExtResource("1_slot")
+
+[node name="Icon" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+size_flags_vertical = 4

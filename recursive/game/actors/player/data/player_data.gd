@@ -23,6 +23,8 @@ var facing_turn_speed:= 35.0
 var move_vector:= Vector2.ZERO
 var is_running:= false
 var attack_requested:= false
+var cast_requested:= false
+var cycle_spell_requested:= false
 
 #read/written by StateMachine 
 var current_state: State = State.IDLE
@@ -49,6 +51,12 @@ var is_attacking:= false
 ## Which registered attack a swing spawns. Points at the equipped weapon's
 ## attack, or back at unarmed when nothing is equipped.
 var current_attack: StringName = &"unarmed"
+## The selected spell's registered attack, or empty with nothing to cast.
+## Set by PlayerSpellSystem.
+var current_spell_attack: StringName = &""
+## The attack actually in progress — current_attack for a swing,
+## current_spell_attack for a cast. Set by PlayerAttackSystem.
+var active_attack: StringName = &"unarmed"
 ## The animation set that attack uses. Set with current_attack, so the two
 ## can never disagree about which weapon is in hand.
 var animation_prefix := ""

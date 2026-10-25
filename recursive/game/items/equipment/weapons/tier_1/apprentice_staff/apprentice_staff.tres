@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="EnchantedEquippableItem" format=3]
+
+[ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/iron_sword/iron_sword_attack_offsets.tres" id="1_m4ms3"]
+[ext_resource type="PackedScene" path="res://game/actors/player/hitboxes/sword_hitbox.tscn" id="2_vc6aa"]
+[ext_resource type="Script" path="res://game/components/hitbox/attack_spec.gd" id="3_3vjyt"]
+[ext_resource type="Resource" path="res://game/audio/sfx/swing.tres" id="4_y862p"]
+[ext_resource type="Script" path="res://game/items/equipment/core/stat_bonuses.gd" id="5_jndu7"]
+[ext_resource type="Texture2D" path="res://game/items/equipment/weapons/tier_1/apprentice_staff/Apprentice Staff.png" id="6_lphck"]
+[ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/iron_sword/iron_sword_hold_offsets.tres" id="7_0r81y"]
+[ext_resource type="Script" path="res://game/items/equipment/core/enchanted_equippable_item.gd" id="8_mbmr1"]
+[ext_resource type="Script" path="res://game/spells/core/spell.gd" id="9_1t57l"]
+[ext_resource type="Resource" path="res://game/spells/fireball/fireball.tres" id="10_7jc4s"]
+
+[sub_resource type="Resource" id="Resource_x1akx"]
+script = ExtResource("3_3vjyt")
+scene = ExtResource("2_vc6aa")
+offsets = ExtResource("1_m4ms3")
+damage = 4.0
+knockback_strength = 80.0
+hitstun_chance = 0.2
+knockback_chance = 0.4
+windup_time = 0.2
+lifetime = 0.25
+attack_stamina_cost = 3
+sound = ExtResource("4_y862p")
+reach_radius = 24.0
+
+[sub_resource type="Resource" id="Resource_5vrx3"]
+script = ExtResource("5_jndu7")
+max_mana = 10
+
+[resource]
+script = ExtResource("8_mbmr1")
+spells = Array[ExtResource("9_1t57l")]([ExtResource("10_7jc4s")])
+attack = SubResource("Resource_x1akx")
+bonuses = SubResource("Resource_5vrx3")
+held_texture = ExtResource("6_lphck")
+hold_offsets = ExtResource("7_0r81y")
+rest_angle_degrees = -90.0
+grip_offset = Vector2(0, -12)
+swing_arc_degrees = 70.0
+id = &"apprentice_staff"
+display_name = "Apprentice Staff"
+description = "A plain staff with a crystal that hums with heat.
++10 max mana.
+RMB: cast Fireball (4 mana)."
+icon = ExtResource("6_lphck")
+category = 2

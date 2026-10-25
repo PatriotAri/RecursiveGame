@@ -86,6 +86,8 @@ layout_mode = 2
 text = "WASD - Move
 Shift - Run
 LMB - Attack
+RMB - Cast spell (staff)
+Q - Next spell
 ESC - Pause
 I - Inventory
 LMB - Use inventory item"

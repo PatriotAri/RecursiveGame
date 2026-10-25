@@ -3,6 +3,7 @@ extends CanvasLayer
 @onready var health_bar: Control = $Bars/VBox/HealthBar
 @onready var stamina_bar: Control = $Bars/VBox/StaminaBar
 @onready var mana_bar: Control = $Bars/VBox/ManaBar
+@onready var spell_slot: Control = $Bars/VBox/SpellSlot
 
 @onready var gold_counter: Control = $Counters/GoldCounter
 @onready var soul_counter: Control = $Counters/SoulCounter
@@ -18,6 +19,7 @@ func _ready() -> void:
 	health_bar.bind(player.stats.health)
 	stamina_bar.bind(player.stats.stamina)
 	mana_bar.bind(player.stats.mana)
+	spell_slot.bind(player.player_spell_system)
 	
 	gold_counter.bind(player.data.inventory)
 	soul_counter.bind(player.data.inventory)

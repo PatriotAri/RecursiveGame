@@ -34,6 +34,7 @@ func try_unequip(data: PlayerData, slot: EquippableItem.Slot) -> bool:
 ## the last item" step to get wrong.
 func _refresh(data: PlayerData) -> void:
 	_refresh_weapon(data)
+	player.player_spell_system.refresh(data)
 	player.apply_stat_bonuses(StatBonuses.stat_total(data.equipment.get_bonuses()))
 	# A swing in flight belongs to the weapon you were holding a moment ago.
 	# Without this, post_update() would spawn the NEW weapon's hitbox on the

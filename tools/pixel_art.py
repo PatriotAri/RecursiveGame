@@ -75,10 +75,54 @@ THROWING_DAGGER = [
     "..k..",
 ]
 
+FIREBALL = [
+    "....oo....",
+    "...oyyo...",
+    "..oyyyyo..",
+    ".oyywwyyo.",
+    "oyywwwwyyo",
+    "oyywwwwyyo",
+    ".oyywwyyo.",
+    "..oyyyyo..",
+    "...ryyr...",
+    "....rr....",
+]
+
+STAFF = [
+    "...kkk...",
+    "..kcCck..",
+    ".kcwcCck.",
+    ".kCccCCk.",
+    "..kCCCk..",
+    "...kgk...",
+    "...kGk...",
+    "...kbk...",
+    "...kbk...",
+    "...kBk...",
+    "...kbk...",
+    "...kbk...",
+    "...kBk...",
+    "...kbk...",
+    "...kbk...",
+    "...kBk...",
+    "...kbk...",
+    "...kbk...",
+    "...kBk...",
+    "...kbk...",
+    "...kbk...",
+    "...kBk...",
+    "...kbk...",
+    "...kgk...",
+    "....k....",
+]
+
 SPRITES = {
     "items/equipment/weapons/tier_1/throwing_dagger/Throwing Dagger.png": (THROWING_DAGGER, (32, 32)),
     # Tight canvas for the thrown version so its collision shape and sprite agree.
     "items/equipment/weapons/tier_1/throwing_dagger/throwing_dagger_projectile.png": (THROWING_DAGGER, (5, 15)),
+    "spells/fireball/fireball.png": (FIREBALL, (10, 10)),
+    "spells/fireball/Fireball Icon.png": (FIREBALL, (32, 32)),
+    "items/equipment/weapons/tier_1/apprentice_staff/Apprentice Staff.png": (STAFF, (32, 32)),
 }
 
 if __name__ == "__main__":

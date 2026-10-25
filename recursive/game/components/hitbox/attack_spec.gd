@@ -41,8 +41,9 @@ const DIRECTIONS := ["right", "left", "up", "down",
 @export var ammo_id: StringName = &""
 @export var ammo_cost := 1
 
-@export_group("Stamina")
+@export_group("Costs")
 @export var attack_stamina_cost := 5
+@export var mana_cost := 0
 
 @export_group("Feedback")
 ## Played by whoever starts the attack, at the attacker. Null is silent.

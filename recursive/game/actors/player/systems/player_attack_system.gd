@@ -30,13 +30,17 @@ func update(data: PlayerData, delta: float) -> void:
 		if attack_timer <= 0.0:
 			data.is_attacking = false
 	
-	# Start new attack if input received and not currently attacking
-	if data.attack_requested and not data.is_attacking:
+	# Start new attack if input received and not currently attacking. A swing
+	# wins over a cast requested on the same frame.
+	if (data.attack_requested or data.cast_requested) and not data.is_attacking:
+		var attack_name := data.current_attack if data.attack_requested else data.current_spell_attack
 		data.attack_requested = false
-		var spec := player_hitbox_manager.get_spec(data.current_attack)
+		data.cast_requested = false
+		var spec := player_hitbox_manager.get_spec(attack_name)
 		if spec == null:
-			push_warning("PlayerAttackSystem: no attack registered for '%s'." % data.current_attack)
+			push_warning("PlayerAttackSystem: no attack registered for '%s'." % attack_name)
 			return
+		data.active_attack = attack_name
 		data.is_attacking = true
 		# Timing comes from the spec, so a weapon with a slower windup locks
 		# the player out for its own duration rather than the punch's.
@@ -49,6 +53,7 @@ func update(data: PlayerData, delta: float) -> void:
 func cancel(data: PlayerData) -> void:
 	data.is_attacking = false
 	data.attack_requested = false
+	data.cast_requested = false
 	attack_timer = 0.0
 	attack_duration = 0.0
 	pending_spawn = false
@@ -60,7 +65,7 @@ func post_update(data: PlayerData) -> void:
 	
 	if pending_spawn:
 		pending_spawn = false
-		player_hitbox_manager.spawn_hitbox(data.current_attack)
+		player_hitbox_manager.spawn_hitbox(data.active_attack)
 		
 ## 0 at the start of a swing, 1 at the end. Anything animating off the swing
 ## reads this rather than running its own timer, so a visual can't drift out

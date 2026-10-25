@@ -9,6 +9,7 @@ var player_attack_system: PlayerAttackSystem
 var player_movement_system: PlayerMovementSystem
 var player_consumable_system: PlayerConsumableSystem
 var player_equipment_system: PlayerEquipmentSystem
+var player_spell_system: PlayerSpellSystem
 var player_animation_system: PlayerAnimationSystem
 var player_weapon_visual_system: PlayerWeaponVisualSystem
 
@@ -115,6 +116,7 @@ func _ready() -> void:
 	player_movement_system = PlayerMovementSystem.new(self)
 	player_consumable_system = PlayerConsumableSystem.new(self)
 	player_weapon_visual_system = PlayerWeaponVisualSystem.new($Sprite/Weapon)
+	player_spell_system = PlayerSpellSystem.new(self)
 	player_equipment_system = PlayerEquipmentSystem.new(self)
 	player_animation_system = PlayerAnimationSystem.new(sprite)
 	
@@ -136,6 +138,7 @@ func _physics_process(delta: float) -> void:
 		if data.hurt_timer <= 0.0:
 			data.is_hurt = false
 	
+	player_spell_system.update(data, delta)
 	_update_stamina(delta)
 	
 	if data.move_vector != Vector2.ZERO:
@@ -148,11 +151,13 @@ func _physics_process(delta: float) -> void:
 	var was_attacking := data.is_attacking
 	player_attack_system.update(data, delta)
 	if not was_attacking and data.is_attacking:
-		stats.stamina.remove(current_attack_stamina_cost())
-		var spec := player_hitbox_manager.get_spec(data.current_attack)
+		var spec := player_hitbox_manager.get_spec(data.active_attack)
 		if spec:
+			stats.stamina.remove(stamina_cost_of(spec))
+			stats.mana.remove(spec.mana_cost)
 			_spend_ammo(spec)
 			play_sound(spec.sound)
+		player_spell_system.on_attack_started(data.active_attack)
 	elif was_attacking and not data.is_attacking:
 		_drop_weapon_if_out_of_ammo()
 	player_state_machine.update(data)
@@ -179,10 +184,9 @@ func apply_stat_bonuses(bonuses: StatBonuses) -> void:
 	data.sprint_stamina_cost = maxf(_base_sprint_stamina_cost + bonuses.sprint_stamina_cost, 0.0)
 	data.attack_stamina_modifier = bonuses.attack_stamina_cost
 
-## What one swing of the current attack costs, after equipment. Computed per
+## What one use of an attack costs in stamina, after equipment. Computed per
 ## swing rather than stored, because it depends on which weapon is equipped.
-func current_attack_stamina_cost() -> int:
-	var spec := player_hitbox_manager.get_spec(data.current_attack)
+func stamina_cost_of(spec: AttackSpec) -> int:
 	if spec == null: return 0
 	return maxi(spec.attack_stamina_cost + data.attack_stamina_modifier, 0)
 
@@ -200,16 +204,21 @@ func _update_stamina(delta: float) -> void:
 
 	# Refuse an unaffordable swing before the attack system sees the request,
 	# so the input isn't eaten and the animation never plays for free.
-	if data.attack_requested and not data.is_attacking:
-		if not can_afford_attack():
+	if not data.is_attacking:
+		if data.attack_requested and not can_afford_attack(data.current_attack):
 			data.attack_requested = false
+		if data.cast_requested and not can_afford_attack(data.current_spell_attack):
+			data.cast_requested = false
 
-## Stamina and, for attacks that use it, ammo.
-func can_afford_attack() -> bool:
-	if not stats.stamina.can_afford(current_attack_stamina_cost()):
+## Stamina, mana and, for attacks that use it, ammo.
+func can_afford_attack(attack_name: StringName) -> bool:
+	var spec := player_hitbox_manager.get_spec(attack_name)
+	if spec == null: return false
+	if not stats.stamina.can_afford(stamina_cost_of(spec)):
 		return false
-	var spec := player_hitbox_manager.get_spec(data.current_attack)
-	if spec and spec.ammo_id != &"":
+	if not stats.mana.can_afford(spec.mana_cost):
+		return false
+	if spec.ammo_id != &"":
 		return data.inventory.get_count(spec.ammo_id) >= spec.ammo_cost
 	return true
 
