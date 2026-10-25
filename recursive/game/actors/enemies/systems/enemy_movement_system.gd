@@ -1,7 +1,7 @@
-class_name CrawlerMovementSystem
+class_name EnemyMovementSystem
 
 #references
-var body: CharacterBody2D
+var body: Enemy
 var data: EnemyData
 
 #patrol variables
@@ -11,11 +11,11 @@ var patrol_target:= Vector2.ZERO
 var min_patrol_distance: float
 var max_attempts:= 10
 var arrival_threshold:= 5.0
-# The crawler's own intent-driven velocity. Impulses are layered onto
+# The enemy's own intent-driven velocity. Impulses are layered onto
 # body.velocity for one frame only and never stored back here.
 var locomotion := Vector2.ZERO
 
-func _init(body_ref: CharacterBody2D, data_ref: EnemyData) -> void:
+func _init(body_ref: Enemy, data_ref: EnemyData) -> void:
 	body = body_ref
 	data = data_ref
 	
@@ -23,7 +23,7 @@ func _init(body_ref: CharacterBody2D, data_ref: EnemyData) -> void:
 	patrol_timer = body.patrol_timer
 	min_patrol_distance = body.min_patrol_distance
 	
-	pick_patrol_target() #sets patrol point on crawler spawn
+	pick_patrol_target() #sets patrol point on spawn
 
 func update(delta: float) -> void:
 	data.modifiers.update(delta)

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bmonh3sf35441"]
 
 [ext_resource type="Script" uid="uid://bex0jclbed1so" path="res://game/actors/enemies/types/fodder/crawler/core/crawler.gd" id="1_iskh7"]
-[ext_resource type="Script" uid="uid://b78qrelon2r6a" path="res://game/actors/enemies/types/fodder/crawler/systems/crawler_detection_system.gd" id="2_et6g1"]
+[ext_resource type="Script" uid="uid://b78qrelon2r6a" path="res://game/actors/enemies/systems/enemy_detection_system.gd" id="2_et6g1"]
 [ext_resource type="PackedScene" uid="uid://dr8dgg3mtr20a" path="res://game/actors/enemies/types/fodder/crawler/hitboxes/CrawlerMeleeHitbox.tscn" id="2_k1huj"]
 [ext_resource type="Texture2D" uid="uid://d2xia3iwmytx8" path="res://game/actors/enemies/types/fodder/crawler/assets/slime_ATTACK.png" id="2_oftu5"]
 [ext_resource type="Resource" uid="uid://b3r4taoidcymg" path="res://game/actors/enemies/types/fodder/crawler/hitboxes/crawler_melee_offsets.tres" id="3_0pbox"]
@@ -598,8 +598,8 @@ collision_layer = 4
 collision_mask = 7
 platform_floor_layers = 0
 script = ExtResource("1_iskh7")
-crawler_hitbox = ExtResource("2_k1huj")
-crawler_melee_offsets = ExtResource("3_0pbox")
+melee_hitbox = ExtResource("2_k1huj")
+melee_offsets = ExtResource("3_0pbox")
 lifetime = 0.1
 damage = 1.0
 drop_table = ExtResource("4_kc0vh")

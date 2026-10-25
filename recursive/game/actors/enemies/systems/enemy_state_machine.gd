@@ -1,4 +1,4 @@
-class_name CrawlerStateMachine
+class_name EnemyStateMachine
 
 var attack_cooldown_duration := 1.5
 

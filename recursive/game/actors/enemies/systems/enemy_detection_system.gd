@@ -1,10 +1,10 @@
-class_name CrawlerDetectionSystem
+class_name EnemyDetectionSystem
 
 extends Area2D
 
-#data injected from crawler.gd _ready(), 
+#data injected from enemy.gd _ready()
 var data: EnemyData
-var body: CharacterBody2D
+var body: Enemy
 
 #defaults player ref to null(empty)
 var player: CharacterBody2D = null
@@ -20,7 +20,7 @@ var _shape_offset := Vector2.ZERO
 var _player_inside := false
 var _forget_timer := 0.0
 
-func initialize(data_ref: EnemyData, body_ref: CharacterBody2D) -> void:
+func initialize(data_ref: EnemyData, body_ref: Enemy) -> void:
 	data = data_ref
 	body = body_ref
 	
@@ -65,7 +65,7 @@ func update(delta: float) -> void:
 	update_attack_range()
 
 # Parameter renamed from `body` — the original shadowed the member above it,
-# so inside this function `body` meant the player, not the crawler.
+# so inside this function `body` meant the player, not the enemy.
 func _on_body_entered(entered: Node) -> void:
 	#if player enters detection area then
 	if entered.is_in_group(&"player"):

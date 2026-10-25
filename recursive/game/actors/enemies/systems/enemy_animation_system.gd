@@ -1,4 +1,4 @@
-class_name CrawlerAnimationSystem
+class_name EnemyAnimationSystem
 
 var sprite: AnimatedSprite2D
 var data: EnemyData
