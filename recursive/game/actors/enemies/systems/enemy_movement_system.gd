@@ -118,6 +118,8 @@ func pick_patrol_target() -> void:
 		patrol_target = body.global_position
 		return
 		
+	# Only the zone's rectangle is read, for its size. It takes no part in
+	# physics: no layer, no mask, no monitoring.
 	var zone:= body.get_node("PatrolZone")
 	var shape:= zone.get_node("CollisionShape2D").shape as RectangleShape2D
 	var half:= shape.size / 2.0

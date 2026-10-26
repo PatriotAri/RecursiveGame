@@ -66,8 +66,8 @@ func _aim_direction(origin: Vector2) -> Vector2:
 
 func _on_area_entered(area: Area2D) -> void:
 	# Only something that takes damage stops it. Watching the Environment
-	# layer for walls also turns up plain areas there (an enemy's patrol zone,
-	# say), and those it flies straight through.
+	# layer for walls also turns up any plain area left on that layer, and
+	# those it flies straight through.
 	if not _active or _hits_left <= 0 or not area.has_method("receive_damage"):
 		return
 	var hits_before := _hit_ids.size()

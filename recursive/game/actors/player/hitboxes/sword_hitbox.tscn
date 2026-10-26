@@ -6,6 +6,8 @@
 radius = 24.0
 
 [node name="SwordHitbox" type="Area2D" unique_id=395331102]
+collision_layer = 0
+collision_mask = 0
 script = ExtResource("1_55owg")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1629390484]
