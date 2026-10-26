@@ -173,7 +173,7 @@ func _restore_drop(drop: Dictionary) -> void:
 	# Only scenes from the game itself: a save file is player-editable.
 	if scene_path.begins_with("res://") and ResourceLoader.exists(scene_path):
 		scene = load(scene_path) as PackedScene
-	var item:= ItemRegistry.get_item(StringName(drop["item"]))
+	var item:= ContentRegistry.get_item(StringName(drop["item"]))
 	if scene == null or item == null:
 		push_warning("%s: skipped a saved drop (%s, %s)." % [name, scene_path, drop["item"]])
 		return

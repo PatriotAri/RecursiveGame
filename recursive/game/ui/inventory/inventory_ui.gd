@@ -1,6 +1,8 @@
 extends CanvasLayer
 
 const TAB_ALL := -1
+## Lists known spells instead of inventory items.
+const TAB_SPELLS := -2
 
 @export var row_scene: PackedScene
 
@@ -25,6 +27,8 @@ var player: Node
 
 var _tab_group := ButtonGroup.new()
 var _displayed_id: StringName = &""
+## The Spells tab's equivalent of _displayed_id.
+var _displayed_spell: Spell
 var _active_tab: int = TAB_ALL
 var _dirty := true
 ## True only while this menu owns the pause it took in open().
@@ -46,6 +50,8 @@ func _ready() -> void:
 	if player and "data" in player:
 		bind(player.data.inventory)
 		player.data.equipment.equipment_changed.connect(_on_equipment_changed)
+		player.player_spell_system.spells_changed.connect(_on_equipment_changed)
+		player.player_spell_system.readied_changed.connect(_on_equipment_changed.unbind(1))
 	else:
 		push_warning("InventoryUi: no player found to bind to.")
 	if player and "stats" in player:
@@ -73,6 +79,7 @@ func _setup_tabs() -> void:
 		"TabArmor": Item.Category.ARMOR,
 		"TabWeapons": Item.Category.WEAPON,
 		"TabConsumables": Item.Category.CONSUMABLE,
+		"TabSpells": TAB_SPELLS,
 	}
 	for child in tabs.get_children():
 		var tab := child as Button
@@ -92,6 +99,12 @@ func _on_tab_pressed(category: int) -> void:
 # --- open / close -------------------------------------------------------
 
 func _unhandled_input(event: InputEvent) -> void:
+	if visible and _active_tab == TAB_SPELLS and _displayed_spell:
+		for i in PlayerInputSystem.SPELL_ACTIONS.size():
+			if event.is_action_pressed(PlayerInputSystem.SPELL_ACTIONS[i]):
+				player.player_spell_system.assign(player.data, _displayed_spell, i)
+				get_viewport().set_input_as_handled()
+				return
 	if not event.is_action_pressed(&"inventory"): return
 	if visible:
 		close()
@@ -164,6 +177,9 @@ func _rebuild() -> void:
 	for child in rows.get_children():
 		rows.remove_child(child)
 		child.queue_free()
+	if _active_tab == TAB_SPELLS:
+		_rebuild_spells()
+		return
 	var still_displayed := false
 	var stacks := inventory.get_stacks()
 	# Dictionary order is insertion order, so rows reshuffle as you pick things
@@ -189,13 +205,48 @@ func _rebuild() -> void:
 	if visible:
 		_focus_selected_or_first()
 
+## Known spells in the order learned, each with the key it's on.
+func _rebuild_spells() -> void:
+	var data: PlayerData = player.data
+	if not data.known_spells.has(_displayed_spell):
+		_displayed_spell = null
+	for spell in data.known_spells:
+		var row: InventoryRow = row_scene.instantiate()
+		rows.add_child(row)
+		row.display_spell(spell, data.spell_slots.find(spell), data.readied_spell == spell)
+		row.spell_hovered.connect(_on_spell_hovered)
+		row.spell_activated.connect(_on_spell_activated)
+		row.focus_entered.connect(list_scroll.ensure_control_visible.bind(row))
+	if data.known_spells.is_empty():
+		var empty := Label.new()
+		empty.text = "No spells yet. Tomes teach them."
+		rows.add_child(empty)
+	_show_detail()
+	if visible:
+		_focus_selected_or_first()
+
+func _on_spell_hovered(spell: Spell) -> void:
+	if spell == _displayed_spell: return
+	_displayed_spell = spell
+	_show_detail()
+
+## Readies the spell, or puts it away if it's the one in hand: what its key
+## does, for a spell that isn't on one yet.
+func _on_spell_activated(spell: Spell) -> void:
+	var spells: PlayerSpellSystem = player.player_spell_system
+	if player.data.readied_spell == spell:
+		spells.put_away(player.data, true)
+	else:
+		spells.ready_spell(player.data, spell)
+
 func _focus_selected_or_first() -> void:
 	var first: InventoryRow = null
 	for child in rows.get_children():
 		var row := child as InventoryRow
 		if row == null: continue
 		if first == null: first = row
-		if row.item != null and row.item.id == _displayed_id:
+		if (row.item != null and row.item.id == _displayed_id) \
+				or (row.spell != null and row.spell == _displayed_spell):
 			row.grab_focus()
 			return
 	if first != null:
@@ -211,6 +262,8 @@ func _on_row_hovered(item: Item) -> void:
 func _on_row_activated(item: Item) -> void:
 	if player == null: return
 	match item.category:
+		Item.Category.CONSUMABLE when item is TomeItem:
+			player.player_spell_system.learn(player.data, item)
 		Item.Category.CONSUMABLE:
 			# The `is` check rather than a cast: a .tres whose category was set
 			# to CONSUMEABLE but built from plain Item would otherwise pass a
@@ -231,6 +284,9 @@ func _on_row_activated(item: Item) -> void:
 			pass
 
 func _show_detail() -> void:
+	if _active_tab == TAB_SPELLS:
+		_show_spell_detail()
+		return
 	var stack: ItemStack = inventory.get_stack(_displayed_id) if inventory else null
 	var has := stack != null
 	detail_name.visible = has
@@ -239,4 +295,29 @@ func _show_detail() -> void:
 	if not has: return
 	detail_name.text = stack.item.display_name
 	detail_icon.texture = stack.item.icon
-	detail_desc.text = stack.item.description
+	detail_desc.text = stack.item.description + _enchantment_text(stack.item)
+
+## "Enchanted" and one line per enchantment, or nothing for a plain item.
+func _enchantment_text(item: Item) -> String:
+	if not (item is EquippableItem and item.is_enchanted()): return ""
+	var lines := PackedStringArray(["", "", "Enchanted:"])
+	for enchantment in item.enchantments:
+		if enchantment: lines.append(enchantment.describe())
+	return "\n".join(lines)
+
+func _show_spell_detail() -> void:
+	var spell := _displayed_spell
+	detail_name.visible = spell != null
+	detail_icon.visible = spell != null
+	detail_desc.visible = spell != null
+	if spell == null: return
+	detail_name.text = spell.display_name
+	detail_icon.texture = spell.icon
+	var attack := spell.attack
+	var type_name := String(AttackSpec.DamageType.keys()[attack.damage_type]).to_lower()
+	var lines := PackedStringArray([spell.description, ""])
+	lines.append("%d mana. %d %s damage%s." % [attack.mana_cost, roundi(attack.damage), type_name,
+		", in a blast" if attack.blast_radius > 0.0 else ""])
+	var key: int = player.data.spell_slots.find(spell)
+	lines.append("On key %d. Press 1-4 to move it." % (key + 1) if key >= 0 else "Press 1-4 to put it on a key.")
+	detail_desc.text = "\n".join(lines)

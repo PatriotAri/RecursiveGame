@@ -8,7 +8,8 @@ extends HitboxBase
 ## it off the hitbox manager's list (leaving the tree fires tree_exited), so
 ## nothing that happens to the thrower afterwards can touch it. It then flies
 ## straight at the aim point until it hits a wall, runs out of range, or has
-## hit as many targets as it can.
+## hit as many targets as it can. One with a blast then bursts, hitting every
+## target around it once.
 
 ## Walls stop it. Low obstacles don't: it flies over them.
 const LAYER_ENVIRONMENT := 1
@@ -21,9 +22,19 @@ var launch_offset := Vector2.ZERO
 ## Returns the world point it's aimed at. Unset, it flies along the thrower's
 ## facing.
 var aim_provider: Callable
+## Returns the world point it leaves from: a staff's tip, say. Unset, it
+## leaves from the thrower's feet plus launch_offset.
+var launch_point_provider: Callable
+var blast_radius := 0.0
+var blast_scene: PackedScene
+var blast_sound: SoundEffect
 
 var direction := Vector2.RIGHT
 var _hits_left := 1
+## Hit something and waiting a frame to burst: physics can't be queried from
+## inside the collision callback that found the hit.
+var _impact_pending := false
+var _burst := false
 
 func _ready() -> void:
 	super()
@@ -36,9 +47,21 @@ func get_target_layer() -> void:
 	collision_mask |= LAYER_ENVIRONMENT
 
 func _physics_process(delta: float) -> void:
+	if _impact_pending:
+		cancel()
+		return
 	if _active:
 		global_position += direction * speed * delta
 	super(delta)
+
+## Ends the flight. A released projectile with a blast bursts first, however
+## the flight ended: a hit, a wall, or running out of range. One cancelled in
+## the hand (a stagger mid-windup) never bursts.
+func cancel() -> void:
+	if _active and blast_radius > 0.0 and not _burst:
+		_burst = true
+		_blast()
+	super()
 
 ## Held projectiles never follow the thrower's facing; they aim at release.
 func _track_facing() -> void:
@@ -46,7 +69,8 @@ func _track_facing() -> void:
 
 func _activate() -> void:
 	var thrower := get_parent() as Node2D
-	var origin := thrower.global_position + launch_offset
+	var origin: Vector2 = launch_point_provider.call() if launch_point_provider.is_valid() \
+		else thrower.global_position + launch_offset
 	direction = _aim_direction(origin)
 	knockback_direction = direction
 	_hits_left = pierce + 1
@@ -75,8 +99,43 @@ func _on_area_entered(area: Area2D) -> void:
 	if _hit_ids.size() > hits_before:
 		_hits_left -= 1
 		if _hits_left <= 0:
-			cancel()
+			_end_flight()
 
 func _on_body_entered(_body: Node2D) -> void:
 	if _active:
+		_end_flight()
+
+func _end_flight() -> void:
+	if blast_radius <= 0.0:
 		cancel()
+		return
+	speed = 0.0
+	_impact_pending = true
+
+## Damages every target within the blast that this projectile hasn't already
+## hit, each pushed away from the centre, then shows the burst.
+func _blast() -> void:
+	var circle := CircleShape2D.new()
+	circle.radius = blast_radius
+	var query := PhysicsShapeQueryParameters2D.new()
+	query.shape = circle
+	query.transform = Transform2D(0.0, global_position)
+	query.collision_mask = target_layer
+	query.collide_with_areas = true
+	query.collide_with_bodies = false
+	for result in get_world_2d().direct_space_state.intersect_shape(query, 64):
+		var area := result.collider as Area2D
+		if area == null or not area.has_method("receive_damage"): continue
+		var id := area.get_instance_id()
+		if _hit_ids.has(id): continue
+		_hit_ids[id] = true
+		knockback_direction = (area.global_position - global_position).normalized()
+		area.receive_damage(damage, self, randf() < hitstun_chance, randf() < knockback_chance)
+		Sfx.play(hit_sound, area.global_position)
+	Sfx.play(blast_sound, global_position)
+	if blast_scene:
+		var flash := blast_scene.instantiate()
+		get_parent().add_child(flash)
+		flash.global_position = global_position
+		if flash is Blast:
+			flash.play(blast_radius)

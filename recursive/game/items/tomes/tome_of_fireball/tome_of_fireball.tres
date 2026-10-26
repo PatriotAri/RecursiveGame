@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="TomeItem" format=3]
+
+[ext_resource type="Script" path="res://game/items/tomes/core/tome_item.gd" id="1_tome"]
+[ext_resource type="Resource" path="res://game/spells/fireball/fireball.tres" id="2_spell"]
+[ext_resource type="Texture2D" path="res://game/items/tomes/tome_of_fireball/tome_of_fireball.png" id="3_icon"]
+[ext_resource type="Resource" path="res://game/items/tomes/audio/tome_learn.tres" id="4_learn"]
+
+[resource]
+script = ExtResource("1_tome")
+spell = ExtResource("2_spell")
+use_sound = ExtResource("4_learn")
+id = &"tome_of_fireball"
+display_name = "Tome of Fireball"
+description = "Teaches Fireball. Used up once read."
+icon = ExtResource("3_icon")
+category = 3
+value = 50

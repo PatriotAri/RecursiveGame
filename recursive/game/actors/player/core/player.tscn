@@ -17,6 +17,7 @@
 [ext_resource type="Resource" path="res://game/actors/player/assets/audio/player_hurt.tres" id="24_hurt"]
 [ext_resource type="Resource" path="res://game/actors/player/assets/audio/player_death.tres" id="25_death"]
 [ext_resource type="Resource" path="res://game/actors/player/assets/audio/player_exhausted.tres" id="26_tired"]
+[ext_resource type="Resource" path="res://game/actors/player/assets/audio/spell_ready.tres" id="27_spell"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_iwgb0"]
 radius = 6.0
@@ -41,6 +42,7 @@ unarmed_hit_sound = ExtResource("23_hit")
 hurt_sound = ExtResource("24_hurt")
 death_sound = ExtResource("25_death")
 exhausted_sound = ExtResource("26_tired")
+spell_ready_sound = ExtResource("27_spell")
 run_speed = 180.0
 
 [node name="Collision" type="CollisionShape2D" parent="." unique_id=1079167882]
@@ -88,6 +90,9 @@ animation = &"idle_S"
 [node name="Helmet" type="AnimatedSprite2D" parent="Visual" unique_id=1985034272]
 
 [node name="Weapon" type="Sprite2D" parent="Visual" unique_id=1707004274]
+visible = false
+
+[node name="SpellOrb" type="Sprite2D" parent="Visual" unique_id=1707004391]
 visible = false
 
 [node name="Footsteps" type="Node2D" parent="." unique_id=1873390612]

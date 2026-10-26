@@ -27,6 +27,10 @@ enum BodyLayer {HEAD, TORSO, LEFT_ARM, RIGHT_ARM, LEGS} #always append enum, nev
 ## Optional on either slot. Null means this item changes no stats.
 @export var bonuses: StatBonuses
 
+## The item's magic: elemental boosts, stat percentages, pierce. Any at all
+## makes it enchanted. Added at the armor and weapon stands from v0.11.0.0.
+@export var enchantments: Array[Enchantment] = []
+
 @export var animation_prefix := ""
 
 ## Armour only. The art drawn over each body layer while worn — a helmet
@@ -51,3 +55,19 @@ enum BodyLayer {HEAD, TORSO, LEFT_ARM, RIGHT_ARM, LEGS} #always append enum, nev
 @export var grip_offset:= Vector2.ZERO
 ## How far the weapon is cocked back at the start of a swing, in degrees.
 @export_range(0.0, 180.0) var swing_arc_degrees:= 90.0
+
+@export_group("Staff")
+## A staff: casting-only, with no melee of its own. A spell readied while
+## it's held is amplified by the numbers below.
+@export var casting_focus := false
+@export var amplify_damage := 1.0
+## Scales a spell's blast.
+@export var amplify_area := 1.0
+## Scales a spell's mana cost, rounded up.
+@export var amplify_mana := 1.0
+## Where a readied spell sits, from the held texture's centre: the staff's
+## tip. Spells are cast from there.
+@export var cast_point := Vector2.ZERO
+
+func is_enchanted() -> bool:
+	return not enchantments.is_empty()

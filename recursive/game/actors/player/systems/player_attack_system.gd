@@ -8,12 +8,15 @@ var attack_duration:= 0.0
 
 var pending_spawn:= false
 
-## Time left before a throwing weapon can be thrown again. Melee attacks have
-## no cooldown beyond their own length.
-var cooldown_timer:= 0.0
-## Counts down the current throw's windup; at zero the weapon has left the
-## hand. Negative when there's no throw in progress.
+## Time left before each projectile attack can be used again, by attack
+## name. Kept per attack, so swapping weapons or spells neither resets a
+## cooldown nor hands it to the next attack. Melee attacks have no cooldown
+## beyond their own length.
+var _cooldowns:= {}
+## Counts down the current throw's windup; below zero it has left the hand.
 var _release_timer:= -1.0
+## The attack whose windup _release_timer is counting.
+var _releasing: StringName = &""
 
 func _init(player_ref: CharacterBody2D, hb_ref: HitboxManagerBase) -> void:
 	player = player_ref
@@ -27,14 +30,14 @@ func _init(player_ref: CharacterBody2D, hb_ref: HitboxManagerBase) -> void:
 func update(data: PlayerData, delta: float) -> void:
 	# Ticks even through hitstun: a weapon already thrown comes back on time
 	# whatever happens to the thrower.
-	if cooldown_timer > 0.0:
-		cooldown_timer -= delta
+	for attack_name in _cooldowns.keys():
+		_cooldowns[attack_name] -= delta
+		if _cooldowns[attack_name] <= 0.0:
+			_cooldowns.erase(attack_name)
 	if _release_timer >= 0.0:
 		_release_timer -= delta
-		if _release_timer < 0.0:
-			data.weapon_thrown = true
-	if cooldown_timer <= 0.0:
-		data.weapon_thrown = false
+	# Empty-handed from release until the attack in hand is ready again.
+	data.cooling_down = _release_timer < 0.0 and cooldown_left(data.current_attack) > 0.0
 	
 	# No swinging out of hitstun. Without this the player could start an
 	# attack and spawn a hitbox while the hurt state was still active.
@@ -49,11 +52,16 @@ func update(data: PlayerData, delta: float) -> void:
 			data.is_attacking = false
 	
 	# Start new attack if input received and not currently attacking
-	if data.attack_requested and not data.is_attacking and cooldown_timer <= 0.0:
+	if data.attack_requested and not data.is_attacking and cooldown_left(data.current_attack) <= 0.0:
 		data.attack_requested = false
+		# A staff with no spell readied has nothing to attack with.
+		if data.current_attack == &"": return
 		var spec := player_hitbox_manager.get_spec(data.current_attack)
 		if spec == null:
 			push_warning("PlayerAttackSystem: no attack registered for '%s'." % data.current_attack)
+			return
+		if spec.mana_cost > player.stats.mana.current:
+			Sfx.play(Sfx.refused)
 			return
 		data.is_attacking = true
 		# Timing comes from the spec, so a weapon with a slower windup locks
@@ -62,8 +70,9 @@ func update(data: PlayerData, delta: float) -> void:
 		attack_duration = attack_timer
 		pending_spawn = true
 		if spec is ProjectileAttackSpec:
-			cooldown_timer = spec.cooldown
+			_cooldowns[data.current_attack] = spec.cooldown
 			_release_timer = spec.windup_time
+			_releasing = data.current_attack
 
 ## Drops any in-progress swing. pending_spawn surviving an interrupt would
 ## spawn the hitbox a frame later, after the attack was already cancelled.
@@ -75,15 +84,12 @@ func cancel(data: PlayerData) -> void:
 	pending_spawn = false
 	# Interrupted before it left the hand, nothing was thrown: no cooldown.
 	if _release_timer >= 0.0:
+		_cooldowns.erase(_releasing)
 		_release_timer = -1.0
-		cooldown_timer = 0.0
 
-## Forgets any cooldown. For a weapon change: the new weapon is in hand and
-## ready, whatever the last one was doing.
-func reset_cooldown(data: PlayerData) -> void:
-	cooldown_timer = 0.0
-	_release_timer = -1.0
-	data.weapon_thrown = false
+## Seconds before `attack_name` can be used again; 0 when it's ready.
+func cooldown_left(attack_name: StringName) -> float:
+	return _cooldowns.get(attack_name, 0.0)
 
 func post_update(data: PlayerData) -> void:
 	if not data.is_attacking:

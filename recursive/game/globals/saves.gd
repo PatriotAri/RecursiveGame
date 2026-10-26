@@ -175,6 +175,14 @@ func _is_valid(file_data: Variant) -> bool:
 		if not id is String: return false
 	for path in level["taken_pickups"]:
 		if not path is String: return false
+	# Optional too: saves from before spells.
+	for key in ["spells", "spell_slots"]:
+		var ids: Variant = player.get(key, [])
+		if not ids is Array: return false
+		for id in ids:
+			if not id is String: return false
+	for key in ["readied_spell", "stowed_weapon"]:
+		if not player.get(key, "") is String: return false
 	return true
 
 func _is_position(value: Variant) -> bool:

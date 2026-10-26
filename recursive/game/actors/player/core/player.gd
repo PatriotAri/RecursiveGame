@@ -16,6 +16,7 @@ var player_equipment_system: PlayerEquipmentSystem
 var player_animation_system: PlayerAnimationSystem
 var player_weapon_visual_system: PlayerWeaponVisualSystem
 var player_interaction_system: PlayerInteractionSystem
+var player_spell_system: PlayerSpellSystem
 
 var player_hitbox_manager: HitboxManagerBase
 
@@ -66,6 +67,8 @@ var death_handled := false
 @export var death_sound: SoundEffect
 ## Played when stamina runs out.
 @export var exhausted_sound: SoundEffect
+## Played when a spell is readied or put away.
+@export var spell_ready_sound: SoundEffect
 
 @export_group("Combat Feel")
 #how long player is locked in hitstun
@@ -123,7 +126,8 @@ func _ready() -> void:
 	player_attack_system = PlayerAttackSystem.new(self, player_hitbox_manager)
 	player_movement_system = PlayerMovementSystem.new(self)
 	player_consumable_system = PlayerConsumableSystem.new(self)
-	player_weapon_visual_system = PlayerWeaponVisualSystem.new($Visual/Weapon, visual)
+	player_weapon_visual_system = PlayerWeaponVisualSystem.new($Visual/Weapon, visual, $Visual/SpellOrb)
+	player_spell_system = PlayerSpellSystem.new(self, spell_ready_sound)
 	player_equipment_system = PlayerEquipmentSystem.new(self)
 	player_animation_system = PlayerAnimationSystem.new(visual)
 	player_interaction_system = PlayerInteractionSystem.new(self)
@@ -139,6 +143,8 @@ func _physics_process(delta: float) -> void:
 		return
 	stats.update(delta)
 	player_input_system.update(data)
+	if data.spell_key_pressed >= 0:
+		player_spell_system.press_slot(data, data.spell_key_pressed)
 	
 	#hitstun is a timer now, ticks before the state machine
 	if data.hurt_timer > 0.0:
@@ -159,6 +165,7 @@ func _physics_process(delta: float) -> void:
 	player_attack_system.update(data, delta)
 	if not was_attacking and data.is_attacking:
 		stats.stamina.remove(current_attack_stamina_cost())
+		stats.mana.remove(current_attack_mana_cost())
 	# Every attack aims at the cursor: facing snaps to it when the attack
 	# starts and follows it until the attack ends, then goes back to following
 	# movement. Done before anything spawns or animates the attack.
@@ -176,18 +183,21 @@ func _face_cursor() -> void:
 	if to_cursor.length() > 1.0:
 		data.facing_dir = to_cursor.normalized()
 
-## Recomputes every equipment-affected value from base + the supplied total.
-## Called whenever equipment changes; safe to call with an empty StatBonuses
-## to strip all bonuses.
-func apply_stat_bonuses(bonuses: StatBonuses) -> void:
+## Recomputes every equipment-affected value from base + the supplied totals:
+## flat bonuses first, then enchantment percentages on top. Called whenever
+## equipment changes; safe to call with an empty StatBonuses to strip all
+## bonuses.
+func apply_stat_bonuses(bonuses: StatBonuses, totals: EnchantmentTotals = null) -> void:
+	if totals == null:
+		totals = EnchantmentTotals.new()
 	# keep_ratio false: gear gives headroom, it doesn't heal. Taking armour
 	# off clamps current down if it's now above the new maximum.
-	stats.health.set_maximum(_base_max_health + bonuses.max_health)
-	stats.stamina.set_maximum(_base_max_stamina + bonuses.max_stamina)
-	stats.mana.set_maximum(_base_max_mana + bonuses.max_mana)
+	stats.health.set_maximum(roundi((_base_max_health + bonuses.max_health) * totals.stat_scale(StatPercentEnchantment.Stat.MAX_HEALTH)))
+	stats.stamina.set_maximum(roundi((_base_max_stamina + bonuses.max_stamina) * totals.stat_scale(StatPercentEnchantment.Stat.MAX_STAMINA)))
+	stats.mana.set_maximum(roundi((_base_max_mana + bonuses.max_mana) * totals.stat_scale(StatPercentEnchantment.Stat.MAX_MANA)))
 	
-	data.walk_speed = _base_walk_speed + bonuses.walk_speed
-	data.run_speed = _base_run_speed + bonuses.run_speed
+	data.walk_speed = (_base_walk_speed + bonuses.walk_speed) * totals.stat_scale(StatPercentEnchantment.Stat.WALK_SPEED)
+	data.run_speed = (_base_run_speed + bonuses.run_speed) * totals.stat_scale(StatPercentEnchantment.Stat.RUN_SPEED)
 	
 	# Clamped at zero: free is a legitimate outcome for a very good item,
 	# negative is not.
@@ -201,6 +211,11 @@ func current_attack_stamina_cost() -> int:
 	var spec := player_hitbox_manager.get_spec(data.current_attack)
 	if spec == null: return 0
 	return maxi(spec.attack_stamina_cost + data.attack_stamina_modifier, 0)
+
+## What the current attack costs in mana: a spell's, after any staff.
+func current_attack_mana_cost() -> int:
+	var spec := player_hitbox_manager.get_spec(data.current_attack)
+	return spec.mana_cost if spec else 0
 
 func _update_stamina(delta: float) -> void:
 	if data.is_exhausted and stats.stamina.ratio() >= exhaustion_recovery_ratio:
@@ -258,7 +273,7 @@ func _on_knockback_received(direction: Vector2, strength: float, decay: float) -
 
 ## Everything about the player a save keeps: where they stand, their
 ## current health, stamina and mana, what they carry and what they wear.
-## Items are stored by id; see ItemRegistry.
+## Items are stored by id; see ContentRegistry.
 func get_save_data() -> Dictionary:
 	var items := {}
 	for stack in data.inventory.get_stacks():
@@ -268,7 +283,7 @@ func get_save_data() -> Dictionary:
 		var item: EquippableItem = data.equipment.get_item(slot)
 		if item:
 			worn[str(slot)] = String(item.id)
-	return {
+	var saved := {
 		"position": [global_position.x, global_position.y],
 		"health": stats.health.current,
 		"stamina": stats.stamina.current,
@@ -276,19 +291,24 @@ func get_save_data() -> Dictionary:
 		"inventory": items,
 		"equipment": worn,
 	}
+	saved.merge(player_spell_system.get_save_data(data))
+	return saved
 
 func load_save_data(saved: Dictionary) -> void:
 	for id in saved.get("inventory", {}):
-		var item := ItemRegistry.get_item(StringName(id))
+		var item := ContentRegistry.get_item(StringName(id))
 		if item == null:
 			push_warning("Save has an unknown item '%s'; skipped." % id)
 			continue
 		data.inventory.add(item, int(saved["inventory"][id]))
 	# Gear goes back on before stats are set, since it changes the maximums.
 	for slot in saved.get("equipment", {}):
-		var item := ItemRegistry.get_item(StringName(saved["equipment"][slot])) as EquippableItem
+		var item := ContentRegistry.get_item(StringName(saved["equipment"][slot])) as EquippableItem
 		if item:
 			player_equipment_system.try_equip(data, item, true)
+	# Before stats too: a readied spell decides the attack, and its staff the
+	# maximums.
+	player_spell_system.load_save_data(data, saved)
 	var position_saved: Array = saved.get("position", [global_position.x, global_position.y])
 	global_position = Vector2(position_saved[0], position_saved[1])
 	stats.health.current = clampi(int(saved.get("health", stats.health.maximum)), 1, stats.health.maximum)

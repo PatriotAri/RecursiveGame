@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="EquippableItem" format=3]
+
+[ext_resource type="Script" path="res://game/items/equipment/core/equippable_item.gd" id="1_item"]
+[ext_resource type="Script" path="res://game/items/equipment/enchantments/elemental_damage_enchantment.gd" id="2_fire"]
+[ext_resource type="Texture2D" path="res://game/items/equipment/weapons/tier_1/apprentice_staff/apprentice_staff.png" id="3_tex"]
+[ext_resource type="Texture2D" path="res://game/items/equipment/weapons/tier_1/apprentice_staff/apprentice_staff_icon.png" id="4_icon"]
+[ext_resource type="Script" path="res://game/items/equipment/enchantments/enchantment.gd" id="5_ench"]
+
+[sub_resource type="Resource" id="Resource_fire"]
+script = ExtResource("2_fire")
+damage_type = 1
+percent = 15.0
+
+[resource]
+script = ExtResource("1_item")
+value = 40
+handedness = 1
+enchantments = Array[ExtResource("5_ench")]([SubResource("Resource_fire")])
+held_texture = ExtResource("3_tex")
+grip_offset = Vector2(5, 0)
+swing_arc_degrees = 0.0
+casting_focus = true
+amplify_damage = 1.5
+amplify_area = 1.5
+amplify_mana = 1.5
+cast_point = Vector2(9, 0)
+id = &"apprentice_staff"
+display_name = "Apprentice Staff"
+description = "A plain staff with a gem at its tip. Strengthens spells cast through it, at a cost."
+icon = ExtResource("4_icon")
+category = 2

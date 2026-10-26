@@ -4,6 +4,8 @@ extends Resource
 
 const DIRECTIONS := ["E", "W", "N", "S", "NE", "NW", "SE", "SW"]
 
+enum DamageType {PHYSICAL, FIRE} #always append enum, never insert in middle
+
 ## Everything one attack needs: what to spawn, where to put it, how hard it
 ## hits, and how long it lasts. Built in code today; save as a .tres later to
 ## tune attacks in the Inspector instead of editing scripts.
@@ -13,6 +15,8 @@ const DIRECTIONS := ["E", "W", "N", "S", "NE", "NW", "SE", "SW"]
 
 @export_group("Damage")
 @export var damage := 1.0
+## What kind of damage it deals. Elemental enchantments boost one kind.
+@export var damage_type := DamageType.PHYSICAL
 @export var knockback_strength := 50.0
 @export var knockback_decay := 800.0
 ## Rolled per target, per hit. 1.0 reproduces the old always-stagger behaviour.
@@ -23,8 +27,10 @@ const DIRECTIONS := ["E", "W", "N", "S", "NE", "NW", "SE", "SW"]
 @export var windup_time := 0.1
 @export var lifetime := 0.1
 
-@export_group("Stamina")
+@export_group("Cost")
 @export var attack_stamina_cost := 5
+## Spent when the attack starts. Without enough, the attack is refused.
+@export var mana_cost := 0
 
 @export_group("Audio")
 ## Played when the attack starts — for an enemy, its telegraph.
@@ -37,6 +43,16 @@ const DIRECTIONS := ["E", "W", "N", "S", "NE", "NW", "SE", "SW"]
 ## from the scene so a commit range can be computed without instancing one.
 ## Keep in sync by hand if you resize the hitbox shape in the editor.
 @export var reach_radius := 10.0
+
+## A copy with the attacker's modifiers applied: a staff's amplify and their
+## enchantments. This spec is a shared resource, so it's never changed itself.
+func modified(damage_scale: float, mana_scale := 1.0, area_scale := 1.0, extra_pierce := 0) -> AttackSpec:
+	var copy := duplicate() as AttackSpec
+	copy.damage = damage * damage_scale
+	# Snapped first so float noise (3 x 1.1 = 3.3000000000000003) can't round
+	# a cost up a whole point.
+	copy.mana_cost = ceili(snappedf(mana_cost * mana_scale, 0.001))
+	return copy
 
 func offset_for(facing: Vector2) -> Vector2:
 	if offsets == null:

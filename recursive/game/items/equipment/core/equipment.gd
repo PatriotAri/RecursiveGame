@@ -33,6 +33,11 @@ func is_equipped(item: Item) -> bool:
 			return true
 	return false
 
+func get_items() -> Array[EquippableItem]:
+	var result: Array[EquippableItem] = []
+	result.assign(_slots.values())
+	return result
+
 ## Every worn item's bonuses, ready to hand to StatBonuses.total().
 func get_bonuses() -> Array[StatBonuses]:
 	var result: Array[StatBonuses] = []

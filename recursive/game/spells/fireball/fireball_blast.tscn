@@ -1,0 +1,9 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/components/projectile/blast.gd" id="1_blast"]
+[ext_resource type="Texture2D" path="res://game/spells/fireball/fireball_blast.png" id="2_tex"]
+
+[node name="FireballBlast" type="Sprite2D"]
+z_index = 1
+texture = ExtResource("2_tex")
+script = ExtResource("1_blast")

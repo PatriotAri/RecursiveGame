@@ -6,12 +6,16 @@ extends Button
 signal hovered(item: Item)
 ## Left click, or Enter/Space while focused. Uses or equips.
 signal activated(item: Item)
+## The same two for a row in the Spells tab, which lists spells, not items.
+signal spell_hovered(spell: Spell)
+signal spell_activated(spell: Spell)
 
 @onready var item_name: Label = $Margin/HBox/ItemName
 @onready var count: Label = $Margin/HBox/Count
 @onready var equipped_marker: ColorRect = $Margin/HBox/EquippedMarker
 
 var item: Item
+var spell: Spell
 
 func _ready() -> void:
 	# Button.pressed already fires on left click only — button_mask defaults to
@@ -31,10 +35,22 @@ func display(stack: ItemStack, equipped := false) -> void:
 	equipped_marker.modulate = Color(1, 1, 1, 1.0 if equipped else 0.0)
 	count.text = str(stack.count)
 
+## A known spell: the key it's on in the count's place, the marker if it's
+## the one readied.
+func display_spell(spell_ref: Spell, key: int, readied: bool) -> void:
+	spell = spell_ref
+	item_name.text = spell.display_name
+	equipped_marker.modulate = Color(1, 1, 1, 1.0 if readied else 0.0)
+	count.text = "[%d]" % (key + 1) if key >= 0 else ""
+
 func _on_pointed_at() -> void:
-	if item == null: return
-	hovered.emit(item)
+	if spell:
+		spell_hovered.emit(spell)
+	elif item:
+		hovered.emit(item)
 
 func _on_pressed() -> void:
-	if item == null: return
-	activated.emit(item)
+	if spell:
+		spell_activated.emit(spell)
+	elif item:
+		activated.emit(item)

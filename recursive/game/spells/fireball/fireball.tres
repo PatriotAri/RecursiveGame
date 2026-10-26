@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="Spell" format=3]
+
+[ext_resource type="Script" path="res://game/spells/core/spell.gd" id="1_spell"]
+[ext_resource type="Script" path="res://game/components/projectile/projectile_attack_spec.gd" id="2_spec"]
+[ext_resource type="PackedScene" path="res://game/spells/fireball/fireball_projectile.tscn" id="3_proj"]
+[ext_resource type="PackedScene" path="res://game/spells/fireball/fireball_blast.tscn" id="4_blast"]
+[ext_resource type="Texture2D" path="res://game/spells/fireball/fireball_icon.png" id="5_icon"]
+[ext_resource type="Texture2D" path="res://game/spells/fireball/fireball_orb.png" id="6_orb"]
+[ext_resource type="Resource" path="res://game/spells/fireball/audio/fireball_cast.tres" id="7_cast"]
+[ext_resource type="Resource" path="res://game/spells/fireball/audio/fireball_blast.tres" id="8_boom"]
+
+[sub_resource type="Resource" id="Resource_fireball"]
+script = ExtResource("2_spec")
+scene = ExtResource("3_proj")
+damage = 8.0
+damage_type = 1
+knockback_strength = 80.0
+hitstun_chance = 0.3
+knockback_chance = 0.5
+windup_time = 0.3
+lifetime = 0.15
+attack_stamina_cost = 0
+mana_cost = 3
+swing_sound = ExtResource("7_cast")
+speed = 300.0
+max_range = 300.0
+cooldown = 0.8
+blast_radius = 40.0
+blast_scene = ExtResource("4_blast")
+blast_sound = ExtResource("8_boom")
+
+[resource]
+script = ExtResource("1_spell")
+id = &"fireball"
+display_name = "Fireball"
+description = "A ball of fire that bursts on impact, burning everything close by."
+icon = ExtResource("5_icon")
+held_texture = ExtResource("6_orb")
+attack = SubResource("Resource_fireball")

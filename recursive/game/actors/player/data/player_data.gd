@@ -56,9 +56,24 @@ var current_attack: StringName = &"unarmed"
 ## The animation set that attack uses. Set with current_attack, so the two
 ## can never disagree about which weapon is in hand.
 var animation_prefix := ""
-## A throwing weapon that has left the hand and isn't back yet: true from
-## release until its cooldown ends. The hand shows it empty meanwhile.
-var weapon_thrown:= false
+## A projectile attack that's been let go of and is cooling down: true from
+## release until its cooldown ends. The thrown weapon or readied spell isn't
+## shown in the hand meanwhile.
+var cooling_down:= false
+
+#spells, read/written by SpellSystem
+## Learned from tomes, in the order learned.
+var known_spells: Array[Spell] = []
+## What's on keys 1 to 4. Null for an empty key.
+var spell_slots: Array[Spell] = [null, null, null, null]
+## The spell in hand, cast with the attack button. Null when none is readied.
+var readied_spell: Spell
+## The melee weapon put away to free the hands for a spell. The spell's key
+## puts the spell away and brings this back.
+var stowed_weapon: EquippableItem
+## Which spell key (0 to 3) was pressed this frame, or -1. Written by
+## InputSystem.
+var spell_key_pressed:= -1
 
 #read/written by StatSystem
 var is_exhausted:= false

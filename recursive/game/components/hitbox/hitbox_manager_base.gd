@@ -15,6 +15,10 @@ var facing_provider: Callable
 ## Returns the world point projectiles are aimed at: the cursor for the
 ## player. Optional; without it they fly along the facing.
 var aim_provider: Callable
+## Returns the world point projectiles leave from, when that isn't the spec's
+## launch_offset: the player sets it to the readied spell's spot while one is
+## readied. Optional.
+var launch_point_provider: Callable
 
 var active_hitboxes: Array[HitboxBase] = []
 var attack_registry: Dictionary = {}
@@ -96,6 +100,10 @@ func _configure_projectile(projectile: Projectile, spec: ProjectileAttackSpec) -
 	projectile.pierce = spec.pierce
 	projectile.launch_offset = spec.launch_offset
 	projectile.aim_provider = aim_provider
+	projectile.launch_point_provider = launch_point_provider
+	projectile.blast_radius = spec.blast_radius
+	projectile.blast_scene = spec.blast_scene
+	projectile.blast_sound = spec.blast_sound
 	# A projectile's lifetime is its flight; the spec's lifetime is the
 	# thrower's follow-through, which only the attack system cares about.
 	projectile.lifetime = spec.flight_time()

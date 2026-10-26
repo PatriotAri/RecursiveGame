@@ -3,18 +3,42 @@ class_name PlayerWeaponVisualSystem
 ## The weapon is held in this arm, so it sits on the same side of the body.
 const WEAPON_ARM := &"RightArm"
 
+## Facings where the readied spell is behind the body: back to the camera.
+const SPELL_BEHIND := ["N", "NE", "NW"]
+## Where a spell floats with no staff, in front of the chest, as a distance
+## along the facing from this point (the visual's own space).
+const HANDS_CENTRE := Vector2(0, 2)
+const HANDS_REACH := 12.0
+
 var sprite: Sprite2D
 ## The weapon sits in this stack's hand, frame by frame.
 var visual: LayeredSprite
+## The readied spell, floating in the hands or at a staff's tip.
+var spell_sprite: Sprite2D
 
 var _rest_offset:= 0.0
 var _swing_arc:= 0.0
+## A held staff's tip, from its texture's centre. Null when no staff.
+var _cast_point: Variant = null
 
-func _init(sprite_ref: Sprite2D, visual_ref: LayeredSprite) -> void:
+func _init(sprite_ref: Sprite2D, visual_ref: LayeredSprite, spell_ref: Sprite2D) -> void:
 	sprite = sprite_ref
 	visual = visual_ref
+	spell_sprite = spell_ref
 	# Start from a known state rather than trusting whatever the scene saved.
 	set_weapon(null)
+	set_spell(null, null)
+
+## Called on every refresh: the readied spell (or null), and the staff it's
+## held in (or null for bare hands).
+func set_spell(spell: Spell, staff: EquippableItem) -> void:
+	spell_sprite.texture = spell.held_texture if spell else null
+	spell_sprite.visible = spell != null
+	_cast_point = staff.cast_point if staff else null
+
+## Where the readied spell is, in world space. Spells are cast from here.
+func spell_point() -> Vector2:
+	return spell_sprite.global_position
 
 ## Called by equipment on every weapon-slot change, unequipping included.
 func set_weapon(item: EquippableItem) -> void:
@@ -34,10 +58,27 @@ func set_weapon(item: EquippableItem) -> void:
 	sprite.visible = true
 
 func update(data: PlayerData, swing_progress: float) -> void:
+	_update_weapon(data, swing_progress)
+	_update_spell(data)
+
+## After the weapon, so a staff's tip is where the weapon was just put.
+func _update_spell(data: PlayerData) -> void:
+	if spell_sprite.texture == null: return
+	# Gone from release until it's ready to cast again, like a thrown weapon.
+	spell_sprite.visible = not data.cooling_down
+	if _cast_point != null and sprite.visible:
+		spell_sprite.position = sprite.transform * (sprite.offset + _cast_point)
+	else:
+		spell_sprite.position = HANDS_CENTRE + data.facing_dir.normalized() * HANDS_REACH
+	var dir:= FacingHelper.facing_to_string(data.facing_dir)
+	spell_sprite.z_index = -1 if dir in SPELL_BEHIND else 2
+
+func _update_weapon(data: PlayerData, swing_progress: float) -> void:
 	if sprite.texture == null: return
 	# A thrown weapon is out of the hand from release until its cooldown
-	# ends, so the empty hand shows when the next throw is ready.
-	sprite.visible = not data.weapon_thrown
+	# ends, so the empty hand shows when the next throw is ready. A staff
+	# stays: it isn't what's let go of.
+	sprite.visible = not data.cooling_down or _cast_point != null
 	if not sprite.visible: return
 	
 	var dir:= FacingHelper.facing_to_string(data.facing_dir)

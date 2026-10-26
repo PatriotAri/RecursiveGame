@@ -6,6 +6,8 @@ extends CanvasLayer
 
 @onready var gold_counter: Control = $Counters/GoldCounter
 @onready var soul_counter: Control = $Counters/SoulCounter
+## The readied spell's icon, in the bottom-left corner.
+@onready var readied_spell: TextureRect = $ReadiedSpell
 
 func _ready() -> void:
 	var player := get_tree().get_first_node_in_group(&"player")
@@ -21,3 +23,11 @@ func _ready() -> void:
 	
 	gold_counter.bind(player.data.inventory)
 	soul_counter.bind(player.data.inventory)
+	
+	player.player_spell_system.readied_changed.connect(_show_readied_spell)
+	# A loaded save may have readied one before the HUD was listening.
+	_show_readied_spell(player.data.readied_spell)
+
+func _show_readied_spell(spell: Spell) -> void:
+	readied_spell.texture = spell.icon if spell else null
+	readied_spell.visible = spell != null
