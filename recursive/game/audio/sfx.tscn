@@ -1,0 +1,26 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/audio/sfx.gd" id="1_sfx"]
+[ext_resource type="Resource" path="res://game/audio/sfx/ui_click.tres" id="2_click"]
+[ext_resource type="Resource" path="res://game/audio/sfx/ui_hover.tres" id="3_hover"]
+[ext_resource type="Resource" path="res://game/audio/sfx/menu_open.tres" id="4_open"]
+[ext_resource type="Resource" path="res://game/audio/sfx/menu_close.tres" id="5_close"]
+[ext_resource type="Resource" path="res://game/audio/sfx/refused.tres" id="6_refused"]
+[ext_resource type="Resource" path="res://game/audio/sfx/pickup.tres" id="7_pickup"]
+[ext_resource type="Resource" path="res://game/audio/sfx/item_drop.tres" id="8_drop"]
+[ext_resource type="Resource" path="res://game/audio/sfx/equip.tres" id="9_equip"]
+[ext_resource type="Resource" path="res://game/audio/sfx/unequip.tres" id="10_unequip"]
+[ext_resource type="Resource" path="res://game/audio/sfx/death_sting.tres" id="11_sting"]
+
+[node name="Sfx" type="Node"]
+script = ExtResource("1_sfx")
+ui_click = ExtResource("2_click")
+ui_hover = ExtResource("3_hover")
+menu_open = ExtResource("4_open")
+menu_close = ExtResource("5_close")
+refused = ExtResource("6_refused")
+pickup = ExtResource("7_pickup")
+item_drop = ExtResource("8_drop")
+equip = ExtResource("9_equip")
+unequip = ExtResource("10_unequip")
+death_sting = ExtResource("11_sting")

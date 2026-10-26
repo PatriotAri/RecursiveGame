@@ -18,5 +18,6 @@ func _on_body_entered(body: Node) -> void:
 	if not body.is_in_group(&"player"):
 		return
 	body.data.inventory.add(item, amount)
+	Sfx.play(item.pickup_sound if item.pickup_sound else Sfx.pickup, global_position)
 	set_deferred("monitoring", false)
 	queue_free()

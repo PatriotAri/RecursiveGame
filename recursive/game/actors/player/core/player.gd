@@ -58,6 +58,14 @@ var death_handled := false
 @export var damage:= 10.0
 @export var unarmed_offsets: HitboxOffsetData
 
+@export_group("Audio")
+@export var unarmed_swing_sound: SoundEffect
+@export var unarmed_hit_sound: SoundEffect
+@export var hurt_sound: SoundEffect
+@export var death_sound: SoundEffect
+## Played when stamina runs out.
+@export var exhausted_sound: SoundEffect
+
 @export_group("Combat Feel")
 #how long player is locked in hitstun
 @export var hurt_duration:= 0.12
@@ -102,6 +110,8 @@ func _ready() -> void:
 	unarmed.hitstun_chance = 0.3
 	unarmed.knockback_chance = 0.3
 	unarmed.attack_stamina_cost = attack_stamina_cost
+	unarmed.swing_sound = unarmed_swing_sound
+	unarmed.hit_sound = unarmed_hit_sound
 	
 	player_hitbox_manager = HitboxManagerBase.new(self, HitboxManagerBase.LAYER_ENEMY_HURTBOX, func(): return data.facing_dir)
 	player_hitbox_manager.register_attack(&"unarmed", unarmed)
@@ -198,11 +208,13 @@ func _update_stamina(delta: float) -> void:
 
 func _on_stamina_emptied() -> void:
 	data.is_exhausted = true
+	Sfx.play(exhausted_sound, global_position)
 
 func _on_damage_received(damage_amount: float, apply_hitstun: bool) -> void:
 	stats.health.remove(damage_after_armor(damage_amount))
 	if data.is_dead:
 		return
+	Sfx.play(hurt_sound, global_position)
 	_flash_damage()
 	if not apply_hitstun:
 		return
@@ -247,6 +259,7 @@ func _flash_damage() -> void:
 	_flash_tween.tween_property(visual, "modulate", Color.WHITE, 0.15)
 
 func _handle_death() -> void:
+	Sfx.play(death_sound, global_position)
 	$Collision.set_deferred("disabled", true)
 	$Hurtbox.set_deferred("monitorable", false)
 	player_state_machine.update(data)

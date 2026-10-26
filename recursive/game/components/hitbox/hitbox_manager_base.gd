@@ -71,9 +71,11 @@ func spawn_hitbox(attack_name: StringName) -> HitboxBase:
 	hitbox.lifetime = spec.lifetime
 	hitbox.offsets = spec.offsets
 	hitbox.facing_provider = facing_provider
+	hitbox.hit_sound = spec.hit_sound
 	
 	body.add_child(hitbox)
 	hitbox.begin_attack()
+	Sfx.play(spec.swing_sound, body.global_position)
 
 	active_hitboxes.append(hitbox)
 	hitbox.tree_exited.connect(on_hitbox_removed.bind(hitbox))

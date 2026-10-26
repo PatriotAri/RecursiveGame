@@ -27,12 +27,14 @@ func try_equip(data: PlayerData, item: EquippableItem) -> bool:
 	
 	data.equipment.equip(item)
 	_refresh(data)
+	Sfx.play(item.equip_sound if item.equip_sound else Sfx.equip)
 	return true
 
 func try_unequip(data: PlayerData, slot: EquippableItem.Slot) -> bool:
 	if data.equipment.get_item(slot) == null: return false
 	data.equipment.unequip(slot)
 	_refresh(data)
+	Sfx.play(Sfx.unequip)
 	return true
 
 ## Rebuilds everything equipment controls, from whatever is currently worn.

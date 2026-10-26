@@ -15,6 +15,8 @@ extends Enemy
 @export var windup_time:= 0.5   # Enemy windup
 @export var lifetime:= 0.3       # How long hitbox stays active
 @export var damage:= 10.0    # Damage done by enemy
+@export var melee_swing_sound: SoundEffect
+@export var melee_hit_sound: SoundEffect
 
 func _register_attacks() -> void:
 	var melee := AttackSpec.new()
@@ -27,6 +29,8 @@ func _register_attacks() -> void:
 	melee.knockback_strength = 50.0
 	melee.hitstun_chance = 0.3
 	melee.knockback_chance = 0.3
+	melee.swing_sound = melee_swing_sound
+	melee.hit_sound = melee_hit_sound
 
 	primary_attack = &"melee"
 	hitbox_manager.register_attack(primary_attack, melee)

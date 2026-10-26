@@ -14,6 +14,9 @@ enum BodyLayer {HEAD, TORSO, LEFT_ARM, RIGHT_ARM, LEGS} #always append enum, nev
 ## category but different slots.
 @export var slot: Slot = Slot.WEAPON
 
+## Played when it's put on. Leave empty for the shared equip sound.
+@export var equip_sound: SoundEffect
+
 ## Weapons only. How many hands the weapon takes.
 @export var handedness: Handedness = Handedness.ONE_HANDED
 

@@ -15,6 +15,7 @@ var knockback_strength:= 0.0
 var knockback_decay:= 800.0 #px/s^2
 var hitstun_chance:= 1.0
 var knockback_chance:= 1.0
+var hit_sound: SoundEffect
 
 ## Supplied at spawn so the hitbox can re-aim itself. Leave either unset and
 ## it stays pinned to the offset it was given, which is what a hitbox that
@@ -109,3 +110,4 @@ func _on_area_entered(area: Area2D) -> void:
 		var stun := randf() < hitstun_chance
 		var knock := randf() < knockback_chance
 		area.receive_damage(damage, self, stun, knock)
+		Sfx.play(hit_sound, area.global_position)

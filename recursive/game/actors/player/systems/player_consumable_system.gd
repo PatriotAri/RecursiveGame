@@ -12,12 +12,15 @@ func can_use(data: PlayerData, item: ConsumableItem) -> bool:
 	return _any_effect_lands(item)
 
 func try_use(data: PlayerData, item: ConsumableItem) -> bool:
-	if not can_use(data, item): return false
+	if not can_use(data, item):
+		Sfx.play(Sfx.refused)
+		return false
 	# Decrement first. If an effect throws, a failed use can never leave the
 	# item in the inventory after its effect already landed.
 	if not data.inventory.remove(item.id, 1): return false
 	for effect in item.effects:
 		effect.apply(player.stats)
+	Sfx.play(item.use_sound)
 	return true
 
 ## An item with no effects, or whose every effect is already maxed out, is

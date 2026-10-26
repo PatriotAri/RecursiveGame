@@ -2,9 +2,11 @@
 
 [ext_resource type="Script" uid="uid://bh4it52lgf67d" path="res://game/items/general/core/item.gd" id="1_pni1x"]
 [ext_resource type="Texture2D" uid="uid://dcb7nyiu7ojgk" path="res://game/items/drops/gold_sack/gold_sack.png" id="1_rxuni"]
+[ext_resource type="Resource" path="res://game/items/drops/gold_sack/audio/gold_pickup.tres" id="9_pick"]
 
 [resource]
 script = ExtResource("1_pni1x")
+pickup_sound = ExtResource("9_pick")
 id = &"gold"
 display_name = "Gold"
 icon = ExtResource("1_rxuni")

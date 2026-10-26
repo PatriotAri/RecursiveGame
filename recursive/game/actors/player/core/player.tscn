@@ -10,6 +10,13 @@
 [ext_resource type="SpriteFrames" path="res://game/actors/player/assets/layers/left_arm/left_arm_frames.tres" id="10_left_arm"]
 [ext_resource type="SpriteFrames" path="res://game/actors/player/assets/layers/right_arm/right_arm_frames.tres" id="12_right_arm"]
 [ext_resource type="SpriteFrames" path="res://game/actors/player/assets/layers/head/head_frames.tres" id="11_head"]
+[ext_resource type="Script" path="res://game/components/audio/footsteps.gd" id="20_feet"]
+[ext_resource type="Resource" path="res://game/actors/player/assets/audio/player_step.tres" id="21_step"]
+[ext_resource type="Resource" path="res://game/actors/player/assets/audio/punch_swing.tres" id="22_swing"]
+[ext_resource type="Resource" path="res://game/actors/player/assets/audio/punch_hit.tres" id="23_hit"]
+[ext_resource type="Resource" path="res://game/actors/player/assets/audio/player_hurt.tres" id="24_hurt"]
+[ext_resource type="Resource" path="res://game/actors/player/assets/audio/player_death.tres" id="25_death"]
+[ext_resource type="Resource" path="res://game/actors/player/assets/audio/player_exhausted.tres" id="26_tired"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_iwgb0"]
 radius = 6.0
@@ -29,6 +36,11 @@ attack_stamina_cost = 2
 windup_time = 0.2
 damage = 7.0
 unarmed_offsets = ExtResource("2_iwgb0")
+unarmed_swing_sound = ExtResource("22_swing")
+unarmed_hit_sound = ExtResource("23_hit")
+hurt_sound = ExtResource("24_hurt")
+death_sound = ExtResource("25_death")
+exhausted_sound = ExtResource("26_tired")
 run_speed = 180.0
 
 [node name="Collision" type="CollisionShape2D" parent="." unique_id=1079167882]
@@ -77,6 +89,10 @@ animation = &"idle_S"
 
 [node name="Weapon" type="Sprite2D" parent="Visual" unique_id=1707004274]
 visible = false
+
+[node name="Footsteps" type="Node2D" parent="." unique_id=1873390612]
+script = ExtResource("20_feet")
+sound = ExtResource("21_step")
 
 [node name="Hurtbox" type="Area2D" parent="." unique_id=387818382]
 visible = false

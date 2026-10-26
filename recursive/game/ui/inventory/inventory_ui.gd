@@ -104,6 +104,7 @@ func _can_open() -> bool:
 
 func open() -> void:
 	visible = true
+	Sfx.play(Sfx.menu_open)
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	if not get_tree().paused:
 		get_tree().paused = true
@@ -113,6 +114,7 @@ func open() -> void:
 
 func close() -> void:
 	visible = false
+	Sfx.play(Sfx.menu_close)
 	# Only release the pause we took ourselves, and only if nothing else still
 	# needs the game frozen. Unconditionally unpausing resumed the game
 	# underneath the death screen if the inventory was open when you died.

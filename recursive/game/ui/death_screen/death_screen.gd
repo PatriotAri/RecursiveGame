@@ -9,6 +9,7 @@ func _ready() -> void:
 	$Background/VBoxContainer/Quit.pressed.connect(_on_quit)
 
 func show_death() -> void:
+	Sfx.play(Sfx.death_sting)
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	visible = true
 	get_tree().paused = true

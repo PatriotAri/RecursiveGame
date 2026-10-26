@@ -6,6 +6,9 @@
 [ext_resource type="Script" uid="uid://v162jjr58mo1" path="res://game/items/equipment/core/stat_bonuses.gd" id="2_qvrjd"]
 [ext_resource type="PackedScene" uid="uid://ckfkf6upo66tf" path="res://game/actors/player/hitboxes/sword_hitbox.tscn" id="2_qypl4"]
 [ext_resource type="Texture2D" uid="uid://fv1bc2vesq72" path="res://game/items/equipment/weapons/tier_1/iron_sword/iron_sword.png" id="3_qvrjd"]
+[ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/iron_sword/audio/sword_swing.tres" id="5_swing"]
+[ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/iron_sword/audio/sword_hit.tres" id="6_hit"]
+[ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/iron_sword/audio/sword_equip.tres" id="7_equip"]
 
 [sub_resource type="Resource" id="Resource_jkgb8"]
 script = ExtResource("1_nnr27")
@@ -18,6 +21,8 @@ knockback_chance = 0.05
 windup_time = 0.25
 lifetime = 0.5
 reach_radius = 24.0
+swing_sound = ExtResource("5_swing")
+hit_sound = ExtResource("6_hit")
 metadata/_custom_type_script = "uid://c1b7wypd2oh0i"
 
 [sub_resource type="Resource" id="Resource_ml6gl"]
@@ -29,6 +34,7 @@ script = ExtResource("1_y2l73")
 attack = SubResource("Resource_jkgb8")
 bonuses = SubResource("Resource_ml6gl")
 animation_prefix = "onehand"
+equip_sound = ExtResource("7_equip")
 held_texture = ExtResource("3_qvrjd")
 rest_angle_degrees = -90.0
 grip_offset = Vector2(0, -12)

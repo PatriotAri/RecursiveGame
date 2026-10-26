@@ -26,6 +26,12 @@ const DIRECTIONS := ["E", "W", "N", "S", "NE", "NW", "SE", "SW"]
 @export_group("Stamina")
 @export var attack_stamina_cost := 5
 
+@export_group("Audio")
+## Played when the attack starts — for an enemy, its telegraph.
+@export var swing_sound: SoundEffect
+## Played at each target the attack connects with.
+@export var hit_sound: SoundEffect
+
 @export_group("Geometry")
 ## Radius of the collision shape inside `scene`. Stored here rather than read
 ## from the scene so a commit range can be computed without instancing one.

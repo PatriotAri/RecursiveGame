@@ -25,6 +25,8 @@ var hitbox_manager: HitboxManagerBase
 var stats: StatSystem
 var _flash_tween: Tween
 var death_handled := false
+var _was_detected := false
+var _spawn_sound_played := false
 
 ## The registered attack the attack system swings, and the one attack range
 ## is measured from. A type registers it in _register_attacks().
@@ -59,6 +61,13 @@ var attack_range:= 0.0
 @export var patrol_wait_time:= 3.5
 @export var patrol_timer:= 0.0
 @export var min_patrol_distance:= 40.0
+
+@export_group("Audio")
+@export var hurt_sound: SoundEffect
+@export var death_sound: SoundEffect
+## Played when the enemy spots the player.
+@export var alert_sound: SoundEffect
+@export var spawn_sound: SoundEffect
 
 @export_group("Drop Tuning")
 @export var drop_table: DropTable
@@ -96,6 +105,12 @@ func _physics_process(delta: float) -> void:
 			_handle_death()
 		return
 
+	# Played here rather than in _ready(): a spawner places the enemy after
+	# adding it, so _ready() would sound from the wrong spot.
+	if not _spawn_sound_played:
+		_spawn_sound_played = true
+		Sfx.play(spawn_sound, global_position)
+
 	stats.update(delta)
 
 	# Hitstun is a timer now. Ticked before the state machine so is_hurt is
@@ -106,6 +121,9 @@ func _physics_process(delta: float) -> void:
 			data.is_hurt = false
 
 	detection_system.update(delta)
+	if data.player_detected and not _was_detected:
+		Sfx.play(alert_sound, global_position)
+	_was_detected = data.player_detected
 	state_machine.update(data, delta)
 	movement_system.update(delta)
 	attack_system.update(data, delta)
@@ -141,6 +159,7 @@ func _on_damage_received(damage_amount: float, apply_hitstun: bool) -> void:
 	stats.health.remove(roundi(damage_amount))
 	if data.is_dead:
 		return
+	Sfx.play(hurt_sound, global_position)
 	_flash_damage()
 	if not apply_hitstun:
 		return
@@ -178,6 +197,7 @@ func _handle_death() -> void:
 	$Collision.set_deferred("disabled", true)
 	$Hurtbox.set_deferred("monitorable", false)
 	sprite.play("died")
+	Sfx.play(death_sound, global_position)
 	_try_spawn_drops()
 	await sprite.animation_finished
 	await get_tree().create_timer(0.5).timeout

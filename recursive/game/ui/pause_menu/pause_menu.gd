@@ -41,11 +41,13 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		
 func pause() -> void:
+	Sfx.play(Sfx.menu_open)
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	visible = true
 	get_tree().paused = true
 
 func resume() -> void:
+	Sfx.play(Sfx.menu_close)
 	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED_HIDDEN)
 	# Closing through the menu saves, so unpausing straight out of it does
 	# too.

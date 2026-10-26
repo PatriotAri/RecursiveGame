@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://dbi1x54t3m5fi" path="res://game/actors/player/hitboxes/player_unarmed_hitbox.tscn" id="2_0nnqp"]
 [ext_resource type="Script" uid="uid://v162jjr58mo1" path="res://game/items/equipment/core/stat_bonuses.gd" id="2_w320p"]
 [ext_resource type="Texture2D" uid="uid://7cw27q5h868t" path="res://game/debug/test_weapon_01/test_weapon.png" id="5_0nnqp"]
+[ext_resource type="Resource" path="res://game/actors/player/assets/audio/punch_swing.tres" id="7_swing"]
+[ext_resource type="Resource" path="res://game/actors/player/assets/audio/punch_hit.tres" id="8_hit"]
 
 [sub_resource type="Resource" id="Resource_w320p"]
 script = ExtResource("1_hknmk")
@@ -14,6 +16,8 @@ offsets = ExtResource("1_gxdt4")
 damage = 50.0
 windup_time = 0.6
 reach_radius = 35.0
+swing_sound = ExtResource("7_swing")
+hit_sound = ExtResource("8_hit")
 metadata/_custom_type_script = "uid://c1b7wypd2oh0i"
 
 [sub_resource type="Resource" id="Resource_wxv45"]

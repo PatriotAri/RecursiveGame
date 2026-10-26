@@ -3,6 +3,8 @@
 [ext_resource type="Script" path="res://game/actors/enemies/base/enemy.gd" id="1_enemy"]
 [ext_resource type="Script" uid="uid://bp8ie2pwt8578" path="res://game/components/hurtbox/hurtbox_component.gd" id="2_hurtbox"]
 [ext_resource type="Script" uid="uid://b78qrelon2r6a" path="res://game/actors/enemies/systems/enemy_detection_system.gd" id="3_detection"]
+[ext_resource type="Script" path="res://game/components/audio/footsteps.gd" id="4_feet"]
+[ext_resource type="Resource" path="res://game/audio/sfx/enemy_spawn.tres" id="5_spawn"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
 radius = 3.0
@@ -23,6 +25,7 @@ collision_layer = 4
 collision_mask = 71
 platform_floor_layers = 0
 script = ExtResource("1_enemy")
+spawn_sound = ExtResource("5_spawn")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=7471093]
 offset = Vector2(0, -32)
@@ -63,6 +66,9 @@ avoidance_enabled = true
 radius = 12.0
 neighbor_distance = 60.0
 max_speed = 130.0
+
+[node name="Footsteps" type="Node2D" parent="." unique_id=1301452617]
+script = ExtResource("4_feet")
 
 [node name="PatrolZone" type="Area2D" parent="." unique_id=215373219]
 visible = false
