@@ -1,0 +1,64 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/actors/enemies/base/enemy.gd" id="1_enemy"]
+[ext_resource type="Script" uid="uid://bp8ie2pwt8578" path="res://game/components/hurtbox/hurtbox_component.gd" id="2_hurtbox"]
+[ext_resource type="Script" uid="uid://b78qrelon2r6a" path="res://game/actors/enemies/systems/enemy_detection_system.gd" id="3_detection"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
+radius = 3.0
+height = 20.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hurtbox"]
+radius = 15.0
+height = 34.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_detection"]
+radius = 160.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_patrol"]
+size = Vector2(300, 275)
+
+[node name="Enemy" type="CharacterBody2D" unique_id=442968874 groups=["enemy"]]
+collision_layer = 4
+collision_mask = 7
+platform_floor_layers = 0
+script = ExtResource("1_enemy")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=7471093]
+offset = Vector2(0, -32)
+
+[node name="Collision" type="CollisionShape2D" parent="." unique_id=859264384]
+position = Vector2(0, -3)
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_body")
+debug_color = Color(0.6802632, 0.31803465, 0.9999998, 0.41960785)
+
+[node name="Hurtbox" type="Area2D" parent="." unique_id=2006968954]
+visible = false
+collision_layer = 32
+collision_mask = 0
+script = ExtResource("2_hurtbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=1043765262]
+position = Vector2(0, -12)
+rotation = -1.5707964
+shape = SubResource("CapsuleShape2D_hurtbox")
+debug_color = Color(0, 0.45588005, 0.8697051, 0.41960785)
+
+[node name="DetectionArea" type="Area2D" parent="." unique_id=36156171]
+visible = false
+collision_layer = 4
+collision_mask = 2
+script = ExtResource("3_detection")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea" unique_id=2085672107]
+position = Vector2(0, -31)
+shape = SubResource("CircleShape2D_detection")
+debug_color = Color(0, 0.85882354, 0, 0.41960785)
+
+[node name="PatrolZone" type="Area2D" parent="." unique_id=215373219]
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PatrolZone" unique_id=1245973108]
+position = Vector2(0, -12)
+shape = SubResource("RectangleShape2D_patrol")

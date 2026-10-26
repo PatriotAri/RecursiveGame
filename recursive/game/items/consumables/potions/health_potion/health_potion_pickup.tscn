@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cu4q6pywaruof" path="res://game/items/general/core/item_pickup.gd" id="1_nbdfb"]
 [ext_resource type="Resource" uid="uid://dq1ckemgpbwtg" path="res://game/items/consumables/potions/health_potion/health_potion.tres" id="2_nbdfb"]
-[ext_resource type="Texture2D" uid="uid://bhdt1qnbdauyq" path="res://game/items/consumables/potions/health_potion/Health Potion.png" id="3_bck8y"]
+[ext_resource type="Texture2D" uid="uid://bhdt1qnbdauyq" path="res://game/items/consumables/potions/health_potion/health_potion.png" id="3_bck8y"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lvfgc"]
 radius = 8.0

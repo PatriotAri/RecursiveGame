@@ -1,16 +1,15 @@
 [gd_scene format=3 uid="uid://bmonh3sf35441"]
 
+[ext_resource type="PackedScene" path="res://game/actors/enemies/base/enemy.tscn" id="0_base"]
 [ext_resource type="Script" uid="uid://bex0jclbed1so" path="res://game/actors/enemies/types/fodder/crawler/core/crawler.gd" id="1_iskh7"]
-[ext_resource type="Script" uid="uid://b78qrelon2r6a" path="res://game/actors/enemies/types/fodder/crawler/systems/crawler_detection_system.gd" id="2_et6g1"]
-[ext_resource type="PackedScene" uid="uid://dr8dgg3mtr20a" path="res://game/actors/enemies/types/fodder/crawler/hitboxes/CrawlerMeleeHitbox.tscn" id="2_k1huj"]
-[ext_resource type="Texture2D" uid="uid://d2xia3iwmytx8" path="res://game/actors/enemies/types/fodder/crawler/assets/slime_ATTACK.png" id="2_oftu5"]
+[ext_resource type="PackedScene" uid="uid://dr8dgg3mtr20a" path="res://game/actors/enemies/types/fodder/crawler/hitboxes/crawler_melee_hitbox.tscn" id="2_k1huj"]
+[ext_resource type="Texture2D" uid="uid://d2xia3iwmytx8" path="res://game/actors/enemies/types/fodder/crawler/assets/slime_attack.png" id="2_oftu5"]
 [ext_resource type="Resource" uid="uid://b3r4taoidcymg" path="res://game/actors/enemies/types/fodder/crawler/hitboxes/crawler_melee_offsets.tres" id="3_0pbox"]
-[ext_resource type="Texture2D" uid="uid://t6rs20w7omup" path="res://game/actors/enemies/types/fodder/crawler/assets/slime_DIED.png" id="3_k1huj"]
-[ext_resource type="Texture2D" uid="uid://b7yontipibenc" path="res://game/actors/enemies/types/fodder/crawler/assets/slime_HURT.png" id="4_0pbox"]
+[ext_resource type="Texture2D" uid="uid://t6rs20w7omup" path="res://game/actors/enemies/types/fodder/crawler/assets/slime_died.png" id="3_k1huj"]
+[ext_resource type="Texture2D" uid="uid://b7yontipibenc" path="res://game/actors/enemies/types/fodder/crawler/assets/slime_hurt.png" id="4_0pbox"]
 [ext_resource type="Resource" uid="uid://c6pny72mk8boe" path="res://game/actors/enemies/types/fodder/crawler/crawler_drops.tres" id="4_kc0vh"]
-[ext_resource type="Script" uid="uid://bp8ie2pwt8578" path="res://game/components/hurtbox/hurtbox_component.gd" id="7_wwd7i"]
-[ext_resource type="Texture2D" uid="uid://8fraly8w6dfe" path="res://game/actors/enemies/types/fodder/crawler/assets/Slime_IDLE.png" id="8_03f4h"]
-[ext_resource type="Texture2D" uid="uid://cfp7knntoir16" path="res://game/actors/enemies/types/fodder/crawler/assets/Slime_WALK.png" id="9_oftu5"]
+[ext_resource type="Texture2D" uid="uid://8fraly8w6dfe" path="res://game/actors/enemies/types/fodder/crawler/assets/slime_idle.png" id="8_03f4h"]
+[ext_resource type="Texture2D" uid="uid://cfp7knntoir16" path="res://game/actors/enemies/types/fodder/crawler/assets/slime_walk.png" id="9_oftu5"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_sjx0v"]
 atlas = ExtResource("2_oftu5")
@@ -579,24 +578,7 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pr2p4"]
-radius = 3.0
-height = 20.0
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ny2m7"]
-radius = 15.0
-height = 34.0
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_iskh7"]
-radius = 160.0
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_23y3x"]
-size = Vector2(300, 275)
-
-[node name="Crawler" type="CharacterBody2D" unique_id=442968874 groups=["enemy"]]
-collision_layer = 4
-collision_mask = 7
-platform_floor_layers = 0
+[node name="Crawler" instance=ExtResource("0_base")]
 script = ExtResource("1_iskh7")
 crawler_hitbox = ExtResource("2_k1huj")
 crawler_melee_offsets = ExtResource("3_0pbox")
@@ -604,43 +586,6 @@ lifetime = 0.1
 damage = 1.0
 drop_table = ExtResource("4_kc0vh")
 
-[node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=7471093]
+[node name="Sprite" parent="." index="0"]
 sprite_frames = SubResource("SpriteFrames_vlhhy")
 animation = &"idle_S"
-offset = Vector2(0, -32)
-
-[node name="Collision" type="CollisionShape2D" parent="." unique_id=859264384]
-position = Vector2(0, -3)
-rotation = 1.5707964
-shape = SubResource("CapsuleShape2D_pr2p4")
-debug_color = Color(0.6802632, 0.31803465, 0.9999998, 0.41960785)
-
-[node name="Hurtbox" type="Area2D" parent="." unique_id=2006968954]
-visible = false
-collision_layer = 32
-collision_mask = 0
-script = ExtResource("7_wwd7i")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=1043765262]
-position = Vector2(0, -12)
-rotation = -1.5707964
-shape = SubResource("CapsuleShape2D_ny2m7")
-debug_color = Color(0, 0.45588005, 0.8697051, 0.41960785)
-
-[node name="DetectionArea" type="Area2D" parent="." unique_id=36156171]
-visible = false
-collision_layer = 4
-collision_mask = 2
-script = ExtResource("2_et6g1")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea" unique_id=2085672107]
-position = Vector2(0, -31)
-shape = SubResource("CircleShape2D_iskh7")
-debug_color = Color(0, 0.85882354, 0, 0.41960785)
-
-[node name="PatrolZone" type="Area2D" parent="." unique_id=215373219]
-visible = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PatrolZone" unique_id=1245973108]
-position = Vector2(0, -12)
-shape = SubResource("RectangleShape2D_23y3x")

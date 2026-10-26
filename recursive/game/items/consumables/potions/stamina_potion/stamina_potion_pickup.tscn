@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cu4q6pywaruof" path="res://game/items/general/core/item_pickup.gd" id="1_k7ek2"]
 [ext_resource type="Resource" uid="uid://f134er318bg1" path="res://game/items/consumables/potions/stamina_potion/stamina_potion.tres" id="2_k7ek2"]
-[ext_resource type="Texture2D" uid="uid://dhwe1ymmkuijh" path="res://game/items/consumables/potions/stamina_potion/Stamina Potion.png" id="3_moord"]
+[ext_resource type="Texture2D" uid="uid://dhwe1ymmkuijh" path="res://game/items/consumables/potions/stamina_potion/stamina_potion.png" id="3_moord"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lvfgc"]
 radius = 8.0
