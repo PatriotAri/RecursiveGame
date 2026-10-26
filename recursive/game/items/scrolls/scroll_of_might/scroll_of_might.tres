@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="ScrollItem" format=3]
+
+[ext_resource type="Script" path="res://game/items/scrolls/core/scroll_item.gd" id="1_scroll"]
+[ext_resource type="Script" path="res://game/items/equipment/enchantments/damage_type_enchantment.gd" id="2_ench"]
+[ext_resource type="Texture2D" path="res://game/items/scrolls/scroll_of_might/scroll_of_might.png" id="3_icon"]
+[ext_resource type="Resource" path="res://game/items/scrolls/audio/scroll_read.tres" id="4_read"]
+
+[sub_resource type="Resource" id="Resource_ench"]
+script = ExtResource("2_ench")
+id = &"might"
+damage_type = 0
+percent = 15.0
+
+[resource]
+script = ExtResource("1_scroll")
+enchantment = SubResource("Resource_ench")
+use_sound = ExtResource("4_read")
+id = &"scroll_of_might"
+display_name = "Scroll of Might"
+description = "Teaches the enchantment +15% physical damage, to put on gear at the armor or weapon stand for a soul. Used up once read."
+icon = ExtResource("3_icon")
+category = 3
+value = 40

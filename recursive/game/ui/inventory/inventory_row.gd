@@ -35,11 +35,11 @@ func display(stack: ItemStack, equipped := false) -> void:
 	equipped_marker.modulate = Color(1, 1, 1, 1.0 if equipped else 0.0)
 	count.text = str(stack.count)
 
-## A known spell: the key it's on in the count's place, the marker if it's
-## the one readied.
-func display_spell(spell_ref: Spell, key: int, readied: bool) -> void:
+## A known spell at its level: the key it's on in the count's place, the
+## marker if it's the one readied.
+func display_spell(spell_ref: Spell, level: int, key: int, readied: bool) -> void:
 	spell = spell_ref
-	item_name.text = spell.display_name
+	item_name.text = spell.name_at(level)
 	equipped_marker.modulate = Color(1, 1, 1, 1.0 if readied else 0.0)
 	count.text = "[%d]" % (key + 1) if key >= 0 else ""
 

@@ -1,14 +1,16 @@
 class_name ContentRegistry
 
-## Finds any item or spell by its stable id, so saves can store ids instead of
-## file paths and a file can be moved without breaking old saves. Built on
-## first use by scanning the content folders for Item and Spell resources.
+## Finds any item, spell or learnable enchantment by its stable id, so saves
+## can store ids instead of file paths and a file can be moved without
+## breaking old saves. Built on first use by scanning the content folders for
+## Item and Spell resources; learnable enchantments are the ones on scrolls.
 
 ## Folders searched, recursively.
 const ROOTS := ["res://game/items", "res://game/spells", "res://game/debug"]
 
 static var _items: Dictionary = {}  # StringName id -> Item
 static var _spells: Dictionary = {}  # StringName id -> Spell
+static var _enchantments: Dictionary = {}  # StringName id -> Enchantment
 static var _built := false
 
 static func get_item(id: StringName) -> Item:
@@ -18,6 +20,10 @@ static func get_item(id: StringName) -> Item:
 static func get_spell(id: StringName) -> Spell:
 	_build()
 	return _spells.get(id)
+
+static func get_enchantment(id: StringName) -> Enchantment:
+	_build()
+	return _enchantments.get(id)
 
 static func _build() -> void:
 	if _built: return
@@ -38,6 +44,8 @@ static func _scan(path: String) -> void:
 		var resource := load(path.path_join(file))
 		if resource is Item:
 			_register(_items, resource)
+			if resource is ScrollItem and resource.enchantment:
+				_register(_enchantments, resource.enchantment)
 		elif resource is Spell:
 			_register(_spells, resource)
 

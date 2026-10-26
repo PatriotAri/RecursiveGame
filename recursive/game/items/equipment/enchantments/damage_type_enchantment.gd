@@ -1,4 +1,4 @@
-class_name ElementalDamageEnchantment
+class_name DamageTypeEnchantment
 
 extends Enchantment
 

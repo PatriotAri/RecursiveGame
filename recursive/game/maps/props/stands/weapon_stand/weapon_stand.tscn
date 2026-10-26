@@ -1,0 +1,39 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/maps/props/stands/core/gear_stand.gd" id="1_stand"]
+[ext_resource type="Texture2D" path="res://game/maps/props/stands/weapon_stand/weapon_stand.png" id="2_tex"]
+[ext_resource type="Resource" path="res://game/items/drops/gold_sack/gold.tres" id="3_gold"]
+[ext_resource type="Resource" path="res://game/items/drops/soul/soul.tres" id="4_soul"]
+[ext_resource type="Resource" path="res://game/maps/props/stands/audio/stand_upgrade.tres" id="5_up"]
+[ext_resource type="Resource" path="res://game/maps/props/stands/audio/stand_enchant.tres" id="6_ench"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_reach"]
+radius = 40.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(22, 10)
+
+[node name="WeaponStand" type="Area2D"]
+script = ExtResource("1_stand")
+title = "Weapon stand"
+gold_item = ExtResource("3_gold")
+soul_item = ExtResource("4_soul")
+weapons = true
+upgrade_sound = ExtResource("5_up")
+enchant_sound = ExtResource("6_ench")
+prompt_text = "Weapon stand"
+prompt_offset = Vector2(0, -54)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_tex")
+offset = Vector2(0, -24)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_reach")
+
+[node name="Body" type="StaticBody2D" parent="."]
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body"]
+position = Vector2(0, -4)
+shape = SubResource("RectangleShape2D_body")

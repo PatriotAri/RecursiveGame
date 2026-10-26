@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ItemMaterial" format=3]
+
+[ext_resource type="Script" path="res://game/items/equipment/materials/item_material.gd" id="1_mat"]
+
+[sub_resource type="Gradient" id="Gradient_ramp"]
+offsets = PackedFloat32Array(0.0, 0.12, 0.3, 0.45, 0.8, 1.0)
+colors = PackedColorArray(0.0235, 0.0157, 0.0314, 1, 0.0549, 0.0392, 0.0706, 1, 0.1412, 0.1098, 0.1804, 1, 0.2275, 0.1804, 0.2824, 1, 0.3765, 0.3216, 0.4627, 1, 0.5882, 0.5333, 0.6902, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ramp"]
+gradient = SubResource("Gradient_ramp")
+width = 128
+
+[resource]
+script = ExtResource("1_mat")
+display_name = "Ebony"
+rank = 4
+upgrade_cost = 240
+enchant_slots = 3
+ramp = SubResource("GradientTexture1D_ramp")

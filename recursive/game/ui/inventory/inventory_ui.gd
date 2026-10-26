@@ -137,7 +137,7 @@ func close() -> void:
 	_paused_by_me = false
 
 func _other_pause_holder_visible() -> bool:
-	for group in [&"death_screen", &"pause_menu", &"shop_ui"]:
+	for group in [&"death_screen", &"pause_menu", &"shop_ui", &"stand_ui"]:
 		var node := get_tree().get_first_node_in_group(group)
 		if node and node.visible:
 			return true
@@ -213,7 +213,8 @@ func _rebuild_spells() -> void:
 	for spell in data.known_spells:
 		var row: InventoryRow = row_scene.instantiate()
 		rows.add_child(row)
-		row.display_spell(spell, data.spell_slots.find(spell), data.readied_spell == spell)
+		row.display_spell(spell, player.player_spell_system.level_of(data, spell),
+			data.spell_slots.find(spell), data.readied_spell == spell)
 		row.spell_hovered.connect(_on_spell_hovered)
 		row.spell_activated.connect(_on_spell_activated)
 		row.focus_entered.connect(list_scroll.ensure_control_visible.bind(row))
@@ -264,6 +265,8 @@ func _on_row_activated(item: Item) -> void:
 	match item.category:
 		Item.Category.CONSUMABLE when item is TomeItem:
 			player.player_spell_system.learn(player.data, item)
+		Item.Category.CONSUMABLE when item is ScrollItem:
+			player.player_upgrade_system.learn(player.data, item)
 		Item.Category.CONSUMABLE:
 			# The `is` check rather than a cast: a .tres whose category was set
 			# to CONSUMEABLE but built from plain Item would otherwise pass a
@@ -295,15 +298,8 @@ func _show_detail() -> void:
 	if not has: return
 	detail_name.text = stack.item.display_name
 	detail_icon.texture = stack.item.icon
-	detail_desc.text = stack.item.description + _enchantment_text(stack.item)
-
-## "Enchanted" and one line per enchantment, or nothing for a plain item.
-func _enchantment_text(item: Item) -> String:
-	if not (item is EquippableItem and item.is_enchanted()): return ""
-	var lines := PackedStringArray(["", "", "Enchanted:"])
-	for enchantment in item.enchantments:
-		if enchantment: lines.append(enchantment.describe())
-	return "\n".join(lines)
+	detail_icon.material = MaterialRecolor.for_item(stack.item)
+	detail_desc.text = stack.item.details()
 
 func _show_spell_detail() -> void:
 	var spell := _displayed_spell
@@ -311,13 +307,17 @@ func _show_spell_detail() -> void:
 	detail_icon.visible = spell != null
 	detail_desc.visible = spell != null
 	if spell == null: return
-	detail_name.text = spell.display_name
+	var spells: PlayerSpellSystem = player.player_spell_system
+	detail_name.text = spell.name_at(spells.level_of(player.data, spell))
 	detail_icon.texture = spell.icon
-	var attack := spell.attack
+	detail_icon.material = null
+	var attack := spells.attack_for(player.data, spell)
 	var type_name := String(AttackSpec.DamageType.keys()[attack.damage_type]).to_lower()
 	var lines := PackedStringArray([spell.description, ""])
-	lines.append("%d mana. %d %s damage%s." % [attack.mana_cost, roundi(attack.damage), type_name,
-		", in a blast" if attack.blast_radius > 0.0 else ""])
+	lines.append("%d mana. %s %s damage%s." % [attack.mana_cost, String.num(attack.damage), type_name,
+		", in a %dpx blast" % roundi(attack.blast_radius) if attack.blast_radius > 0.0 else ""])
+	if player.data.researching == spell:
+		lines.append("Researching the next level: ready after your next round.")
 	var key: int = player.data.spell_slots.find(spell)
 	lines.append("On key %d. Press 1-4 to move it." % (key + 1) if key >= 0 else "Press 1-4 to put it on a key.")
 	detail_desc.text = "\n".join(lines)

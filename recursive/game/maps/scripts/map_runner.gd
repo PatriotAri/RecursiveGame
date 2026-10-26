@@ -104,6 +104,9 @@ func _enter_level(index: int) -> void:
 	# Auto-saves land on round boundaries only: just before a round, and as
 	# soon as one is cleared.
 	level.round_starting.connect(_auto_save.unbind(1))
+	# Research at the tome stand finishes with the round, before the save
+	# that follows it, so the save has the new level.
+	level.round_cleared.connect(func(_round: int) -> void: player.player_spell_system.finish_research(player.data))
 	level.round_cleared.connect(_auto_save.unbind(1))
 	add_child(level)
 	_place_player(level.actors, level.player_spawn.global_position)

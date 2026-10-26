@@ -15,7 +15,7 @@ static func from_items(items: Array) -> EnchantmentTotals:
 	var totals := EnchantmentTotals.new()
 	for item in items:
 		if item == null: continue
-		for enchantment in item.enchantments:
+		for enchantment in item.all_enchantments():
 			if enchantment: enchantment.apply_to(totals)
 	return totals
 
@@ -23,6 +23,10 @@ static func from_items(items: Array) -> EnchantmentTotals:
 func damage_scale(type: AttackSpec.DamageType) -> float:
 	return 1.0 + damage_percent.get(type, 0.0) / 100.0
 
-## What `stat` is multiplied by, after flat bonuses.
+## What `stat` is multiplied by, after flat bonuses. Walk and run speed take
+## MOVE_SPEED too.
 func stat_scale(stat: StatPercentEnchantment.Stat) -> float:
-	return 1.0 + stat_percent.get(stat, 0.0) / 100.0
+	var percent: float = stat_percent.get(stat, 0.0)
+	if stat in [StatPercentEnchantment.Stat.WALK_SPEED, StatPercentEnchantment.Stat.RUN_SPEED]:
+		percent += stat_percent.get(StatPercentEnchantment.Stat.MOVE_SPEED, 0.0)
+	return 1.0 + percent / 100.0

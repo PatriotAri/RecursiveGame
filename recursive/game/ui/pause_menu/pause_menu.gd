@@ -51,6 +51,11 @@ func _input(event: InputEvent) -> void:
 			shop_ui.close()
 			get_viewport().set_input_as_handled()
 			return
+		var stand_ui := get_tree().get_first_node_in_group(&"stand_ui")
+		if stand_ui and stand_ui.visible:
+			stand_ui.close()
+			get_viewport().set_input_as_handled()
+			return
 		if get_tree().paused:
 			resume()
 		else:

@@ -49,12 +49,14 @@ func set_weapon(item: EquippableItem) -> void:
 		_swing_arc = 0.0
 		sprite.offset = Vector2.ZERO
 		sprite.texture = null
+		sprite.material = null
 		sprite.visible = false
 		return
 	_rest_offset = deg_to_rad(item.rest_angle_degrees)
 	_swing_arc = deg_to_rad(item.swing_arc_degrees)
 	sprite.offset = item.grip_offset
 	sprite.texture = item.held_texture
+	sprite.material = MaterialRecolor.for_item(item)
 	sprite.visible = true
 
 func update(data: PlayerData, swing_progress: float) -> void:

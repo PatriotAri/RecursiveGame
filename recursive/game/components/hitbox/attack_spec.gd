@@ -15,7 +15,7 @@ enum DamageType {PHYSICAL, FIRE} #always append enum, never insert in middle
 
 @export_group("Damage")
 @export var damage := 1.0
-## What kind of damage it deals. Elemental enchantments boost one kind.
+## What kind of damage it deals. Damage-type enchantments boost one kind.
 @export var damage_type := DamageType.PHYSICAL
 @export var knockback_strength := 50.0
 @export var knockback_decay := 800.0
@@ -37,6 +37,10 @@ enum DamageType {PHYSICAL, FIRE} #always append enum, never insert in middle
 @export var swing_sound: SoundEffect
 ## Played at each target the attack connects with.
 @export var hit_sound: SoundEffect
+
+## What the spawned attack's art is drawn through, e.g. a thrown dagger
+## recoloured to its material. Set on a modified copy, never saved.
+var visual_material: Material
 
 @export_group("Geometry")
 ## Radius of the collision shape inside `scene`. Stored here rather than read

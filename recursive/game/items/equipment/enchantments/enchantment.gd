@@ -6,6 +6,11 @@ extends Resource
 ## carries a list of them; any at all makes it enchanted. Each kind is a
 ## subclass that adds itself into the totals for everything worn.
 
+## Stable, like an item id: saves refer to learned and added enchantments by
+## it. Learnable ones come from scrolls. Empty on built-in ones, which come
+## with their item.
+@export var id: StringName
+
 func apply_to(_totals: EnchantmentTotals) -> void:
 	pass
 

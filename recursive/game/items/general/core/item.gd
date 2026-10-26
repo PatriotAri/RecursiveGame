@@ -13,3 +13,8 @@ enum Category {NONE, ARMOR, WEAPON, CONSUMABLE, CURRENCY} #always append enum, n
 @export var value := 0
 ## Played when it's picked up. Leave empty for the shared pickup sound.
 @export var pickup_sound: SoundEffect
+
+## The text a menu shows for it: its description, plus anything a kind of
+## item adds, like gear's material and enchantments.
+func details() -> String:
+	return description

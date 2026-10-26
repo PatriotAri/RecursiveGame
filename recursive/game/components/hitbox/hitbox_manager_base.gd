@@ -63,6 +63,10 @@ func spawn_hitbox(attack_name: StringName) -> HitboxBase:
 		instance.queue_free()
 		return null
 
+	if spec.visual_material:
+		for sprite in hitbox.find_children("*", "Sprite2D"):
+			sprite.material = spec.visual_material
+
 	var facing := get_facing()
 
 	hitbox.attack_name = attack_name

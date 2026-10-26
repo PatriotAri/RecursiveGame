@@ -172,7 +172,7 @@ func _create_animation_system() -> EnemyAnimationSystem:
 	return EnemyAnimationSystem.new(sprite, data)
 
 func _on_damage_received(damage_amount: float, apply_hitstun: bool) -> void:
-	stats.health.remove(roundi(damage_amount))
+	stats.health.remove(damage_amount)
 	if data.is_dead:
 		return
 	Sfx.play(hurt_sound, global_position)

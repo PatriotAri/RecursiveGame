@@ -38,10 +38,12 @@ func get_items() -> Array[EquippableItem]:
 	result.assign(_slots.values())
 	return result
 
-## Every worn item's bonuses, ready to hand to StatBonuses.total().
+## Every worn item's bonuses, at its material, ready to hand to
+## StatBonuses.stat_total().
 func get_bonuses() -> Array[StatBonuses]:
 	var result: Array[StatBonuses] = []
 	for equipped in _slots.values():
-		if equipped.bonuses != null:
-			result.append(equipped.bonuses)
+		var bonuses: StatBonuses = equipped.get_bonuses()
+		if bonuses != null:
+			result.append(bonuses)
 	return result

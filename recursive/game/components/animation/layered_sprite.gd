@@ -106,6 +106,13 @@ func set_layer_frames(layer_name: StringName, frames: SpriteFrames) -> void:
 		return
 	_apply_layer(layer)
 
+## Draws one layer through `material`, e.g. armour recoloured to what it's
+## made of. Null draws it as it is.
+func set_layer_material(layer_name: StringName, layer_material: Material) -> void:
+	var layer := _get_layer(layer_name)
+	if layer == null: return
+	layer.material = layer_material
+
 ## Moves a layer in front of or behind its siblings without reordering the
 ## tree. 0 is the layer's place in the stack.
 func set_layer_z(layer_name: StringName, z: int) -> void:

@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" path="res://game/spells/fireball/fireball_orb.png" id="6_orb"]
 [ext_resource type="Resource" path="res://game/spells/fireball/audio/fireball_cast.tres" id="7_cast"]
 [ext_resource type="Resource" path="res://game/spells/fireball/audio/fireball_blast.tres" id="8_boom"]
+[ext_resource type="Script" path="res://game/spells/core/spell_level.gd" id="9_level"]
 
 [sub_resource type="Resource" id="Resource_fireball"]
 script = ExtResource("2_spec")
@@ -29,6 +30,20 @@ blast_radius = 40.0
 blast_scene = ExtResource("4_blast")
 blast_sound = ExtResource("8_boom")
 
+[sub_resource type="Resource" id="Resource_level_2"]
+script = ExtResource("9_level")
+damage = 11.0
+blast_radius = 48.0
+mana_cost = 3
+research_cost = 2
+
+[sub_resource type="Resource" id="Resource_level_3"]
+script = ExtResource("9_level")
+damage = 15.0
+blast_radius = 56.0
+mana_cost = 4
+research_cost = 4
+
 [resource]
 script = ExtResource("1_spell")
 id = &"fireball"
@@ -37,3 +52,4 @@ description = "A ball of fire that bursts on impact, burning everything close by
 icon = ExtResource("5_icon")
 held_texture = ExtResource("6_orb")
 attack = SubResource("Resource_fireball")
+levels = Array[ExtResource("9_level")]([SubResource("Resource_level_2"), SubResource("Resource_level_3")])

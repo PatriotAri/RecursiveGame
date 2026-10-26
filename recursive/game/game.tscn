@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://di5p52ar71okx" path="res://game/ui/death_screen/death_screen.tscn" id="4_4fuuu"]
 [ext_resource type="PackedScene" uid="uid://brvy4sxjfboda" path="res://game/ui/inventory/inventory_ui.tscn" id="5_dxrkv"]
 [ext_resource type="PackedScene" path="res://game/ui/shop/shop_ui.tscn" id="6_shop"]
+[ext_resource type="PackedScene" path="res://game/ui/stand/stand_ui.tscn" id="7_stand"]
 
 [node name="Game" type="Node" unique_id=905991356]
 
@@ -23,3 +24,5 @@ map = ExtResource("1_map")
 [node name="InventoryUi" parent="." unique_id=1053432433 instance=ExtResource("5_dxrkv")]
 
 [node name="ShopUi" parent="." unique_id=1844210977 instance=ExtResource("6_shop")]
+
+[node name="StandUi" parent="." unique_id=1844210988 instance=ExtResource("7_stand")]

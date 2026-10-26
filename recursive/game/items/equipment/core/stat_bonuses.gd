@@ -9,7 +9,9 @@ extends Resource
 @export var max_mana := 0
 @export var walk_speed := 0.0
 @export var run_speed := 0.0
-## Flat damage reduction per hit. See player.gd _on_damage_received().
+## Armour points: each takes a percentage off every hit. See
+## Player.damage_after_armor(). An item with materials takes its armour from
+## its tier instead.
 @export var armor := 0
 
 ## Costs, so the sign is inverted from everything above: NEGATIVE is the

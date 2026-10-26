@@ -22,6 +22,11 @@ func remove(item_id: StringName, amount: int = 1) -> bool:
 	changed.emit(stack.item, stack.count)
 	return true
 
+## An item's own state changed (upgraded, enchanted) without its count
+## changing. Tells listeners the same way a count change does.
+func notify_changed(item: Item) -> void:
+	changed.emit(item, get_count(item.id))
+
 func get_count(item_id: StringName) -> int:
 	var stack: ItemStack = _stacks.get(item_id)
 	return stack.count if stack else 0

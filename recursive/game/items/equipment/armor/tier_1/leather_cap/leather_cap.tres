@@ -4,11 +4,59 @@
 [ext_resource type="Script" uid="uid://v162jjr58mo1" path="res://game/items/equipment/core/stat_bonuses.gd" id="2_bonus"]
 [ext_resource type="SpriteFrames" path="res://game/items/equipment/armor/tier_1/leather_cap/leather_cap_frames.tres" id="3_frames"]
 [ext_resource type="Texture2D" path="res://game/items/equipment/armor/tier_1/leather_cap/leather_cap.png" id="4_icon"]
+[ext_resource type="Script" path="res://game/items/equipment/materials/item_tier.gd" id="40_tier"]
+[ext_resource type="Resource" path="res://game/items/equipment/materials/leather.tres" id="41_leather"]
+[ext_resource type="Resource" path="res://game/items/equipment/materials/iron.tres" id="41_iron"]
+[ext_resource type="Resource" path="res://game/items/equipment/materials/steel.tres" id="41_steel"]
+[ext_resource type="Resource" path="res://game/items/equipment/materials/damascus.tres" id="41_damascus"]
+[ext_resource type="Resource" path="res://game/items/equipment/materials/ebony.tres" id="41_ebony"]
+[ext_resource type="Resource" path="res://game/items/equipment/materials/glass.tres" id="41_glass"]
 
 [sub_resource type="Resource" id="Resource_bonus"]
 script = ExtResource("2_bonus")
 armor = 1
 metadata/_custom_type_script = "uid://v162jjr58mo1"
+
+[sub_resource type="Resource" id="Resource_tier_0"]
+script = ExtResource("40_tier")
+material = ExtResource("41_leather")
+display_name = "Leather Cap"
+armor = 1
+
+[sub_resource type="Resource" id="Resource_tier_1"]
+script = ExtResource("40_tier")
+material = ExtResource("41_iron")
+display_name = "Iron Helmet"
+description = "An iron helmet. It rings when struck."
+armor = 2
+
+[sub_resource type="Resource" id="Resource_tier_2"]
+script = ExtResource("40_tier")
+material = ExtResource("41_steel")
+display_name = "Steel Helmet"
+description = "A steel helmet. Harder than iron, and lighter."
+armor = 2
+
+[sub_resource type="Resource" id="Resource_tier_3"]
+script = ExtResource("40_tier")
+material = ExtResource("41_damascus")
+display_name = "Damascus Helmet"
+description = "A damascus helmet. Rippled from the forge, and tougher still."
+armor = 3
+
+[sub_resource type="Resource" id="Resource_tier_4"]
+script = ExtResource("40_tier")
+material = ExtResource("41_ebony")
+display_name = "Ebony Helmet"
+description = "An ebony helmet. Black as night, and nearly as hard to get through."
+armor = 4
+
+[sub_resource type="Resource" id="Resource_tier_5"]
+script = ExtResource("40_tier")
+material = ExtResource("41_glass")
+display_name = "Glass Helmet"
+description = "A glass helmet. Lighter than it looks, and harder than any metal."
+armor = 5
 
 [resource]
 script = ExtResource("1_item")
@@ -24,3 +72,4 @@ description = "A leather cap. Better than nothing."
 icon = ExtResource("4_icon")
 category = 1
 metadata/_custom_type_script = "uid://c12w1whtmqtq7"
+tiers = Array[ExtResource("40_tier")]([SubResource("Resource_tier_0"), SubResource("Resource_tier_1"), SubResource("Resource_tier_2"), SubResource("Resource_tier_3"), SubResource("Resource_tier_4"), SubResource("Resource_tier_5")])

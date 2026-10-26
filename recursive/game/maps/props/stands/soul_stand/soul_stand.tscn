@@ -1,0 +1,71 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/maps/props/stands/core/soul_stand.gd" id="1_stand"]
+[ext_resource type="Texture2D" path="res://game/maps/props/stands/soul_stand/soul_stand.png" id="2_tex"]
+[ext_resource type="Resource" path="res://game/items/drops/gold_sack/gold.tres" id="3_gold"]
+[ext_resource type="Resource" path="res://game/items/drops/soul/soul.tres" id="4_soul"]
+[ext_resource type="Resource" path="res://game/maps/props/stands/audio/stand_soul.tres" id="5_buy"]
+[ext_resource type="Script" path="res://game/maps/props/stands/core/soul_upgrade.gd" id="6_up"]
+
+[sub_resource type="Resource" id="Resource_max_health"]
+script = ExtResource("6_up")
+id = &"max_health"
+display_name = "Max health"
+stat = 0
+amount = 2
+first_cost = 1
+cost_increase = 1
+increase_every = 2
+max_purchases = 10
+
+[sub_resource type="Resource" id="Resource_max_stamina"]
+script = ExtResource("6_up")
+id = &"max_stamina"
+display_name = "Max stamina"
+stat = 1
+amount = 2
+first_cost = 1
+cost_increase = 1
+increase_every = 2
+max_purchases = 10
+
+[sub_resource type="Resource" id="Resource_max_mana"]
+script = ExtResource("6_up")
+id = &"max_mana"
+display_name = "Max mana"
+stat = 2
+amount = 1
+first_cost = 1
+cost_increase = 1
+increase_every = 2
+max_purchases = 10
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_reach"]
+radius = 40.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(22, 10)
+
+[node name="SoulStand" type="Area2D"]
+script = ExtResource("1_stand")
+title = "Soul stand"
+gold_item = ExtResource("3_gold")
+soul_item = ExtResource("4_soul")
+upgrades = Array[ExtResource("6_up")]([SubResource("Resource_max_health"), SubResource("Resource_max_stamina"), SubResource("Resource_max_mana")])
+buy_sound = ExtResource("5_buy")
+prompt_text = "Soul stand"
+prompt_offset = Vector2(0, -54)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_tex")
+offset = Vector2(0, -24)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_reach")
+
+[node name="Body" type="StaticBody2D" parent="."]
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body"]
+position = Vector2(0, -4)
+shape = SubResource("RectangleShape2D_body")

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ItemMaterial" format=3]
+
+[ext_resource type="Script" path="res://game/items/equipment/materials/item_material.gd" id="1_mat"]
+
+[sub_resource type="Gradient" id="Gradient_ramp"]
+offsets = PackedFloat32Array(0.0, 0.12, 0.3, 0.45, 0.8, 1.0)
+colors = PackedColorArray(0.0549, 0.0627, 0.0863, 1, 0.1255, 0.1412, 0.1725, 1, 0.4314, 0.4784, 0.5490, 1, 0.6275, 0.6824, 0.7529, 1, 0.8392, 0.8863, 0.9412, 1, 0.9804, 0.9882, 1.0000, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ramp"]
+gradient = SubResource("Gradient_ramp")
+width = 128
+
+[resource]
+script = ExtResource("1_mat")
+display_name = "Steel"
+rank = 2
+upgrade_cost = 60
+enchant_slots = 2
+ramp = SubResource("GradientTexture1D_ramp")

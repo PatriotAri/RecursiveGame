@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ItemMaterial" format=3]
+
+[ext_resource type="Script" path="res://game/items/equipment/materials/item_material.gd" id="1_mat"]
+
+[sub_resource type="Gradient" id="Gradient_ramp"]
+offsets = PackedFloat32Array(0.0, 0.12, 0.3, 0.45, 0.8, 1.0)
+colors = PackedColorArray(0.0627, 0.0471, 0.0471, 1, 0.1333, 0.1098, 0.1020, 1, 0.3843, 0.3373, 0.3137, 1, 0.5490, 0.4941, 0.4549, 1, 0.7294, 0.6745, 0.6275, 1, 0.9020, 0.8627, 0.8235, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ramp"]
+gradient = SubResource("Gradient_ramp")
+width = 128
+
+[resource]
+script = ExtResource("1_mat")
+display_name = "Damascus"
+rank = 3
+upgrade_cost = 120
+enchant_slots = 2
+ramp = SubResource("GradientTexture1D_ramp")

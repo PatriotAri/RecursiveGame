@@ -13,6 +13,20 @@
 [ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/throwing_dagger/throwing_dagger.tres" id="11_dagger"]
 [ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/apprentice_staff/apprentice_staff.tres" id="12_staff"]
 [ext_resource type="Resource" path="res://game/items/tomes/tome_of_fireball/tome_of_fireball.tres" id="13_tome"]
+[ext_resource type="Resource" path="res://game/items/equipment/armor/tier_1/leather_tunic/leather_tunic.tres" id="20_tunic"]
+[ext_resource type="Resource" path="res://game/items/equipment/armor/tier_1/leather_gloves/leather_gloves.tres" id="21_gloves"]
+[ext_resource type="Resource" path="res://game/items/equipment/armor/tier_1/leather_boots/leather_boots.tres" id="22_boots"]
+[ext_resource type="Resource" path="res://game/items/scrolls/scroll_of_might/scroll_of_might.tres" id="23_might"]
+[ext_resource type="Resource" path="res://game/items/scrolls/scroll_of_embers/scroll_of_embers.tres" id="23_embers"]
+[ext_resource type="Resource" path="res://game/items/scrolls/scroll_of_vitality/scroll_of_vitality.tres" id="23_vitality"]
+[ext_resource type="Resource" path="res://game/items/scrolls/scroll_of_endurance/scroll_of_endurance.tres" id="23_endurance"]
+[ext_resource type="Resource" path="res://game/items/scrolls/scroll_of_insight/scroll_of_insight.tres" id="23_insight"]
+[ext_resource type="Resource" path="res://game/items/scrolls/scroll_of_swiftness/scroll_of_swiftness.tres" id="23_swiftness"]
+[ext_resource type="Resource" path="res://game/items/scrolls/scroll_of_piercing/scroll_of_piercing.tres" id="23_piercing"]
+[ext_resource type="PackedScene" path="res://game/maps/props/stands/armor_stand/armor_stand.tscn" id="30_armor"]
+[ext_resource type="PackedScene" path="res://game/maps/props/stands/weapon_stand/weapon_stand.tscn" id="31_weapon"]
+[ext_resource type="PackedScene" path="res://game/maps/props/stands/tome_stand/tome_stand.tscn" id="32_tome"]
+[ext_resource type="PackedScene" path="res://game/maps/props/stands/soul_stand/soul_stand.tscn" id="33_soul"]
 
 [node name="Airship" type="Node2D" node_paths=PackedStringArray("ramp_down", "arrival", "actors") unique_id=1508322869]
 script = ExtResource("1_airship")
@@ -37,7 +51,19 @@ y_sort_enabled = true
 
 [node name="Vendor" parent="Y-sorted" unique_id=1508362464 instance=ExtResource("3_vendor")]
 position = Vector2(288, 144)
-stock = Array[ExtResource("10_item")]([ExtResource("5_health"), ExtResource("6_stamina"), ExtResource("7_mana"), ExtResource("8_sword"), ExtResource("11_dagger"), ExtResource("12_staff"), ExtResource("9_cap"), ExtResource("13_tome")])
+stock = Array[ExtResource("10_item")]([ExtResource("5_health"), ExtResource("6_stamina"), ExtResource("7_mana"), ExtResource("8_sword"), ExtResource("11_dagger"), ExtResource("12_staff"), ExtResource("9_cap"), ExtResource("20_tunic"), ExtResource("21_gloves"), ExtResource("22_boots"), ExtResource("13_tome"), ExtResource("23_might"), ExtResource("23_embers"), ExtResource("23_vitality"), ExtResource("23_endurance"), ExtResource("23_insight"), ExtResource("23_swiftness"), ExtResource("23_piercing")])
+
+[node name="ArmorStand" parent="Y-sorted" unique_id=1508380001 instance=ExtResource("30_armor")]
+position = Vector2(112, 200)
+
+[node name="WeaponStand" parent="Y-sorted" unique_id=1508380002 instance=ExtResource("31_weapon")]
+position = Vector2(112, 296)
+
+[node name="TomeStand" parent="Y-sorted" unique_id=1508380003 instance=ExtResource("32_tome")]
+position = Vector2(464, 200)
+
+[node name="SoulStand" parent="Y-sorted" unique_id=1508380004 instance=ExtResource("33_soul")]
+position = Vector2(464, 296)
 
 [node name="RampDown" parent="Y-sorted" unique_id=1508370383 instance=ExtResource("4_ramp")]
 position = Vector2(288, 416)

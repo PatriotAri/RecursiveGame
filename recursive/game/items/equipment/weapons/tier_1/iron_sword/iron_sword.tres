@@ -9,6 +9,12 @@
 [ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/iron_sword/audio/sword_swing.tres" id="5_swing"]
 [ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/iron_sword/audio/sword_hit.tres" id="6_hit"]
 [ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/iron_sword/audio/sword_equip.tres" id="7_equip"]
+[ext_resource type="Script" path="res://game/items/equipment/materials/item_tier.gd" id="40_tier"]
+[ext_resource type="Resource" path="res://game/items/equipment/materials/iron.tres" id="41_iron"]
+[ext_resource type="Resource" path="res://game/items/equipment/materials/steel.tres" id="41_steel"]
+[ext_resource type="Resource" path="res://game/items/equipment/materials/damascus.tres" id="41_damascus"]
+[ext_resource type="Resource" path="res://game/items/equipment/materials/ebony.tres" id="41_ebony"]
+[ext_resource type="Resource" path="res://game/items/equipment/materials/glass.tres" id="41_glass"]
 
 [sub_resource type="Resource" id="Resource_jkgb8"]
 script = ExtResource("1_nnr27")
@@ -29,6 +35,40 @@ metadata/_custom_type_script = "uid://c1b7wypd2oh0i"
 script = ExtResource("2_qvrjd")
 metadata/_custom_type_script = "uid://v162jjr58mo1"
 
+[sub_resource type="Resource" id="Resource_tier_0"]
+script = ExtResource("40_tier")
+material = ExtResource("41_iron")
+display_name = "Iron Sword"
+damage = 10.0
+
+[sub_resource type="Resource" id="Resource_tier_1"]
+script = ExtResource("40_tier")
+material = ExtResource("41_steel")
+display_name = "Steel Sword"
+description = "A steel sword. Harder than iron, and lighter."
+damage = 13.0
+
+[sub_resource type="Resource" id="Resource_tier_2"]
+script = ExtResource("40_tier")
+material = ExtResource("41_damascus")
+display_name = "Damascus Sword"
+description = "A damascus sword. Rippled from the forge, and tougher still."
+damage = 16.0
+
+[sub_resource type="Resource" id="Resource_tier_3"]
+script = ExtResource("40_tier")
+material = ExtResource("41_ebony")
+display_name = "Ebony Sword"
+description = "An ebony sword. Black as night, and nearly as hard to get through."
+damage = 20.0
+
+[sub_resource type="Resource" id="Resource_tier_4"]
+script = ExtResource("40_tier")
+material = ExtResource("41_glass")
+display_name = "Glass Sword"
+description = "A glass sword. Lighter than it looks, and harder than any metal."
+damage = 25.0
+
 [resource]
 script = ExtResource("1_y2l73")
 value = 30
@@ -46,3 +86,5 @@ description = "An iron sword. Nothing to scoff at."
 icon = ExtResource("3_qvrjd")
 category = 2
 metadata/_custom_type_script = "uid://c12w1whtmqtq7"
+tiers = Array[ExtResource("40_tier")]([SubResource("Resource_tier_0"), SubResource("Resource_tier_1"), SubResource("Resource_tier_2"), SubResource("Resource_tier_3"), SubResource("Resource_tier_4")])
+recolor_max_saturation = 0.25

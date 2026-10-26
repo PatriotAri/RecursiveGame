@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="ItemMaterial" format=3]
+
+[ext_resource type="Script" path="res://game/items/equipment/materials/item_material.gd" id="1_mat"]
+
+[resource]
+script = ExtResource("1_mat")
+display_name = "Leather"
+rank = 0
+upgrade_cost = 0
+enchant_slots = 1

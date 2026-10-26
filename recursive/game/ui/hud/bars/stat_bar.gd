@@ -27,8 +27,8 @@ func bind(stat: Stat) -> void:
 	_target_ratio = _display_ratio
 	_redraw()
 
-func _on_stat_changed(new_value: int, new_maximum: int) -> void:
-	_target_ratio = float(new_value) / float(new_maximum)
+func _on_stat_changed(new_value: float, new_maximum: float) -> void:
+	_target_ratio = new_value / new_maximum
 	set_process(true)
 
 func _process(delta: float) -> void:

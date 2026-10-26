@@ -1,9 +1,5 @@
 extends CharacterBody2D
 
-## Armour can soften a hit but never cancel it, so weak enemies stay a threat
-## however well geared the player is.
-const MIN_DAMAGE_TAKEN := 1
-
 var data: PlayerData
 var stats: StatSystem
 
@@ -17,6 +13,7 @@ var player_animation_system: PlayerAnimationSystem
 var player_weapon_visual_system: PlayerWeaponVisualSystem
 var player_interaction_system: PlayerInteractionSystem
 var player_spell_system: PlayerSpellSystem
+var player_upgrade_system: PlayerUpgradeSystem
 
 var player_hitbox_manager: HitboxManagerBase
 
@@ -52,6 +49,13 @@ var death_handled := false
 @export var max_mana: int = 10
 @export var mana_regen_per_second: float = 1.0
 @export var mana_regen_delay: float = 1.0
+
+@export_group("Armour")
+## How much of every hit one armour point takes off.
+@export var armor_percent_per_point:= 4.0
+## The most armour can take off, however much is worn, so weak enemies stay a
+## threat to a fully geared player.
+@export var max_armor_percent:= 80.0
 
 @export_category("Combat/Movement")
 @export_group("Attack")
@@ -129,6 +133,7 @@ func _ready() -> void:
 	player_weapon_visual_system = PlayerWeaponVisualSystem.new($Visual/Weapon, visual, $Visual/SpellOrb)
 	player_spell_system = PlayerSpellSystem.new(self, spell_ready_sound)
 	player_equipment_system = PlayerEquipmentSystem.new(self)
+	player_upgrade_system = PlayerUpgradeSystem.new(self)
 	player_animation_system = PlayerAnimationSystem.new(visual)
 	player_interaction_system = PlayerInteractionSystem.new(self)
 	
@@ -257,12 +262,15 @@ func _on_damage_received(damage_amount: float, apply_hitstun: bool) -> void:
 	player_attack_system.cancel(data)
 	player_hitbox_manager.cancel_all()
 
-## Flat reduction: each point of armour takes one point off every hit, down
-## to MIN_DAMAGE_TAKEN. A hit that was never meant to hurt stays at zero.
-func damage_after_armor(damage_amount: float) -> int:
-	var raw := roundi(damage_amount)
-	if raw <= 0: return 0
-	return maxi(raw - data.armor, MIN_DAMAGE_TAKEN)
+## Percent reduction: each armour point takes armor_percent_per_point off
+## every hit, up to max_armor_percent. Health keeps the fraction.
+func damage_after_armor(damage_amount: float) -> float:
+	if damage_amount <= 0.0: return 0.0
+	return damage_amount * (1.0 - armor_reduction())
+
+## The share of every hit armour takes off, from 0 to max_armor_percent / 100.
+func armor_reduction() -> float:
+	return minf(data.armor * armor_percent_per_point, max_armor_percent) / 100.0
 
 func _on_health_emptied() -> void:
 	data.is_dead = true
@@ -272,8 +280,10 @@ func _on_knockback_received(direction: Vector2, strength: float, decay: float) -
 	data.modifiers.add(knockback)
 
 ## Everything about the player a save keeps: where they stand, their
-## current health, stamina and mana, what they carry and what they wear.
-## Items are stored by id; see ContentRegistry.
+## current health, stamina and mana, what they carry and what they wear, and
+## what they've bought at the stands. Items are stored by id; see
+## ContentRegistry. Copies made at the stands are rebuilt from their
+## original; see PlayerUpgradeSystem.
 func get_save_data() -> Dictionary:
 	var items := {}
 	for stack in data.inventory.get_stacks():
@@ -292,30 +302,43 @@ func get_save_data() -> Dictionary:
 		"equipment": worn,
 	}
 	saved.merge(player_spell_system.get_save_data(data))
+	saved.merge(player_upgrade_system.get_save_data(data))
 	return saved
 
 func load_save_data(saved: Dictionary) -> void:
+	var copies := player_upgrade_system.load_save_data(data, saved)
 	for id in saved.get("inventory", {}):
-		var item := ContentRegistry.get_item(StringName(id))
+		var item: Item = copies.get(StringName(id), ContentRegistry.get_item(StringName(id)))
 		if item == null:
 			push_warning("Save has an unknown item '%s'; skipped." % id)
 			continue
 		data.inventory.add(item, int(saved["inventory"][id]))
 	# Gear goes back on before stats are set, since it changes the maximums.
 	for slot in saved.get("equipment", {}):
-		var item := ContentRegistry.get_item(StringName(saved["equipment"][slot])) as EquippableItem
+		var item := resolve_item(StringName(saved["equipment"][slot])) as EquippableItem
 		if item:
 			player_equipment_system.try_equip(data, item, true)
+	# Soul upgrades change the maximums too, worn gear or not.
+	player_equipment_system.refresh(data)
 	# Before stats too: a readied spell decides the attack, and its staff the
 	# maximums.
 	player_spell_system.load_save_data(data, saved)
 	var position_saved: Array = saved.get("position", [global_position.x, global_position.y])
 	global_position = Vector2(position_saved[0], position_saved[1])
-	stats.health.current = clampi(int(saved.get("health", stats.health.maximum)), 1, stats.health.maximum)
-	stats.stamina.current = clampi(int(saved.get("stamina", stats.stamina.maximum)), 0, stats.stamina.maximum)
-	stats.mana.current = clampi(int(saved.get("mana", stats.mana.maximum)), 0, stats.mana.maximum)
+	stats.health.current = clampf(float(saved.get("health", stats.health.maximum)), 0.0, stats.health.maximum)
+	# A save is only ever made alive; a damaged one doesn't load a corpse.
+	if stats.health.current <= 0.0:
+		stats.health.current = 1.0
+	stats.stamina.current = clampf(float(saved.get("stamina", stats.stamina.maximum)), 0.0, stats.stamina.maximum)
+	stats.mana.current = clampf(float(saved.get("mana", stats.mana.maximum)), 0.0, stats.mana.maximum)
 	for stat in [stats.health, stats.stamina, stats.mana]:
 		stat.changed.emit(stat.current, stat.maximum)
+
+## The item with `id` that the player has, a copy made at a stand included,
+## else the original from ContentRegistry. Null for an unknown id.
+func resolve_item(id: StringName) -> Item:
+	var stack := data.inventory.get_stack(id)
+	return stack.item if stack else ContentRegistry.get_item(id)
 
 ## The point other actors aim at. Movement wants our feet (global_position);
 ## combat wants the middle of what it has to hit.

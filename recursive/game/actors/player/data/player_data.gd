@@ -38,7 +38,8 @@ var run_speed: float
 var sprint_stamina_cost: float
 var attack_stamina_modifier: int = 0
 
-#flat damage reduction — summed from equipment, read by player.gd
+#armour points — summed from equipment, read by player.gd. Each takes a
+#percentage off every hit; see Player.damage_after_armor().
 var armor: int = 0
 
 #acceleration/deceleration
@@ -74,6 +75,22 @@ var stowed_weapon: EquippableItem
 ## Which spell key (0 to 3) was pressed this frame, or -1. Written by
 ## InputSystem.
 var spell_key_pressed:= -1
+
+#progression bought at the airship stands, read/written by UpgradeSystem
+## Learned from scrolls, in the order learned. The armor and weapon stands
+## offer these.
+var known_enchantments: Array[Enchantment] = []
+## Bought at the soul stand: added to the base before equipment.
+var soul_bonuses:= StatBonuses.new()
+## Purchases so far per soul-stand upgrade, by its id. Each one costs more.
+var soul_purchases:= {}
+## Numbers the copies made at the stands, so every copy's id is unique.
+var next_copy_number:= 1
+## Each known spell's level, by spell id. A spell not listed is level 1.
+var spell_levels:= {}
+## The spell being researched to its next level at the tome stand, finished
+## when the next round is cleared. Null when none is.
+var researching: Spell
 
 #read/written by StatSystem
 var is_exhausted:= false

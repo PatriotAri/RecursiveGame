@@ -54,7 +54,11 @@ func refresh(data: PlayerData) -> void:
 	var totals := EnchantmentTotals.from_items(data.equipment.get_items())
 	_refresh_attack(data, totals)
 	_refresh_armor_visuals(data)
-	player.apply_stat_bonuses(StatBonuses.stat_total(data.equipment.get_bonuses()), totals)
+	# Soul-stand upgrades count as flat bonuses, under any enchantment
+	# percentages like gear does.
+	var bonuses := data.equipment.get_bonuses()
+	bonuses.append(data.soul_bonuses)
+	player.apply_stat_bonuses(StatBonuses.stat_total(bonuses), totals)
 	# A swing in flight belongs to the weapon you were holding a moment ago.
 	# Without this, post_update() would spawn the NEW weapon's hitbox on the
 	# OLD weapon's timer.
@@ -73,7 +77,7 @@ func _refresh_attack(data: PlayerData, totals: EnchantmentTotals) -> void:
 	player.player_weapon_visual_system.set_spell(data.readied_spell, staff)
 	hitboxes.launch_point_provider = Callable()
 	if data.readied_spell:
-		var base := data.readied_spell.attack
+		var base: ProjectileAttackSpec = player.player_spell_system.attack_for(data, data.readied_spell)
 		var spec := base.modified(
 			totals.damage_scale(base.damage_type) * (staff.amplify_damage if staff else 1.0),
 			staff.amplify_mana if staff else 1.0,
@@ -100,23 +104,30 @@ func _refresh_attack(data: PlayerData, totals: EnchantmentTotals) -> void:
 		_set_unarmed(data)
 		return
 	# Registering under the item's own id means re-equipping the same weapon
-	# overwrites its entry rather than adding another.
-	hitboxes.register_attack(weapon.id, weapon.attack.modified(
-		totals.damage_scale(weapon.attack.damage_type), 1.0, 1.0, totals.pierce))
+	# overwrites its entry rather than adding another. Its material sets its
+	# damage before enchantments scale it.
+	var spec := weapon.attack.modified(
+		weapon.damage_scale() * totals.damage_scale(weapon.attack.damage_type), 1.0, 1.0, totals.pierce)
+	# A thrown weapon flies looking like what it's made of.
+	spec.visual_material = MaterialRecolor.for_item(weapon)
+	hitboxes.register_attack(weapon.id, spec)
 	data.current_attack = weapon.id
 	data.animation_prefix = weapon.animation_prefix
 
 ## Every overlay layer is redrawn, covered or not, so taking a piece off
-## clears its layers instead of leaving the last item's art behind.
+## clears its layers instead of leaving the last item's art behind. Each is
+## recoloured to what its piece is made of.
 func _refresh_armor_visuals(data: PlayerData) -> void:
 	var worn := {}
 	for slot in EquippableItem.Slot.values():
 		var item: EquippableItem = data.equipment.get_item(slot)
 		if item == null: continue
 		for body_layer in item.overlays:
-			worn[body_layer] = item.overlays[body_layer]
+			worn[body_layer] = item
 	for body_layer in OVERLAY_LAYERS:
-		player.visual.set_layer_frames(OVERLAY_LAYERS[body_layer], worn.get(body_layer))
+		var item: EquippableItem = worn.get(body_layer)
+		player.visual.set_layer_frames(OVERLAY_LAYERS[body_layer], item.overlays[body_layer] if item else null)
+		player.visual.set_layer_material(OVERLAY_LAYERS[body_layer], MaterialRecolor.for_item(item))
 
 ## Both values are set together everywhere, so the animation can never end up
 ## describing a weapon you aren't actually swinging.

@@ -181,8 +181,26 @@ func _is_valid(file_data: Variant) -> bool:
 		if not ids is Array: return false
 		for id in ids:
 			if not id is String: return false
-	for key in ["readied_spell", "stowed_weapon"]:
+	for key in ["readied_spell", "stowed_weapon", "researching"]:
 		if not player.get(key, "") is String: return false
+	# Optional from here: saves from before the stands.
+	var copies: Variant = player.get("copies", [])
+	if not copies is Array: return false
+	for copy in copies:
+		if not (copy is Dictionary and copy.get("id") is String and copy.get("base") is String
+				and copy.get("tier") is float and copy.get("enchantments") is Array):
+			return false
+		for id in copy["enchantments"]:
+			if not id is String: return false
+	var known: Variant = player.get("known_enchantments", [])
+	if not known is Array: return false
+	for id in known:
+		if not id is String: return false
+	for key in ["soul_purchases", "soul_bonuses", "spell_levels"]:
+		var counts: Variant = player.get(key, {})
+		if not counts is Dictionary: return false
+		for count in counts.values():
+			if not count is float: return false
 	return true
 
 func _is_position(value: Variant) -> bool:

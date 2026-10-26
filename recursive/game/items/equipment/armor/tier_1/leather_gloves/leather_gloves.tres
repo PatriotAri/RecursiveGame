@@ -1,0 +1,70 @@
+[gd_resource type="Resource" script_class="EquippableItem" format=3]
+
+[ext_resource type="Script" path="res://game/items/equipment/core/equippable_item.gd" id="1_item"]
+[ext_resource type="Texture2D" path="res://game/items/equipment/armor/tier_1/leather_gloves/leather_gloves.png" id="2_icon"]
+[ext_resource type="SpriteFrames" path="res://game/items/equipment/armor/tier_1/leather_gloves/leather_gloves_left_frames.tres" id="3_leather_gloves_left"]
+[ext_resource type="SpriteFrames" path="res://game/items/equipment/armor/tier_1/leather_gloves/leather_gloves_right_frames.tres" id="3_leather_gloves_right"]
+[ext_resource type="Script" path="res://game/items/equipment/materials/item_tier.gd" id="40_tier"]
+[ext_resource type="Resource" path="res://game/items/equipment/materials/leather.tres" id="41_leather"]
+[ext_resource type="Resource" path="res://game/items/equipment/materials/iron.tres" id="41_iron"]
+[ext_resource type="Resource" path="res://game/items/equipment/materials/steel.tres" id="41_steel"]
+[ext_resource type="Resource" path="res://game/items/equipment/materials/damascus.tres" id="41_damascus"]
+[ext_resource type="Resource" path="res://game/items/equipment/materials/ebony.tres" id="41_ebony"]
+[ext_resource type="Resource" path="res://game/items/equipment/materials/glass.tres" id="41_glass"]
+
+[sub_resource type="Resource" id="Resource_tier_0"]
+script = ExtResource("40_tier")
+material = ExtResource("41_leather")
+display_name = "Leather Gloves"
+description = "Leather gloves. They keep a grip."
+armor = 1
+
+[sub_resource type="Resource" id="Resource_tier_1"]
+script = ExtResource("40_tier")
+material = ExtResource("41_iron")
+display_name = "Iron Gauntlets"
+description = "Iron gauntlets. They ring when struck."
+armor = 1
+
+[sub_resource type="Resource" id="Resource_tier_2"]
+script = ExtResource("40_tier")
+material = ExtResource("41_steel")
+display_name = "Steel Gauntlets"
+description = "Steel gauntlets. Harder than iron, and lighter."
+armor = 2
+
+[sub_resource type="Resource" id="Resource_tier_3"]
+script = ExtResource("40_tier")
+material = ExtResource("41_damascus")
+display_name = "Damascus Gauntlets"
+description = "Damascus gauntlets. Rippled from the forge, and tougher still."
+armor = 3
+
+[sub_resource type="Resource" id="Resource_tier_4"]
+script = ExtResource("40_tier")
+material = ExtResource("41_ebony")
+display_name = "Ebony Gauntlets"
+description = "Ebony gauntlets. Black as night, and nearly as hard to get through."
+armor = 4
+
+[sub_resource type="Resource" id="Resource_tier_5"]
+script = ExtResource("40_tier")
+material = ExtResource("41_glass")
+display_name = "Glass Gauntlets"
+description = "Glass gauntlets. Lighter than they look, and harder than any metal."
+armor = 5
+
+[resource]
+script = ExtResource("1_item")
+value = 15
+slot = 3
+overlays = Dictionary[int, SpriteFrames]({
+2: ExtResource("3_leather_gloves_left"),
+3: ExtResource("3_leather_gloves_right")
+})
+id = &"leather_gloves"
+display_name = "Leather Gloves"
+description = "Leather gloves. They keep a grip."
+icon = ExtResource("2_icon")
+category = 1
+tiers = Array[ExtResource("40_tier")]([SubResource("Resource_tier_0"), SubResource("Resource_tier_1"), SubResource("Resource_tier_2"), SubResource("Resource_tier_3"), SubResource("Resource_tier_4"), SubResource("Resource_tier_5")])
