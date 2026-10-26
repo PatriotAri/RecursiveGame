@@ -29,6 +29,10 @@ func can_save() -> bool:
 	var runner := _runner()
 	return runner != null and runner.can_save()
 
+## Whether a game is in progress, which loading would replace.
+func is_game_running() -> bool:
+	return _runner() != null
+
 ## Writes the running game to `slot`. False if it couldn't: nowhere safe to
 ## save right now, or the file couldn't be written.
 func save_game(slot: int) -> bool:
@@ -156,9 +160,15 @@ func _is_valid(file_data: Variant) -> bool:
 	if not (player is Dictionary and _are_numbers(player, ["health", "stamina", "mana"])
 			and player.get("inventory") is Dictionary and player.get("equipment") is Dictionary):
 		return false
-	var position: Variant = player.get("position")
-	if not (position is Array and position.size() == 2 and position[0] is float and position[1] is float):
-		return false
+	if not _is_position(player.get("position")): return false
+	# Optional: saves from before drops were kept don't have it.
+	var drops: Variant = level.get("drops", [])
+	if not drops is Array: return false
+	for drop in drops:
+		if not (drop is Dictionary and drop.get("scene") is String and drop.get("item") is String
+				and drop.get("amount") is float and drop.get("parent") is String
+				and _is_position(drop.get("position"))):
+			return false
 	for count in player["inventory"].values():
 		if not count is float: return false
 	for id in player["equipment"].values():
@@ -166,6 +176,9 @@ func _is_valid(file_data: Variant) -> bool:
 	for path in level["taken_pickups"]:
 		if not path is String: return false
 	return true
+
+func _is_position(value: Variant) -> bool:
+	return value is Array and value.size() == 2 and value[0] is float and value[1] is float
 
 func _are_numbers(section: Dictionary, keys: Array) -> bool:
 	for key in keys:

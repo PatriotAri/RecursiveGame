@@ -4,8 +4,9 @@ extends Control
 
 ## The save slot list, opened for saving or for loading. Shows the auto-save
 ## and each manual slot with where and when it was saved. Saving over a
-## filled slot takes a second press to confirm. Shared by the pause menu, the
-## shop and the main menu, like SettingsMenu.
+## filled slot, and loading while a game is running, take a second press to
+## confirm. Shared by the pause menu, the shop and the main menu, like
+## SettingsMenu.
 
 ## Emitted on Back. Whichever menu opened this one shows itself again.
 signal closed
@@ -20,8 +21,8 @@ enum Mode {SAVE, LOAD}
 var mode := Mode.LOAD
 ## One button per slot, indexed by slot number: the auto-save is 0.
 var _buttons: Array[Button] = []
-## A filled slot pressed once in save mode, waiting on the second press that
-## confirms overwriting it. -1 when there isn't one.
+## A slot pressed once, waiting on the second press that confirms the
+## overwrite or the load. -1 when there isn't one.
 var _armed_slot := -1
 
 func _ready() -> void:
@@ -49,23 +50,32 @@ func close() -> void:
 
 func _on_slot_pressed(slot: int) -> void:
 	if mode == Mode.LOAD:
+		# Loading mid-game throws away everything since the last save. From
+		# the main menu there's nothing to lose, so it loads at once.
+		if Saves.is_game_running() and _armed_slot != slot:
+			_arm(slot, "Unsaved progress will be lost.")
+			return
 		# Read again on press: the file may have changed since the list was
 		# drawn.
 		if not Saves.load_game(slot):
+			_armed_slot = -1
 			status.text = "That save couldn't be loaded."
 			_refresh()
 		return
 	var filled := not Saves.slot_info(slot).is_empty()
 	if filled and _armed_slot != slot:
-		_armed_slot = slot
-		status.text = ""
-		_refresh()
+		_arm(slot, "")
 		return
 	_armed_slot = -1
 	if Saves.save_game(slot):
 		status.text = "Saved to slot %d." % slot
 	else:
 		status.text = "Couldn't save."
+	_refresh()
+
+func _arm(slot: int, warning: String) -> void:
+	_armed_slot = slot
+	status.text = warning
 	_refresh()
 
 func _refresh() -> void:
@@ -82,7 +92,8 @@ func _refresh() -> void:
 func _row_text(slot: int, info: Dictionary) -> String:
 	var slot_name := "Auto-save" if slot == Saves.AUTO_SLOT else "Slot %d" % slot
 	if slot == _armed_slot:
-		return "%s:  Overwrite? Press again to confirm." % slot_name
+		var action := "Load" if mode == Mode.LOAD else "Overwrite"
+		return "%s:  %s? Press again to confirm." % [slot_name, action]
 	if info.is_empty():
 		return "%s:  Empty" % slot_name
 	return "%s:  %s   %s" % [slot_name, info["label"], _format_time(info["saved_at"])]

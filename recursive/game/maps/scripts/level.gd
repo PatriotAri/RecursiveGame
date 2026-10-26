@@ -43,10 +43,11 @@ var round_number:= 0
 var unlocked_areas:= 1
 var completed:= false
 var _current_area:= 0
-## Paths to the pickups placed in the level's scene. A loaded level leaves out
-## the ones already picked up, so they can't be collected twice. Enemy drops
-## aren't placed, so they aren't tracked.
-var _placed_pickups: Array[NodePath] = []
+## The pickups placed in the level's scene, as instance id -> path. A loaded
+## level leaves out the ones already picked up, so they can't be collected
+## twice. Ids rather than paths tell them apart from drops: a drop can take a
+## freed pickup's name, and so its path, but never its id.
+var _placed_pickups := {}
 
 func _ready() -> void:
 	start_stand.interacted.connect(func(_player: Node) -> void: start_round())
@@ -59,9 +60,10 @@ func _ready() -> void:
 		door.changed.connect(navigation.rebake)
 	for area in areas:
 		area.cleared.connect(_on_area_cleared.bind(area))
-	for node in find_children("*", "", true, true):
-		if node is ItemPickup and node.owner == self:
-			_placed_pickups.append(get_path_to(node))
+	# Every pickup here before play starts was placed; anything later is a
+	# drop.
+	for pickup in _pickups():
+		_placed_pickups[pickup.get_instance_id()] = get_path_to(pickup)
 	_set_between_rounds()
 
 func start_round() -> void:
@@ -112,16 +114,30 @@ func _finish_round() -> void:
 ## between rounds, so there are no enemies to record.
 func get_save_data() -> Dictionary:
 	var taken: Array[String] = []
-	for path in _placed_pickups:
-		var pickup:= get_node_or_null(path)
+	for id in _placed_pickups:
+		var pickup:= instance_from_id(id) as Node
 		if pickup == null or pickup.is_queued_for_deletion():
-			taken.append(String(path))
+			taken.append(String(_placed_pickups[id]))
+	var drops: Array[Dictionary] = []
+	for pickup in _pickups():
+		if _placed_pickups.has(pickup.get_instance_id()) or pickup.is_queued_for_deletion(): continue
+		if pickup.item == null or pickup.scene_file_path.is_empty(): continue
+		drops.append({
+			"scene": pickup.scene_file_path,
+			"item": String(pickup.item.id),
+			"amount": pickup.amount,
+			"parent": String(get_path_to(pickup.get_parent())),
+			# Local, not global: on the airship this level is out of the tree,
+			# where global positions can't be read.
+			"position": [pickup.position.x, pickup.position.y],
+		})
 	return {
 		"round_number": round_number,
 		"unlocked_areas": unlocked_areas,
 		"last_area": _current_area,
 		"completed": completed,
 		"taken_pickups": taken,
+		"drops": drops,
 	}
 
 ## Puts the level back the way get_save_data() found it. Call once, after the
@@ -137,6 +153,8 @@ func load_save_data(saved: Dictionary) -> void:
 		var pickup:= get_node_or_null(NodePath(String(path)))
 		if pickup is ItemPickup:
 			pickup.free()
+	for drop in saved.get("drops", []):
+		_restore_drop(drop)
 	# Between rounds, the doors into the areas fought last round stay open.
 	for i in range(1, areas.size()):
 		var door:= areas[i].entry_door
@@ -146,6 +164,33 @@ func load_save_data(saved: Dictionary) -> void:
 		if exit_door: exit_door.open(true)
 		if exit: exit.enabled = true
 	_set_between_rounds(true)
+
+## Puts a saved drop back where it lay. Skips one whose scene or item is no
+## longer in the game.
+func _restore_drop(drop: Dictionary) -> void:
+	var scene_path:= String(drop["scene"])
+	var scene: PackedScene = null
+	# Only scenes from the game itself: a save file is player-editable.
+	if scene_path.begins_with("res://") and ResourceLoader.exists(scene_path):
+		scene = load(scene_path) as PackedScene
+	var item:= ItemRegistry.get_item(StringName(drop["item"]))
+	if scene == null or item == null:
+		push_warning("%s: skipped a saved drop (%s, %s)." % [name, scene_path, drop["item"]])
+		return
+	var node:= scene.instantiate()
+	var pickup:= node as ItemPickup
+	if pickup == null:
+		node.free()
+		push_warning("%s: saved drop scene %s isn't a pickup." % [name, scene_path])
+		return
+	pickup.item = item
+	pickup.amount = maxi(int(drop["amount"]), 1)
+	pickup.position = Vector2(drop["position"][0], drop["position"][1])
+	# Back under the node it lay in, as long as that's inside this level.
+	var parent:= get_node_or_null(NodePath(String(drop["parent"])))
+	if parent == null or not is_ancestor_of(parent):
+		parent = actors
+	parent.add_child(pickup)
 
 func _set_between_rounds(quiet:= false) -> void:
 	state = State.BETWEEN_ROUNDS
@@ -160,6 +205,13 @@ func _set_between_rounds(quiet:= false) -> void:
 			gate.open(quiet)
 		else:
 			gate.close(quiet)
+
+func _pickups() -> Array[ItemPickup]:
+	var found: Array[ItemPickup] = []
+	for node in find_children("*", "", true, false):
+		if node is ItemPickup:
+			found.append(node)
+	return found
 
 func _all_doors() -> Array[Door]:
 	var doors: Array[Door] = []
