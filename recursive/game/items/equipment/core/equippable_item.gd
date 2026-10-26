@@ -2,12 +2,20 @@ class_name EquippableItem
 
 extends Item
 
-enum Slot {WEAPON, ARMOR} #always append enum, never insert in middle
+## TORSO keeps ARMOR's old value, so anything saved as the single armour slot
+## lands on the torso rather than shifting to a different slot.
+enum Slot {WEAPON, TORSO, HELMET, ARMS, LEGS} #always append enum, never insert in middle
+enum Handedness {ONE_HANDED, TWO_HANDED} #always append enum, never insert in middle
+## The body layers armour art can be drawn over.
+enum BodyLayer {HEAD, TORSO, LEFT_ARM, RIGHT_ARM, LEGS} #always append enum, never insert in middle
 
 ## Where this goes on the body. Distinct from Item.category, which is about
-## how the item is browsed — two helms and a chestplate are all ARMOR
-## category but would be different slots.
+## how the item is browsed — a helmet and a torso piece are both ARMOR
+## category but different slots.
 @export var slot: Slot = Slot.WEAPON
+
+## Weapons only. How many hands the weapon takes.
+@export var handedness: Handedness = Handedness.ONE_HANDED
 
 ## Weapons only. Registered with the hitbox manager while worn, and spawned
 ## by PlayerAttackSystem in place of the unarmed punch. Leave null on armour.
@@ -18,12 +26,17 @@ enum Slot {WEAPON, ARMOR} #always append enum, never insert in middle
 
 @export var animation_prefix := ""
 
+## Armour only. The art drawn over each body layer while worn — a helmet
+## covers HEAD, arm guards cover LEFT_ARM and RIGHT_ARM. Animation names must
+## match the player's layers; any animation a set lacks falls back to the base
+## version, then hides.
+@export var overlays: Dictionary[BodyLayer, SpriteFrames] = {}
+
 @export_group("Texture & Offsets")
-## Drawn in the player's hand while this is equipped. Null means the item has
-## no visible presence — armour, for now.
+## Weapons only. Drawn in the player's hand while this is equipped, at the
+## hand point of whatever frame the arms are on. Null means the weapon has no
+## visible presence.
 @export var held_texture: Texture2D
-## Where it sits, per facing direction, relative to the body sprite's centre.
-@export var hold_offsets: HitboxOffsetData
 ## Correction for how the texture was drawn. 0 means the art points right.
 @export_range(-180.0, 180.0) var rest_angle_degrees:= 0.0
 

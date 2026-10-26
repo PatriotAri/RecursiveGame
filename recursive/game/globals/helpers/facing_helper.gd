@@ -7,19 +7,33 @@ static func facing_to_string(facing: Vector2) -> String:
 	if degrees < 0:
 		degrees += 360
 
+	# Screen space: +y is down, so 90 degrees is south.
 	if degrees >= 337.5 or degrees < 22.5:
-		return "right"
+		return "E"
 	elif degrees < 67.5:
-		return "down_right"
+		return "SE"
 	elif degrees < 112.5:
-		return "down"
+		return "S"
 	elif degrees < 157.5:
-		return "down_left"
+		return "SW"
 	elif degrees < 202.5:
-		return "left"
+		return "W"
 	elif degrees < 247.5:
-		return "up_left"
+		return "NW"
 	elif degrees < 292.5:
-		return "up"
+		return "N"
 	else:
-		return "up_right"
+		return "NE"
+
+## The facing on the other side of the north-south axis. West-side art is
+## drawn by flipping the east side, so this is the facing a flipped frame was
+## actually drawn for.
+static func mirrored(direction: String) -> String:
+	match direction:
+		"E": return "W"
+		"W": return "E"
+		"NE": return "NW"
+		"NW": return "NE"
+		"SE": return "SW"
+		"SW": return "SE"
+		_: return direction

@@ -27,7 +27,7 @@ var attack_requested:= false
 #read/written by StateMachine 
 var current_state: State = State.IDLE
 var facing_dir:= Vector2.DOWN
-var facing_string: String = "down"
+var facing_string: String = "S"
 
 #read/written by ModifierSystem
 var walk_speed: float
@@ -36,6 +36,9 @@ var run_speed: float
 #stamina costs — derived from base + equipment, read by player.gd
 var sprint_stamina_cost: float
 var attack_stamina_modifier: int = 0
+
+#flat damage reduction — summed from equipment, read by player.gd
+var armor: int = 0
 
 #acceleration/deceleration
 var acceleration: float

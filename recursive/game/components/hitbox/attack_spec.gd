@@ -2,8 +2,7 @@ class_name AttackSpec
 
 extends Resource
 
-const DIRECTIONS := ["right", "left", "up", "down",
-	"up_right", "up_left", "down_right", "down_left"]
+const DIRECTIONS := ["E", "W", "N", "S", "NE", "NW", "SE", "SW"]
 
 ## Everything one attack needs: what to spawn, where to put it, how hard it
 ## hits, and how long it lasts. Built in code today; save as a .tres later to

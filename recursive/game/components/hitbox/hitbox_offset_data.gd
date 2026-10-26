@@ -2,31 +2,31 @@ class_name HitboxOffsetData
 
 extends Resource
 
-@export_range(-500, 500, 0.5) var right_x: float
-@export_range(-500, 500, 0.5) var right_y: float
-@export_range(-500, 500, 0.5) var left_x: float
-@export_range(-500, 500, 0.5) var left_y: float
-@export_range(-500, 500, 0.5) var up_x: float
-@export_range(-500, 500, 0.5) var up_y: float
-@export_range(-500, 500, 0.5)var down_x: float
-@export_range(-500, 500, 0.5)var down_y: float
-@export_range(-500, 500, 0.5)var up_right_x: float
-@export_range(-500, 500, 0.5)var up_right_y: float
-@export_range(-500, 500, 0.5)var up_left_x: float
-@export_range(-500, 500, 0.5)var up_left_y: float
-@export_range(-500, 500, 0.5)var down_right_x: float
-@export_range(-500, 500, 0.5)var down_right_y: float
-@export_range(-500, 500, 0.5)var down_left_x: float
-@export_range(-500, 500, 0.5)var down_left_y: float
+@export_range(-500, 500, 0.5) var E_x: float
+@export_range(-500, 500, 0.5) var E_y: float
+@export_range(-500, 500, 0.5) var W_x: float
+@export_range(-500, 500, 0.5) var W_y: float
+@export_range(-500, 500, 0.5) var N_x: float
+@export_range(-500, 500, 0.5) var N_y: float
+@export_range(-500, 500, 0.5) var S_x: float
+@export_range(-500, 500, 0.5) var S_y: float
+@export_range(-500, 500, 0.5) var NE_x: float
+@export_range(-500, 500, 0.5) var NE_y: float
+@export_range(-500, 500, 0.5) var NW_x: float
+@export_range(-500, 500, 0.5) var NW_y: float
+@export_range(-500, 500, 0.5) var SE_x: float
+@export_range(-500, 500, 0.5) var SE_y: float
+@export_range(-500, 500, 0.5) var SW_x: float
+@export_range(-500, 500, 0.5) var SW_y: float
 
 func get_offset(direction_string: String) -> Vector2:
 	match direction_string:
-		"right": return Vector2(right_x, right_y)
-		"left": return Vector2(left_x, left_y)
-		"up": return Vector2(up_x, up_y)
-		"down": return Vector2(down_x, down_y)
-		"up_right": return Vector2(up_right_x, up_right_y)
-		"up_left": return Vector2(up_left_x, up_left_y)
-		"down_right": return Vector2(down_right_x, down_right_y)
-		"down_left": return Vector2(down_left_x, down_left_y)
+		"E": return Vector2(E_x, E_y)
+		"W": return Vector2(W_x, W_y)
+		"N": return Vector2(N_x, N_y)
+		"S": return Vector2(S_x, S_y)
+		"NE": return Vector2(NE_x, NE_y)
+		"NW": return Vector2(NW_x, NW_y)
+		"SE": return Vector2(SE_x, SE_y)
+		"SW": return Vector2(SW_x, SW_y)
 		_: return Vector2.ZERO

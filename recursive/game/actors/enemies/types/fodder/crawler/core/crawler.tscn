@@ -247,7 +247,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_sjx0v")
 }],
 "loop": true,
-"name": &"attack_down",
+"name": &"attack_S",
 "speed": 5.0
 }, {
 "frames": [{
@@ -255,7 +255,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_vlhhy")
 }],
 "loop": true,
-"name": &"attack_down_left",
+"name": &"attack_SW",
 "speed": 5.0
 }, {
 "frames": [{
@@ -263,7 +263,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_sgogj")
 }],
 "loop": true,
-"name": &"attack_down_right",
+"name": &"attack_SE",
 "speed": 5.0
 }, {
 "frames": [{
@@ -271,7 +271,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_k0qvs")
 }],
 "loop": true,
-"name": &"attack_left",
+"name": &"attack_W",
 "speed": 5.0
 }, {
 "frames": [{
@@ -279,7 +279,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_d0708")
 }],
 "loop": true,
-"name": &"attack_right",
+"name": &"attack_E",
 "speed": 5.0
 }, {
 "frames": [{
@@ -287,7 +287,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_oygea")
 }],
 "loop": true,
-"name": &"attack_up",
+"name": &"attack_N",
 "speed": 5.0
 }, {
 "frames": [{
@@ -295,7 +295,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_csrhj")
 }],
 "loop": true,
-"name": &"attack_up_left",
+"name": &"attack_NW",
 "speed": 5.0
 }, {
 "frames": [{
@@ -303,7 +303,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_twdj6")
 }],
 "loop": true,
-"name": &"attack_up_right",
+"name": &"attack_NE",
 "speed": 5.0
 }, {
 "frames": [{
@@ -319,7 +319,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_ejnh5")
 }],
 "loop": false,
-"name": &"hurt_down",
+"name": &"hurt_S",
 "speed": 5.0
 }, {
 "frames": [{
@@ -327,7 +327,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_h7k12")
 }],
 "loop": false,
-"name": &"hurt_down_left",
+"name": &"hurt_SW",
 "speed": 5.0
 }, {
 "frames": [{
@@ -335,7 +335,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_h06cu")
 }],
 "loop": false,
-"name": &"hurt_down_right",
+"name": &"hurt_SE",
 "speed": 5.0
 }, {
 "frames": [{
@@ -343,7 +343,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_jm5pq")
 }],
 "loop": false,
-"name": &"hurt_left",
+"name": &"hurt_W",
 "speed": 5.0
 }, {
 "frames": [{
@@ -351,7 +351,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_jrubi")
 }],
 "loop": false,
-"name": &"hurt_right",
+"name": &"hurt_E",
 "speed": 5.0
 }, {
 "frames": [{
@@ -359,7 +359,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_fpnm1")
 }],
 "loop": false,
-"name": &"hurt_up",
+"name": &"hurt_N",
 "speed": 5.0
 }, {
 "frames": [{
@@ -367,7 +367,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_12hvw")
 }],
 "loop": false,
-"name": &"hurt_up_left",
+"name": &"hurt_NW",
 "speed": 5.0
 }, {
 "frames": [{
@@ -375,7 +375,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_mtb1t")
 }],
 "loop": false,
-"name": &"hurt_up_right",
+"name": &"hurt_NE",
 "speed": 5.0
 }, {
 "frames": [{
@@ -386,7 +386,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_16u66")
 }],
 "loop": true,
-"name": &"idle_down",
+"name": &"idle_S",
 "speed": 5.0
 }, {
 "frames": [{
@@ -397,7 +397,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_hd8tu")
 }],
 "loop": true,
-"name": &"idle_down_left",
+"name": &"idle_SW",
 "speed": 5.0
 }, {
 "frames": [{
@@ -408,7 +408,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_j8h1s")
 }],
 "loop": true,
-"name": &"idle_down_right",
+"name": &"idle_SE",
 "speed": 5.0
 }, {
 "frames": [{
@@ -419,7 +419,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_hbxsd")
 }],
 "loop": true,
-"name": &"idle_left",
+"name": &"idle_W",
 "speed": 5.0
 }, {
 "frames": [{
@@ -430,7 +430,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_bhwfn")
 }],
 "loop": true,
-"name": &"idle_right",
+"name": &"idle_E",
 "speed": 5.0
 }, {
 "frames": [{
@@ -441,7 +441,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_paa21")
 }],
 "loop": true,
-"name": &"idle_up",
+"name": &"idle_N",
 "speed": 5.0
 }, {
 "frames": [{
@@ -452,7 +452,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_aifo6")
 }],
 "loop": true,
-"name": &"idle_up_left",
+"name": &"idle_NW",
 "speed": 5.0
 }, {
 "frames": [{
@@ -463,7 +463,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_ehn8f")
 }],
 "loop": true,
-"name": &"idle_up_right",
+"name": &"idle_NE",
 "speed": 5.0
 }, {
 "frames": [{
@@ -477,7 +477,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_lhbbk")
 }],
 "loop": true,
-"name": &"walk_down",
+"name": &"walk_S",
 "speed": 5.0
 }, {
 "frames": [{
@@ -491,7 +491,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_ucf8c")
 }],
 "loop": true,
-"name": &"walk_down_left",
+"name": &"walk_SW",
 "speed": 5.0
 }, {
 "frames": [{
@@ -505,7 +505,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_603o5")
 }],
 "loop": true,
-"name": &"walk_down_right",
+"name": &"walk_SE",
 "speed": 5.0
 }, {
 "frames": [{
@@ -519,7 +519,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_soxei")
 }],
 "loop": true,
-"name": &"walk_left",
+"name": &"walk_W",
 "speed": 5.0
 }, {
 "frames": [{
@@ -533,7 +533,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_wv2r1")
 }],
 "loop": true,
-"name": &"walk_right",
+"name": &"walk_E",
 "speed": 5.0
 }, {
 "frames": [{
@@ -547,7 +547,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_lh78m")
 }],
 "loop": true,
-"name": &"walk_up",
+"name": &"walk_N",
 "speed": 5.0
 }, {
 "frames": [{
@@ -561,7 +561,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_kfwyk")
 }],
 "loop": true,
-"name": &"walk_up_left",
+"name": &"walk_NW",
 "speed": 5.0
 }, {
 "frames": [{
@@ -575,7 +575,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_kgwcy")
 }],
 "loop": true,
-"name": &"walk_up_right",
+"name": &"walk_NE",
 "speed": 5.0
 }]
 
@@ -606,7 +606,7 @@ drop_table = ExtResource("4_kc0vh")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=7471093]
 sprite_frames = SubResource("SpriteFrames_vlhhy")
-animation = &"idle_down"
+animation = &"idle_S"
 offset = Vector2(0, -32)
 
 [node name="Collision" type="CollisionShape2D" parent="." unique_id=859264384]

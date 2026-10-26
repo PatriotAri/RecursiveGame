@@ -1,5 +1,14 @@
 class_name PlayerEquipmentSystem
 
+## Which LayeredSprite layer each armour overlay draws on.
+const OVERLAY_LAYERS := {
+	EquippableItem.BodyLayer.HEAD: &"Helmet",
+	EquippableItem.BodyLayer.TORSO: &"TorsoArmor",
+	EquippableItem.BodyLayer.LEFT_ARM: &"LeftArmArmor",
+	EquippableItem.BodyLayer.RIGHT_ARM: &"RightArmArmor",
+	EquippableItem.BodyLayer.LEGS: &"LegsArmor",
+}
+
 var player: CharacterBody2D
 
 func _init(player_ref: CharacterBody2D) -> void:
@@ -32,6 +41,7 @@ func try_unequip(data: PlayerData, slot: EquippableItem.Slot) -> bool:
 ## the last item" step to get wrong.
 func _refresh(data: PlayerData) -> void:
 	_refresh_weapon(data)
+	_refresh_armor_visuals(data)
 	player.apply_stat_bonuses(StatBonuses.stat_total(data.equipment.get_bonuses()))
 	# A swing in flight belongs to the weapon you were holding a moment ago.
 	# Without this, post_update() would spawn the NEW weapon's hitbox on the
@@ -54,6 +64,18 @@ func _refresh_weapon(data: PlayerData) -> void:
 	data.current_attack = weapon.id
 	data.animation_prefix = weapon.animation_prefix
 	player.player_weapon_visual_system.set_weapon(weapon)
+
+## Every overlay layer is redrawn, covered or not, so taking a piece off
+## clears its layers instead of leaving the last item's art behind.
+func _refresh_armor_visuals(data: PlayerData) -> void:
+	var worn := {}
+	for slot in EquippableItem.Slot.values():
+		var item: EquippableItem = data.equipment.get_item(slot)
+		if item == null: continue
+		for body_layer in item.overlays:
+			worn[body_layer] = item.overlays[body_layer]
+	for body_layer in OVERLAY_LAYERS:
+		player.visual.set_layer_frames(OVERLAY_LAYERS[body_layer], worn.get(body_layer))
 
 ## Both values are set together everywhere, so the animation can never end up
 ## describing a weapon you aren't actually swinging.

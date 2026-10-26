@@ -1,5 +1,9 @@
 extends CharacterBody2D
 
+## Armour can soften a hit but never cancel it, so weak enemies stay a threat
+## however well geared the player is.
+const MIN_DAMAGE_TAKEN := 1
+
 var data: PlayerData
 var stats: StatSystem
 
@@ -26,7 +30,7 @@ var _base_sprint_stamina_cost: float
 var _flash_tween : Tween
 var death_handled := false
 
-@onready var sprite: AnimatedSprite2D = $Sprite
+@onready var visual: LayeredSprite = $Visual
 
 @export_category("Stat Tuning")
 @export_group("Health")
@@ -107,9 +111,9 @@ func _ready() -> void:
 	player_attack_system = PlayerAttackSystem.new(self, player_hitbox_manager)
 	player_movement_system = PlayerMovementSystem.new(self)
 	player_consumable_system = PlayerConsumableSystem.new(self)
-	player_weapon_visual_system = PlayerWeaponVisualSystem.new($Sprite/Weapon)
+	player_weapon_visual_system = PlayerWeaponVisualSystem.new($Visual/Weapon, visual)
 	player_equipment_system = PlayerEquipmentSystem.new(self)
-	player_animation_system = PlayerAnimationSystem.new(sprite)
+	player_animation_system = PlayerAnimationSystem.new(visual)
 	
 	$Hurtbox._on_damage_received = _on_damage_received
 	$Hurtbox.knockback_received.connect(_on_knockback_received)
@@ -145,7 +149,7 @@ func _physics_process(delta: float) -> void:
 	player_state_machine.update(data)
 	player_attack_system.post_update(data)
 	player_movement_system.update(data, delta)
-	player_animation_system.update(data)
+	player_animation_system.update(data, player_attack_system.swing_progress())
 	player_weapon_visual_system.update(data, player_attack_system.swing_progress())
 	
 ## Recomputes every equipment-affected value from base + the supplied total.
@@ -165,6 +169,7 @@ func apply_stat_bonuses(bonuses: StatBonuses) -> void:
 	# negative is not.
 	data.sprint_stamina_cost = maxf(_base_sprint_stamina_cost + bonuses.sprint_stamina_cost, 0.0)
 	data.attack_stamina_modifier = bonuses.attack_stamina_cost
+	data.armor = maxi(bonuses.armor, 0)
 
 ## What one swing of the current attack costs, after equipment. Computed per
 ## swing rather than stored, because it depends on which weapon is equipped.
@@ -195,7 +200,7 @@ func _on_stamina_emptied() -> void:
 	data.is_exhausted = true
 
 func _on_damage_received(damage_amount: float, apply_hitstun: bool) -> void:
-	stats.health.remove(roundi(damage_amount))
+	stats.health.remove(damage_after_armor(damage_amount))
 	if data.is_dead:
 		return
 	_flash_damage()
@@ -210,6 +215,13 @@ func _on_damage_received(damage_amount: float, apply_hitstun: bool) -> void:
 	# An interrupted swing takes its hitbox with it.
 	player_attack_system.cancel(data)
 	player_hitbox_manager.cancel_all()
+
+## Flat reduction: each point of armour takes one point off every hit, down
+## to MIN_DAMAGE_TAKEN. A hit that was never meant to hurt stays at zero.
+func damage_after_armor(damage_amount: float) -> int:
+	var raw := roundi(damage_amount)
+	if raw <= 0: return 0
+	return maxi(raw - data.armor, MIN_DAMAGE_TAKEN)
 
 func _on_health_emptied() -> void:
 	data.is_dead = true
@@ -230,16 +242,16 @@ func _flash_damage() -> void:
 	# modulate, and the sprite can end up stuck tinted.
 	if _flash_tween and _flash_tween.is_valid():
 		_flash_tween.kill()
-	sprite.modulate = Color(1, 0.3, 0.3)
+	visual.modulate = Color(1, 0.3, 0.3)
 	_flash_tween = create_tween()
-	_flash_tween.tween_property(sprite, "modulate", Color.WHITE, 0.15)
+	_flash_tween.tween_property(visual, "modulate", Color.WHITE, 0.15)
 
 func _handle_death() -> void:
 	$Collision.set_deferred("disabled", true)
 	$Hurtbox.set_deferred("monitorable", false)
 	player_state_machine.update(data)
 	player_animation_system.update(data)
-	await sprite.animation_finished
+	await visual.animation_finished
 	await get_tree().create_timer(1.0).timeout
 	var death_screen := get_tree().get_first_node_in_group(&"death_screen")
 	if death_screen == null:

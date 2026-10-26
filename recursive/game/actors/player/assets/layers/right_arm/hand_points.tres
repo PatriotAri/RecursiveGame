@@ -1,0 +1,38 @@
+[gd_resource type="Resource" script_class="HandPointData" format=3]
+
+[ext_resource type="Script" path="res://game/components/animation/hand_point_data.gd" id="1_hand"]
+
+[resource]
+script = ExtResource("1_hand")
+points = Dictionary[StringName, PackedVector2Array]({
+&"idle_S": PackedVector2Array(-11, 6, -11, 7),
+&"idle_SE": PackedVector2Array(-10, 6, -10, 7),
+&"idle_E": PackedVector2Array(0, 6, 0, 7),
+&"idle_NE": PackedVector2Array(10, 6, 10, 7),
+&"idle_N": PackedVector2Array(11, 6, 11, 7),
+&"walk_S": PackedVector2Array(-11, 7, -11, 7, -11, 3, -11, 7),
+&"walk_SE": PackedVector2Array(-9, 6, -10, 7, -11, 4, -10, 7),
+&"walk_E": PackedVector2Array(2, 5, 0, 7, -2, 5, 0, 7),
+&"walk_NE": PackedVector2Array(11, 4, 10, 7, 9, 6, 10, 7),
+&"walk_N": PackedVector2Array(11, 3, 11, 7, 11, 7, 11, 7),
+&"run_S": PackedVector2Array(-11, 8, -11, 7, -11, 0, -11, 7),
+&"run_SE": PackedVector2Array(-7, 7, -10, 7, -13, 1, -10, 7),
+&"run_E": PackedVector2Array(4, 4, 0, 7, -4, 4, 0, 7),
+&"run_NE": PackedVector2Array(13, 1, 10, 7, 7, 7, 10, 7),
+&"run_N": PackedVector2Array(11, 0, 11, 7, 11, 8, 11, 7),
+&"attack_S": PackedVector2Array(-9, 1, -9, 11),
+&"attack_SE": PackedVector2Array(-7, 0, 0, 7),
+&"attack_E": PackedVector2Array(3, -2, 13, -2),
+&"attack_NE": PackedVector2Array(11, -4, 18, -11),
+&"attack_N": PackedVector2Array(9, -5, 9, -15),
+&"onehand_attack_S": PackedVector2Array(-15, -15, -9, 9, -1, 7),
+&"onehand_attack_SE": PackedVector2Array(-13, -11, -1, 5, 1, 0),
+&"onehand_attack_E": PackedVector2Array(0, -9, 12, -3, 6, -7),
+&"onehand_attack_NE": PackedVector2Array(13, -11, 17, -11, 8, -9),
+&"onehand_attack_N": PackedVector2Array(15, -15, 9, -15, 1, -5),
+&"hurt_S": PackedVector2Array(-11, 3),
+&"hurt_SE": PackedVector2Array(-11, 4),
+&"hurt_E": PackedVector2Array(-2, 5),
+&"hurt_NE": PackedVector2Array(9, 6),
+&"hurt_N": PackedVector2Array(11, 7)
+})
