@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://brwqgd33tc81m" path="res://game/ui/pause_menu/pause_menu.gd" id="1_8byh7"]
 [ext_resource type="PackedScene" path="res://game/ui/settings_menu/settings_menu.tscn" id="2_settings"]
+[ext_resource type="PackedScene" path="res://game/ui/save_slots/save_slots_menu.tscn" id="3_slots"]
 
 [node name="PauseMenu" type="CanvasLayer" unique_id=1670530463]
 process_mode = 3
@@ -14,10 +15,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -150.0
-offset_top = -150.0
-offset_right = 100.0
-offset_bottom = 50.0
+offset_left = -170.0
+offset_top = -170.0
+offset_right = 170.0
+offset_bottom = 170.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.627451)
@@ -47,6 +48,16 @@ horizontal_alignment = 1
 custom_minimum_size = Vector2(50, 10)
 layout_mode = 2
 text = "Resume"
+
+[node name="Save" type="Button" parent="Background/VBoxContainer" unique_id=1577203946]
+custom_minimum_size = Vector2(50, 10)
+layout_mode = 2
+text = "Save"
+
+[node name="Load" type="Button" parent="Background/VBoxContainer" unique_id=1302519787]
+custom_minimum_size = Vector2(50, 10)
+layout_mode = 2
+text = "Load"
 
 [node name="Controls" type="Button" parent="Background/VBoxContainer" unique_id=1327928369]
 custom_minimum_size = Vector2(50, 10)
@@ -93,3 +104,5 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="SettingsMenu" parent="." unique_id=1440983616 instance=ExtResource("2_settings")]
+
+[node name="SaveSlotsMenu" parent="." unique_id=1688410259 instance=ExtResource("3_slots")]

@@ -14,7 +14,10 @@ func show_death() -> void:
 	visible = true
 	get_tree().paused = true
 
+## Back to the most recent save, auto or manual. With no save yet, the run
+## starts over.
 func _on_respawn() -> void:
+	if Saves.load_game(Saves.latest_slot()): return
 	get_tree().paused = false
 	get_tree().reload_current_scene()
 

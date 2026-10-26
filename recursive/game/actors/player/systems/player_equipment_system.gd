@@ -21,13 +21,15 @@ func can_equip(data: PlayerData, item: EquippableItem) -> bool:
 	if data.inventory.get_count(item.id) <= 0: return false
 	return true
 
-func try_equip(data: PlayerData, item: EquippableItem) -> bool:
+## `quiet` skips the equip sound, for putting gear back on when a save loads.
+func try_equip(data: PlayerData, item: EquippableItem, quiet := false) -> bool:
 	if not can_equip(data, item): return false
 	if data.equipment.get_item(item.slot) == item: return false
 	
 	data.equipment.equip(item)
 	_refresh(data)
-	Sfx.play(item.equip_sound if item.equip_sound else Sfx.equip)
+	if not quiet:
+		Sfx.play(item.equip_sound if item.equip_sound else Sfx.equip)
 	return true
 
 func try_unequip(data: PlayerData, slot: EquippableItem.Slot) -> bool:

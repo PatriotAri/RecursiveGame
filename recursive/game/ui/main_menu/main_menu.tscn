@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://ck5pbop5a4l4p" path="res://game/ui/main_menu/main_menu.gd" id="1_gof3u"]
 [ext_resource type="PackedScene" path="res://game/ui/settings_menu/settings_menu.tscn" id="2_settings"]
+[ext_resource type="PackedScene" path="res://game/ui/save_slots/save_slots_menu.tscn" id="3_slots"]
 
 [node name="MainMenu" type="Control" unique_id=981603861]
 layout_mode = 3
@@ -39,10 +40,20 @@ horizontal_alignment = 1
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 
-[node name="Play" type="Button" parent="VBoxContainer" unique_id=960631148]
+[node name="Continue" type="Button" parent="VBoxContainer" unique_id=1148320577]
 custom_minimum_size = Vector2(160, 48)
 layout_mode = 2
-text = "Play"
+text = "Continue"
+
+[node name="NewGame" type="Button" parent="VBoxContainer" unique_id=960631148]
+custom_minimum_size = Vector2(160, 48)
+layout_mode = 2
+text = "New Game"
+
+[node name="Load" type="Button" parent="VBoxContainer" unique_id=1406937215]
+custom_minimum_size = Vector2(160, 48)
+layout_mode = 2
+text = "Load"
 
 [node name="Settings" type="Button" parent="VBoxContainer" unique_id=1785293320]
 custom_minimum_size = Vector2(160, 48)
@@ -55,4 +66,7 @@ layout_mode = 2
 text = "Quit"
 
 [node name="SettingsMenu" parent="." unique_id=1203876354 instance=ExtResource("2_settings")]
+layout_mode = 1
+
+[node name="SaveSlotsMenu" parent="." unique_id=1735529064 instance=ExtResource("3_slots")]
 layout_mode = 1

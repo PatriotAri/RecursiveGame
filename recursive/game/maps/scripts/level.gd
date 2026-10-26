@@ -9,6 +9,9 @@ extends Node2D
 ## between rounds they're open. Once the last area has been cleared, the exit
 ## door to the next level opens.
 
+## Emitted when a round is about to start, while the level is still between
+## rounds: the last safe moment before the fighting, so the game saves here.
+signal round_starting(round_number: int)
 signal round_started(round_number: int)
 signal round_cleared(round_number: int)
 signal level_completed
@@ -40,6 +43,10 @@ var round_number:= 0
 var unlocked_areas:= 1
 var completed:= false
 var _current_area:= 0
+## Paths to the pickups placed in the level's scene. A loaded level leaves out
+## the ones already picked up, so they can't be collected twice. Enemy drops
+## aren't placed, so they aren't tracked.
+var _placed_pickups: Array[NodePath] = []
 
 func _ready() -> void:
 	start_stand.interacted.connect(func(_player: Node) -> void: start_round())
@@ -52,10 +59,14 @@ func _ready() -> void:
 		door.changed.connect(navigation.rebake)
 	for area in areas:
 		area.cleared.connect(_on_area_cleared.bind(area))
+	for node in find_children("*", "", true, true):
+		if node is ItemPickup and node.owner == self:
+			_placed_pickups.append(get_path_to(node))
 	_set_between_rounds()
 
 func start_round() -> void:
 	if state == State.IN_ROUND or areas.is_empty(): return
+	round_starting.emit(round_number + 1)
 	state = State.IN_ROUND
 	round_number += 1
 	_current_area = 0
@@ -97,7 +108,46 @@ func _finish_round() -> void:
 	_set_between_rounds()
 	round_cleared.emit(cleared_round)
 
-func _set_between_rounds() -> void:
+## Everything needed to put the level back as it is now. Saving only happens
+## between rounds, so there are no enemies to record.
+func get_save_data() -> Dictionary:
+	var taken: Array[String] = []
+	for path in _placed_pickups:
+		var pickup:= get_node_or_null(path)
+		if pickup == null or pickup.is_queued_for_deletion():
+			taken.append(String(path))
+	return {
+		"round_number": round_number,
+		"unlocked_areas": unlocked_areas,
+		"last_area": _current_area,
+		"completed": completed,
+		"taken_pickups": taken,
+	}
+
+## Puts the level back the way get_save_data() found it. Call once, after the
+## level is in the tree. Doors move quietly; the navigation map rebakes off
+## their changed signals as usual.
+func load_save_data(saved: Dictionary) -> void:
+	if areas.is_empty(): return
+	round_number = maxi(int(saved.get("round_number", 0)), 0)
+	unlocked_areas = clampi(int(saved.get("unlocked_areas", 1)), 1, areas.size())
+	_current_area = clampi(int(saved.get("last_area", 0)), 0, unlocked_areas - 1)
+	completed = bool(saved.get("completed", false))
+	for path in saved.get("taken_pickups", []):
+		var pickup:= get_node_or_null(NodePath(String(path)))
+		if pickup is ItemPickup:
+			pickup.free()
+	# Between rounds, the doors into the areas fought last round stay open.
+	for i in range(1, areas.size()):
+		var door:= areas[i].entry_door
+		if door and round_number > 0 and i <= _current_area:
+			door.open(true)
+	if completed:
+		if exit_door: exit_door.open(true)
+		if exit: exit.enabled = true
+	_set_between_rounds(true)
+
+func _set_between_rounds(quiet:= false) -> void:
 	state = State.BETWEEN_ROUNDS
 	start_stand.enabled = true
 	if ramp: ramp.enabled = true
@@ -107,9 +157,9 @@ func _set_between_rounds() -> void:
 		var gate:= areas[i].return_gate
 		if gate == null: continue
 		if i < unlocked_areas - 1 or (round_number > 0 and i <= _current_area):
-			gate.open()
+			gate.open(quiet)
 		else:
-			gate.close()
+			gate.close(quiet)
 
 func _all_doors() -> Array[Door]:
 	var doors: Array[Door] = []

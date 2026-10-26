@@ -245,6 +245,47 @@ func _on_knockback_received(direction: Vector2, strength: float, decay: float) -
 	var knockback := MovementModifier.create_impulse(&"knockback", direction, strength, decay)
 	data.modifiers.add(knockback)
 
+## Everything about the player a save keeps: where they stand, their
+## current health, stamina and mana, what they carry and what they wear.
+## Items are stored by id; see ItemRegistry.
+func get_save_data() -> Dictionary:
+	var items := {}
+	for stack in data.inventory.get_stacks():
+		items[String(stack.item.id)] = stack.count
+	var worn := {}
+	for slot in EquippableItem.Slot.values():
+		var item: EquippableItem = data.equipment.get_item(slot)
+		if item:
+			worn[str(slot)] = String(item.id)
+	return {
+		"position": [global_position.x, global_position.y],
+		"health": stats.health.current,
+		"stamina": stats.stamina.current,
+		"mana": stats.mana.current,
+		"inventory": items,
+		"equipment": worn,
+	}
+
+func load_save_data(saved: Dictionary) -> void:
+	for id in saved.get("inventory", {}):
+		var item := ItemRegistry.get_item(StringName(id))
+		if item == null:
+			push_warning("Save has an unknown item '%s'; skipped." % id)
+			continue
+		data.inventory.add(item, int(saved["inventory"][id]))
+	# Gear goes back on before stats are set, since it changes the maximums.
+	for slot in saved.get("equipment", {}):
+		var item := ItemRegistry.get_item(StringName(saved["equipment"][slot])) as EquippableItem
+		if item:
+			player_equipment_system.try_equip(data, item, true)
+	var position_saved: Array = saved.get("position", [global_position.x, global_position.y])
+	global_position = Vector2(position_saved[0], position_saved[1])
+	stats.health.current = clampi(int(saved.get("health", stats.health.maximum)), 1, stats.health.maximum)
+	stats.stamina.current = clampi(int(saved.get("stamina", stats.stamina.maximum)), 0, stats.stamina.maximum)
+	stats.mana.current = clampi(int(saved.get("mana", stats.mana.maximum)), 0, stats.mana.maximum)
+	for stat in [stats.health, stats.stamina, stats.mana]:
+		stat.changed.emit(stat.current, stat.maximum)
+
 ## The point other actors aim at. Movement wants our feet (global_position);
 ## combat wants the middle of what it has to hit.
 func combat_anchor() -> Vector2:

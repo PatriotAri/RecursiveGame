@@ -4,7 +4,8 @@ extends CanvasLayer
 
 ## The vendor's buy/sell menu. Buys at an item's value and sells back at half,
 ## rounded down. Equipped gear can't be sold — unequip it first — so the
-## weapon in your hand can't go by accident.
+## weapon in your hand can't go by accident. The vendor is also one of the
+## places the game can be saved.
 
 const SELL_RATE := 0.5
 
@@ -12,6 +13,9 @@ const SELL_RATE := 0.5
 @onready var sell_rows: VBoxContainer = %SellRows
 @onready var gold_counter: Control = %GoldCounter
 @onready var back_button: Button = %BackButton
+@onready var save_button: Button = %SaveButton
+@onready var root: Control = $Root
+@onready var save_slots_menu: SaveSlotsMenu = $SaveSlotsMenu
 
 var _vendor: Vendor
 var _player: Node
@@ -23,6 +27,8 @@ func _ready() -> void:
 	visible = false
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	back_button.pressed.connect(close)
+	save_button.pressed.connect(_on_save_pressed)
+	save_slots_menu.closed.connect(_on_save_slots_closed)
 
 static func sell_price(item: Item) -> int:
 	return floori(item.value * SELL_RATE)
@@ -40,11 +46,14 @@ func open(vendor: Vendor, player: Node) -> void:
 		get_tree().paused = true
 		_paused_by_me = true
 	Sfx.play(Sfx.menu_open)
+	save_button.disabled = not Saves.can_save()
 	_rebuild()
 	_focus_first()
 
 func close() -> void:
 	if not visible: return
+	if save_slots_menu.visible:
+		save_slots_menu.close()
 	visible = false
 	var inventory: Inventory = _player.data.inventory
 	if inventory.changed.is_connected(_on_inventory_changed):
@@ -61,6 +70,14 @@ func _unhandled_input(event: InputEvent) -> void:
 	if visible and event.is_action_pressed(&"interact"):
 		close()
 		get_viewport().set_input_as_handled()
+
+func _on_save_pressed() -> void:
+	root.visible = false
+	save_slots_menu.open(SaveSlotsMenu.Mode.SAVE)
+
+func _on_save_slots_closed() -> void:
+	root.visible = true
+	save_button.grab_focus()
 
 func _buy(item: Item) -> void:
 	var inventory: Inventory = _player.data.inventory

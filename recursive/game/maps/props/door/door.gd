@@ -26,16 +26,25 @@ var is_open := false
 func _ready() -> void:
 	_apply_size()
 	if Engine.is_editor_hint(): return
-	_set_open(starts_open, false)
+	_apply_open(starts_open)
 
-func open() -> void:
-	_set_open(true, true)
+## `quiet` skips the sound, for putting doors back when a save loads.
+func open(quiet := false) -> void:
+	_set_open(true, quiet)
 
-func close() -> void:
-	_set_open(false, true)
+func close(quiet := false) -> void:
+	_set_open(false, quiet)
 
-func _set_open(value: bool, announce: bool) -> void:
-	if value == is_open and announce: return
+func _set_open(value: bool, quiet: bool) -> void:
+	if value == is_open: return
+	_apply_open(value)
+	if not quiet:
+		Sfx.play(open_sound if is_open else close_sound, global_position)
+	changed.emit()
+
+## Just the state: no sound, no signal. Also sets the starting state, which
+## nothing needs telling about.
+func _apply_open(value: bool) -> void:
 	is_open = value
 	# Deferred: doors open from inside physics callbacks (an enemy dying).
 	_shape.set_deferred("disabled", is_open)
@@ -44,9 +53,6 @@ func _set_open(value: bool, announce: bool) -> void:
 		remove_from_group(&"navigation_obstacles")
 	else:
 		add_to_group(&"navigation_obstacles")
-	if announce:
-		Sfx.play(open_sound if is_open else close_sound, global_position)
-		changed.emit()
 
 func _apply_size() -> void:
 	if not is_node_ready(): return
