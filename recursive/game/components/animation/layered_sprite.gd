@@ -44,6 +44,13 @@ func _ready() -> void:
 		push_error("%s: no lead layer assigned." % name)
 		return
 	lead_layer.animation_finished.connect(animation_finished.emit)
+	# Start on whatever the lead was saved showing, so the stack is consistent
+	# from the first drawn frame — before anything has called play(). Empty
+	# armour layers hide here instead of waiting for the first play().
+	_current = lead_layer.animation
+	for layer in _layers:
+		if layer != lead_layer:
+			_apply_layer(layer)
 
 func _process(_delta: float) -> void:
 	_sync_frames()
@@ -165,5 +172,7 @@ func _sync_frames() -> void:
 			_sync_layer(layer)
 
 func _sync_layer(layer: AnimatedSprite2D) -> void:
+	if layer.sprite_frames == null or not layer.sprite_frames.has_animation(layer.animation):
+		return
 	var count := layer.sprite_frames.get_frame_count(layer.animation)
 	layer.frame = mini(lead_layer.frame, count - 1)

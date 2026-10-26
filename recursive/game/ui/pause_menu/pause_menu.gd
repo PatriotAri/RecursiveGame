@@ -3,6 +3,7 @@ extends CanvasLayer
 @onready var background: ColorRect = $Background
 @onready var controls_panel: Control = $Background/ControlsPanel
 @onready var menu_container: VBoxContainer = $Background/VBoxContainer
+@onready var settings_menu: SettingsMenu = $SettingsMenu
 
 func _ready() -> void:
 	add_to_group(&"pause_menu")
@@ -16,6 +17,8 @@ func _ready() -> void:
 	$Background/VBoxContainer/MainMenu.pressed.connect(_on_main_menu_button_pressed)
 	$Background/VBoxContainer/Quit.pressed.connect(_on_quit_button_pressed)
 	$Background/VBoxContainer/Controls.pressed.connect(_on_controls_button_pressed)
+	$Background/VBoxContainer/Settings.pressed.connect(_on_settings_button_pressed)
+	settings_menu.closed.connect(_on_settings_closed)
 	$Background/ControlsPanel/VBoxContainer/BackButton.pressed.connect(_on_controls_back_pressed)
 	controls_panel.visible = false
 	
@@ -44,6 +47,10 @@ func pause() -> void:
 
 func resume() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED_HIDDEN)
+	# Closing through the menu saves, so unpausing straight out of it does
+	# too.
+	if settings_menu.visible:
+		settings_menu.close()
 	controls_panel.visible = false
 	menu_container.visible = true
 	visible = false
@@ -66,3 +73,10 @@ func _on_controls_button_pressed() -> void:
 func _on_controls_back_pressed() -> void:
 	controls_panel.visible = false
 	menu_container.visible = true
+
+func _on_settings_button_pressed() -> void:
+	background.visible = false
+	settings_menu.open()
+
+func _on_settings_closed() -> void:
+	background.visible = true

@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://1bm0nlkht8kq"]
 
 [ext_resource type="Script" uid="uid://ck5pbop5a4l4p" path="res://game/ui/main_menu/main_menu.gd" id="1_gof3u"]
+[ext_resource type="PackedScene" path="res://game/ui/settings_menu/settings_menu.tscn" id="2_settings"]
 
 [node name="MainMenu" type="Control" unique_id=981603861]
 layout_mode = 3
@@ -43,7 +44,15 @@ custom_minimum_size = Vector2(160, 48)
 layout_mode = 2
 text = "Play"
 
+[node name="Settings" type="Button" parent="VBoxContainer" unique_id=1785293320]
+custom_minimum_size = Vector2(160, 48)
+layout_mode = 2
+text = "Settings"
+
 [node name="Quit" type="Button" parent="VBoxContainer" unique_id=636891424]
 custom_minimum_size = Vector2(160, 48)
 layout_mode = 2
 text = "Quit"
+
+[node name="SettingsMenu" parent="." unique_id=1203876354 instance=ExtResource("2_settings")]
+layout_mode = 1
