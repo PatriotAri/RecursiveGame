@@ -115,6 +115,7 @@ func _ready() -> void:
 	unarmed.hit_sound = unarmed_hit_sound
 	
 	player_hitbox_manager = HitboxManagerBase.new(self, HitboxManagerBase.LAYER_ENEMY_HURTBOX, func(): return data.facing_dir)
+	player_hitbox_manager.aim_provider = get_global_mouse_position
 	player_hitbox_manager.register_attack(&"unarmed", unarmed)
 	
 	player_input_system = PlayerInputSystem.new()
@@ -158,6 +159,11 @@ func _physics_process(delta: float) -> void:
 	player_attack_system.update(data, delta)
 	if not was_attacking and data.is_attacking:
 		stats.stamina.remove(current_attack_stamina_cost())
+	# Every attack aims at the cursor: facing snaps to it when the attack
+	# starts and follows it until the attack ends, then goes back to following
+	# movement. Done before anything spawns or animates the attack.
+	if data.is_attacking:
+		_face_cursor()
 	player_state_machine.update(data)
 	player_attack_system.post_update(data)
 	player_movement_system.update(data, delta)
@@ -165,6 +171,11 @@ func _physics_process(delta: float) -> void:
 	player_weapon_visual_system.update(data, player_attack_system.swing_progress())
 	player_interaction_system.update(data)
 	
+func _face_cursor() -> void:
+	var to_cursor:= get_global_mouse_position() - global_position
+	if to_cursor.length() > 1.0:
+		data.facing_dir = to_cursor.normalized()
+
 ## Recomputes every equipment-affected value from base + the supplied total.
 ## Called whenever equipment changes; safe to call with an empty StatBonuses
 ## to strip all bonuses.

@@ -105,7 +105,7 @@ func _can_open() -> bool:
 func open() -> void:
 	visible = true
 	Sfx.play(Sfx.menu_open)
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	CursorMode.menu()
 	if not get_tree().paused:
 		get_tree().paused = true
 		_paused_by_me = true
@@ -120,7 +120,7 @@ func close() -> void:
 	# underneath the death screen if the inventory was open when you died.
 	if _paused_by_me and not _other_pause_holder_visible():
 		get_tree().paused = false
-		Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED_HIDDEN)
+		CursorMode.gameplay()
 	_paused_by_me = false
 
 func _other_pause_holder_visible() -> bool:

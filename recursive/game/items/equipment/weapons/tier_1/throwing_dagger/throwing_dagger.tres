@@ -1,0 +1,37 @@
+[gd_resource type="Resource" script_class="EquippableItem" format=3]
+
+[ext_resource type="Script" path="res://game/items/equipment/core/equippable_item.gd" id="1_item"]
+[ext_resource type="Script" path="res://game/components/projectile/projectile_attack_spec.gd" id="2_spec"]
+[ext_resource type="PackedScene" path="res://game/items/equipment/weapons/tier_1/throwing_dagger/throwing_dagger_projectile.tscn" id="3_proj"]
+[ext_resource type="Texture2D" path="res://game/items/equipment/weapons/tier_1/throwing_dagger/throwing_dagger.png" id="4_tex"]
+[ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/throwing_dagger/audio/dagger_throw.tres" id="5_throw"]
+[ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/throwing_dagger/audio/dagger_hit.tres" id="6_hit"]
+
+[sub_resource type="Resource" id="Resource_throw"]
+script = ExtResource("2_spec")
+scene = ExtResource("3_proj")
+damage = 6.0
+hitstun_chance = 0.3
+knockback_chance = 0.3
+windup_time = 0.15
+lifetime = 0.15
+attack_stamina_cost = 3
+swing_sound = ExtResource("5_throw")
+hit_sound = ExtResource("6_hit")
+speed = 400.0
+max_range = 300.0
+cooldown = 0.6
+
+[resource]
+script = ExtResource("1_item")
+value = 20
+attack = SubResource("Resource_throw")
+animation_prefix = "throw"
+held_texture = ExtResource("4_tex")
+grip_offset = Vector2(5, 0)
+swing_arc_degrees = 0.0
+id = &"throwing_dagger"
+display_name = "Throwing Dagger"
+description = "Light enough to throw. Another is always to hand."
+icon = ExtResource("4_tex")
+category = 2

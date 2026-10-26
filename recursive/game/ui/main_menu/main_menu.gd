@@ -7,6 +7,8 @@ extends Control
 @onready var load_button: Button = $VBoxContainer/Load
 
 func _ready() -> void:
+	# Back from a game the crosshair may still be up.
+	CursorMode.menu()
 	continue_button.pressed.connect(on_continue_pressed)
 	$VBoxContainer/NewGame.pressed.connect(on_new_game_pressed)
 	load_button.pressed.connect(on_load_pressed)

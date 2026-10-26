@@ -10,6 +10,7 @@
 [ext_resource type="Resource" uid="uid://dllv20s1l4hsa" path="res://game/items/equipment/weapons/tier_1/iron_sword/iron_sword.tres" id="8_sword"]
 [ext_resource type="Resource" path="res://game/items/equipment/armor/tier_1/leather_cap/leather_cap.tres" id="9_cap"]
 [ext_resource type="Script" path="res://game/items/general/core/item.gd" id="10_item"]
+[ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/throwing_dagger/throwing_dagger.tres" id="11_dagger"]
 
 [node name="Airship" type="Node2D" node_paths=PackedStringArray("ramp_down", "arrival", "actors") unique_id=1508322869]
 script = ExtResource("1_airship")
@@ -34,7 +35,7 @@ y_sort_enabled = true
 
 [node name="Vendor" parent="Y-sorted" unique_id=1508362464 instance=ExtResource("3_vendor")]
 position = Vector2(288, 144)
-stock = Array[ExtResource("10_item")]([ExtResource("5_health"), ExtResource("6_stamina"), ExtResource("7_mana"), ExtResource("8_sword"), ExtResource("9_cap")])
+stock = Array[ExtResource("10_item")]([ExtResource("5_health"), ExtResource("6_stamina"), ExtResource("7_mana"), ExtResource("8_sword"), ExtResource("11_dagger"), ExtResource("9_cap")])
 
 [node name="RampDown" parent="Y-sorted" unique_id=1508370383 instance=ExtResource("4_ramp")]
 position = Vector2(288, 416)

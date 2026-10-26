@@ -21,6 +21,7 @@
 [ext_resource type="PackedScene" uid="uid://c2rn4u0yidyre" path="res://game/items/consumables/potions/health_potion/health_potion_pickup.tscn" id="25_health"]
 [ext_resource type="PackedScene" uid="uid://drxqjod7tqrpj" path="res://game/items/consumables/potions/stamina_potion/stamina_potion_pickup.tscn" id="26_stamina"]
 [ext_resource type="PackedScene" uid="uid://nhtgaiby8a08" path="res://game/items/consumables/potions/mana_potion/mana_potion_pickup.tscn" id="27_mana"]
+[ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/throwing_dagger/throwing_dagger.tres" id="28_dagger"]
 
 [sub_resource type="Resource" id="Resource_spawn_0_0"]
 script = ExtResource("5_spawn")
@@ -176,6 +177,10 @@ item = ExtResource("23_test_weapon")
 [node name="Item" parent="Y-sorted" unique_id=1507950676 instance=ExtResource("20_pickup")]
 position = Vector2(468, 832)
 item = ExtResource("24_test_item")
+
+[node name="ThrowingDagger" parent="Y-sorted" unique_id=1507982401 instance=ExtResource("20_pickup")]
+position = Vector2(468, 864)
+item = ExtResource("28_dagger")
 
 [node name="HealthPotion" parent="Y-sorted" unique_id=1507958595 instance=ExtResource("25_health")]
 position = Vector2(384, 864)

@@ -34,5 +34,10 @@ points = Dictionary[StringName, PackedVector2Array]({
 &"hurt_SE": PackedVector2Array(-11, 4),
 &"hurt_E": PackedVector2Array(-2, 5),
 &"hurt_NE": PackedVector2Array(9, 6),
-&"hurt_N": PackedVector2Array(11, 7)
+&"hurt_N": PackedVector2Array(11, 7),
+&"throw_attack_S": PackedVector2Array(-12, -23, -9, -2, -5, 11),
+&"throw_attack_SE": PackedVector2Array(-16, -19, -1, -5, 2, 5),
+&"throw_attack_E": PackedVector2Array(-7, -13, 11, -13, 12, -5),
+&"throw_attack_NE": PackedVector2Array(6, -9, 17, -21, 15, -12),
+&"throw_attack_N": PackedVector2Array(12, -9, 9, -24, 5, -13)
 })

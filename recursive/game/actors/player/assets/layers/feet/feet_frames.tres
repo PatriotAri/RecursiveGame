@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" path="res://game/actors/player/assets/layers/feet/feet_onehand_attack.png" id="5_onehand_attack"]
 [ext_resource type="Texture2D" path="res://game/actors/player/assets/layers/feet/feet_hurt.png" id="6_hurt"]
 [ext_resource type="Texture2D" path="res://game/actors/player/assets/layers/feet/feet_died.png" id="7_died"]
+[ext_resource type="Texture2D" path="res://game/actors/player/assets/layers/feet/feet_throw_attack.png" id="8_throw_attack"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_idle_0_0"]
 atlas = ExtResource("1_idle")
@@ -331,6 +332,66 @@ region = Rect2(0, 256, 64, 64)
 [sub_resource type="AtlasTexture" id="AtlasTexture_died_0_0"]
 atlas = ExtResource("7_died")
 region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_throw_attack_0_0"]
+atlas = ExtResource("8_throw_attack")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_throw_attack_0_1"]
+atlas = ExtResource("8_throw_attack")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_throw_attack_0_2"]
+atlas = ExtResource("8_throw_attack")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_throw_attack_1_0"]
+atlas = ExtResource("8_throw_attack")
+region = Rect2(0, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_throw_attack_1_1"]
+atlas = ExtResource("8_throw_attack")
+region = Rect2(64, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_throw_attack_1_2"]
+atlas = ExtResource("8_throw_attack")
+region = Rect2(128, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_throw_attack_2_0"]
+atlas = ExtResource("8_throw_attack")
+region = Rect2(0, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_throw_attack_2_1"]
+atlas = ExtResource("8_throw_attack")
+region = Rect2(64, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_throw_attack_2_2"]
+atlas = ExtResource("8_throw_attack")
+region = Rect2(128, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_throw_attack_3_0"]
+atlas = ExtResource("8_throw_attack")
+region = Rect2(0, 192, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_throw_attack_3_1"]
+atlas = ExtResource("8_throw_attack")
+region = Rect2(64, 192, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_throw_attack_3_2"]
+atlas = ExtResource("8_throw_attack")
+region = Rect2(128, 192, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_throw_attack_4_0"]
+atlas = ExtResource("8_throw_attack")
+region = Rect2(0, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_throw_attack_4_1"]
+atlas = ExtResource("8_throw_attack")
+region = Rect2(64, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_throw_attack_4_2"]
+atlas = ExtResource("8_throw_attack")
+region = Rect2(128, 256, 64, 64)
 
 [resource]
 animations = [{
@@ -731,4 +792,74 @@ animations = [{
 "loop": false,
 "name": &"died",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_throw_attack_0_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_throw_attack_0_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_throw_attack_0_2")
+}],
+"loop": false,
+"name": &"throw_attack_S",
+"speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_throw_attack_1_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_throw_attack_1_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_throw_attack_1_2")
+}],
+"loop": false,
+"name": &"throw_attack_SE",
+"speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_throw_attack_2_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_throw_attack_2_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_throw_attack_2_2")
+}],
+"loop": false,
+"name": &"throw_attack_E",
+"speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_throw_attack_3_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_throw_attack_3_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_throw_attack_3_2")
+}],
+"loop": false,
+"name": &"throw_attack_NE",
+"speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_throw_attack_4_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_throw_attack_4_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_throw_attack_4_2")
+}],
+"loop": false,
+"name": &"throw_attack_N",
+"speed": 4.0
 }]

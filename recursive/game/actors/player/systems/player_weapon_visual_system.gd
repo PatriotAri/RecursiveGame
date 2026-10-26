@@ -34,6 +34,10 @@ func set_weapon(item: EquippableItem) -> void:
 	sprite.visible = true
 
 func update(data: PlayerData, swing_progress: float) -> void:
+	if sprite.texture == null: return
+	# A thrown weapon is out of the hand from release until its cooldown
+	# ends, so the empty hand shows when the next throw is ready.
+	sprite.visible = not data.weapon_thrown
 	if not sprite.visible: return
 	
 	var dir:= FacingHelper.facing_to_string(data.facing_dir)

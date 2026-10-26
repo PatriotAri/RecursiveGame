@@ -8,6 +8,13 @@ var attack_duration:= 0.0
 
 var pending_spawn:= false
 
+## Time left before a throwing weapon can be thrown again. Melee attacks have
+## no cooldown beyond their own length.
+var cooldown_timer:= 0.0
+## Counts down the current throw's windup; at zero the weapon has left the
+## hand. Negative when there's no throw in progress.
+var _release_timer:= -1.0
+
 func _init(player_ref: CharacterBody2D, hb_ref: HitboxManagerBase) -> void:
 	player = player_ref
 	player_hitbox_manager = hb_ref
@@ -18,6 +25,17 @@ func _init(player_ref: CharacterBody2D, hb_ref: HitboxManagerBase) -> void:
 		push_error("PlayerAttackSystem: no 'unarmed' attack registered.")
 
 func update(data: PlayerData, delta: float) -> void:
+	# Ticks even through hitstun: a weapon already thrown comes back on time
+	# whatever happens to the thrower.
+	if cooldown_timer > 0.0:
+		cooldown_timer -= delta
+	if _release_timer >= 0.0:
+		_release_timer -= delta
+		if _release_timer < 0.0:
+			data.weapon_thrown = true
+	if cooldown_timer <= 0.0:
+		data.weapon_thrown = false
+	
 	# No swinging out of hitstun. Without this the player could start an
 	# attack and spawn a hitbox while the hurt state was still active.
 	if data.is_hurt:
@@ -31,7 +49,7 @@ func update(data: PlayerData, delta: float) -> void:
 			data.is_attacking = false
 	
 	# Start new attack if input received and not currently attacking
-	if data.attack_requested and not data.is_attacking:
+	if data.attack_requested and not data.is_attacking and cooldown_timer <= 0.0:
 		data.attack_requested = false
 		var spec := player_hitbox_manager.get_spec(data.current_attack)
 		if spec == null:
@@ -43,6 +61,9 @@ func update(data: PlayerData, delta: float) -> void:
 		attack_timer = spec.windup_time + spec.lifetime
 		attack_duration = attack_timer
 		pending_spawn = true
+		if spec is ProjectileAttackSpec:
+			cooldown_timer = spec.cooldown
+			_release_timer = spec.windup_time
 
 ## Drops any in-progress swing. pending_spawn surviving an interrupt would
 ## spawn the hitbox a frame later, after the attack was already cancelled.
@@ -52,6 +73,17 @@ func cancel(data: PlayerData) -> void:
 	attack_timer = 0.0
 	attack_duration = 0.0
 	pending_spawn = false
+	# Interrupted before it left the hand, nothing was thrown: no cooldown.
+	if _release_timer >= 0.0:
+		_release_timer = -1.0
+		cooldown_timer = 0.0
+
+## Forgets any cooldown. For a weapon change: the new weapon is in hand and
+## ready, whatever the last one was doing.
+func reset_cooldown(data: PlayerData) -> void:
+	cooldown_timer = 0.0
+	_release_timer = -1.0
+	data.weapon_thrown = false
 
 func post_update(data: PlayerData) -> void:
 	if not data.is_attacking:

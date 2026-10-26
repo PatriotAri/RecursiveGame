@@ -10,7 +10,7 @@ func _ready() -> void:
 
 func show_death() -> void:
 	Sfx.play(Sfx.death_sting)
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	CursorMode.menu()
 	visible = true
 	get_tree().paused = true
 

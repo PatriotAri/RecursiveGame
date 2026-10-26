@@ -56,6 +56,9 @@ var current_attack: StringName = &"unarmed"
 ## The animation set that attack uses. Set with current_attack, so the two
 ## can never disagree about which weapon is in hand.
 var animation_prefix := ""
+## A throwing weapon that has left the hand and isn't back yet: true from
+## release until its cooldown ends. The hand shows it empty meanwhile.
+var weapon_thrown:= false
 
 #read/written by StatSystem
 var is_exhausted:= false

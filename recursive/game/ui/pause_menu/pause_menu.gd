@@ -10,7 +10,8 @@ extends CanvasLayer
 
 func _ready() -> void:
 	add_to_group(&"pause_menu")
-	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED_HIDDEN)
+	# The game scene starts in play, so the crosshair goes up with it.
+	CursorMode.gameplay()
 	set_process_input(true)
 	#starts the pause menu hidden
 	visible = false
@@ -27,6 +28,12 @@ func _ready() -> void:
 	save_slots_menu.closed.connect(_on_save_slots_closed)
 	$Background/ControlsPanel/VBoxContainer/BackButton.pressed.connect(_on_controls_back_pressed)
 	controls_panel.visible = false
+
+## The crosshair lasts as long as the game scene. Clearing it here also lets
+## go of its texture before the engine shuts down, which otherwise reports it
+## as leaked on quit.
+func _exit_tree() -> void:
+	CursorMode.menu()
 	
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause"):
@@ -53,14 +60,14 @@ func _input(event: InputEvent) -> void:
 		
 func pause() -> void:
 	Sfx.play(Sfx.menu_open)
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	CursorMode.menu()
 	_refresh_save_buttons()
 	visible = true
 	get_tree().paused = true
 
 func resume() -> void:
 	Sfx.play(Sfx.menu_close)
-	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED_HIDDEN)
+	CursorMode.gameplay()
 	# Closing through the menu saves, so unpausing straight out of it does
 	# too.
 	if settings_menu.visible:

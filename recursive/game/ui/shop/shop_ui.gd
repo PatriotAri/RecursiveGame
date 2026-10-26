@@ -41,7 +41,7 @@ func open(vendor: Vendor, player: Node) -> void:
 	if not inventory.changed.is_connected(_on_inventory_changed):
 		inventory.changed.connect(_on_inventory_changed)
 	visible = true
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	CursorMode.menu()
 	if not get_tree().paused:
 		get_tree().paused = true
 		_paused_by_me = true
@@ -60,7 +60,7 @@ func close() -> void:
 		inventory.changed.disconnect(_on_inventory_changed)
 	if _paused_by_me:
 		get_tree().paused = false
-		Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED_HIDDEN)
+		CursorMode.gameplay()
 	_paused_by_me = false
 	Sfx.play(Sfx.menu_close)
 

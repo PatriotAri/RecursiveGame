@@ -12,6 +12,9 @@ var target_layer: int
 ## Returns the actor's current facing. Supplied by the actor, so this class
 ## needs no per-actor subclass.
 var facing_provider: Callable
+## Returns the world point projectiles are aimed at: the cursor for the
+## player. Optional; without it they fly along the facing.
+var aim_provider: Callable
 
 var active_hitboxes: Array[HitboxBase] = []
 var attack_registry: Dictionary = {}
@@ -72,6 +75,12 @@ func spawn_hitbox(attack_name: StringName) -> HitboxBase:
 	hitbox.offsets = spec.offsets
 	hitbox.facing_provider = facing_provider
 	hitbox.hit_sound = spec.hit_sound
+	if hitbox is Projectile:
+		if not spec is ProjectileAttackSpec:
+			push_error("Attack '%s' on %s: a Projectile scene needs a ProjectileAttackSpec." % [attack_name, body.name])
+			hitbox.free()
+			return null
+		_configure_projectile(hitbox, spec)
 	
 	body.add_child(hitbox)
 	hitbox.begin_attack()
@@ -81,6 +90,15 @@ func spawn_hitbox(attack_name: StringName) -> HitboxBase:
 	hitbox.tree_exited.connect(on_hitbox_removed.bind(hitbox))
 
 	return hitbox
+
+func _configure_projectile(projectile: Projectile, spec: ProjectileAttackSpec) -> void:
+	projectile.speed = spec.speed
+	projectile.pierce = spec.pierce
+	projectile.launch_offset = spec.launch_offset
+	projectile.aim_provider = aim_provider
+	# A projectile's lifetime is its flight; the spec's lifetime is the
+	# thrower's follow-through, which only the attack system cares about.
+	projectile.lifetime = spec.flight_time()
 
 func get_active_count() -> int:
 	return active_hitboxes.size()

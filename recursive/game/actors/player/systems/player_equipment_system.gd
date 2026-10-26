@@ -51,6 +51,7 @@ func _refresh(data: PlayerData) -> void:
 	# Without this, post_update() would spawn the NEW weapon's hitbox on the
 	# OLD weapon's timer.
 	player.player_attack_system.cancel(data)
+	player.player_attack_system.reset_cooldown(data)
 	player.player_hitbox_manager.cancel_all()
 
 func _refresh_weapon(data: PlayerData) -> void:
