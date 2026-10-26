@@ -1,0 +1,35 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/maps/props/vendor/vendor.gd" id="1_vendor"]
+[ext_resource type="Texture2D" path="res://game/maps/props/vendor/vendor.png" id="2_tex"]
+[ext_resource type="Resource" path="res://game/items/drops/gold_sack/gold.tres" id="3_gold"]
+[ext_resource type="Resource" path="res://game/ui/shop/audio/purchase.tres" id="4_buy"]
+[ext_resource type="Resource" path="res://game/ui/shop/audio/sale.tres" id="5_sell"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_reach"]
+radius = 44.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(20, 10)
+
+[node name="Vendor" type="Area2D"]
+script = ExtResource("1_vendor")
+gold_item = ExtResource("3_gold")
+purchase_sound = ExtResource("4_buy")
+sale_sound = ExtResource("5_sell")
+prompt_text = "Shop"
+prompt_offset = Vector2(0, -54)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_tex")
+offset = Vector2(0, -24)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_reach")
+
+[node name="Body" type="StaticBody2D" parent="."]
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body"]
+position = Vector2(0, -4)
+shape = SubResource("RectangleShape2D_body")

@@ -18,6 +18,8 @@ extends NavigationRegion2D
 ## walking enemy, so they don't scrape along corners.
 @export var agent_radius := 10.0
 
+var _rebake_queued := false
+
 func _ready() -> void:
 	if ground == null or ground.tile_set == null:
 		push_error("%s: no ground layer to build navigation from." % name)
@@ -31,6 +33,22 @@ func _ready() -> void:
 	polygon.agent_radius = agent_radius
 	navigation_polygon = polygon
 	# Not on a thread: enemies spawned this frame should find a map waiting.
+	bake_navigation_polygon(false)
+
+## Bakes again from the current obstacles — after a door opens or closes.
+## Several requests in one frame become a single bake.
+func rebake() -> void:
+	if _rebake_queued or navigation_polygon == null: return
+	_rebake_queued = true
+	_rebake.call_deferred()
+
+func _rebake() -> void:
+	_rebake_queued = false
+	# Set aside while the player is on the airship: bake when it's back.
+	if not is_inside_tree():
+		if not tree_entered.is_connected(rebake):
+			tree_entered.connect(rebake, CONNECT_ONE_SHOT)
+		return
 	bake_navigation_polygon(false)
 
 ## The painted ground's bounding rectangle, in this node's space.

@@ -2,6 +2,9 @@ class_name EnemySpawner
 
 extends Marker2D
 
+## A spot enemies appear around. A LevelArea tells it what to spawn and how
+## many; with waves_on it can also run timed waves by itself, for test arenas.
+
 @export var enemy_scene: PackedScene
 
 @export_group("Spawn Tuning")
@@ -24,8 +27,10 @@ func _ready() -> void:
 	if enemy_scene == null:
 		enemy_scene = GlobalPackedScenes.crawler_scene
 	wave_timer = wave_intervals
-	await get_tree().process_frame
-	spawn_wave()
+	# Areas decide when to spawn; only a standalone spawner starts itself.
+	if waves_on:
+		await get_tree().process_frame
+		spawn_wave()
 
 func _process(delta:float) -> void:
 	if not waves_on:
@@ -37,19 +42,24 @@ func _process(delta:float) -> void:
 
 func spawn_wave() -> void:
 	prune_dead()
-	
+	var allowed:= spawn_count
+	if max_enemies > 0:
+		allowed = mini(spawn_count, max_enemies - enemies_alive.size())
+	spawn(enemy_scene, allowed)
+
+## Spawns `count` of `scene` around this point and returns them. Used by
+## areas each round.
+func spawn(scene: PackedScene, count: int) -> Array[Node]:
+	var spawned: Array[Node] = []
+	if scene == null: return spawned
 	var target_parent:= get_parent()
-	var spawned:= 0
 	var positions: Array[Vector2] = []
 	
-	for i in spawn_count:
-		if max_enemies > 0 and (enemies_alive.size() + spawned) >= max_enemies:
-			break
-		
+	for i in count:
 		var pos:= pick_position(positions)
 		positions.append(pos)
 		
-		var enemy:= enemy_scene.instantiate()
+		var enemy:= scene.instantiate()
 		# pick_position() returns world space. Assigning it to `position`
 		# treated it as a local offset — correct only while Y-sorted happens
 		# to sit at the origin. global_position needs the node in the tree,
@@ -57,13 +67,14 @@ func spawn_wave() -> void:
 		target_parent.add_child(enemy)
 		enemy.global_position = pos
 		enemies_alive.append(enemy)
-		spawned += 1
+		spawned.append(enemy)
+	return spawned
 
 func pick_position(existing: Array[Vector2]) -> Vector2:
 	for attempts in 10:
 		var angle:= randf() * TAU
 		var dist:= randf_range(0.0, spawn_radius)
-		var candidate:= global_position + Vector2(cos(angle), sin(angle)) * dist
+		var candidate:= _walkable(global_position + Vector2(cos(angle), sin(angle)) * dist)
 		
 		var too_close:= false
 		for other in existing:
@@ -74,7 +85,17 @@ func pick_position(existing: Array[Vector2]) -> Vector2:
 			return candidate
 	
 	var angle:= randf() * TAU
-	return global_position + Vector2(cos(angle), sin(angle)) * spawn_radius
+	return _walkable(global_position + Vector2(cos(angle), sin(angle)) * spawn_radius)
+
+## The nearest spot an enemy can stand, so a spawn radius that reaches into a
+## wall doesn't bury anyone in it. Unchanged where the level has no
+## navigation map.
+func _walkable(point: Vector2) -> Vector2:
+	var map:= get_world_2d().navigation_map
+	if NavigationServer2D.map_get_iteration_id(map) == 0 \
+			or NavigationServer2D.map_get_regions(map).is_empty():
+		return point
+	return NavigationServer2D.map_get_closest_point(map, point)
 
 func prune_dead() -> void:
 	var still_alive: Array[Node] = []

@@ -15,6 +15,7 @@ var player_consumable_system: PlayerConsumableSystem
 var player_equipment_system: PlayerEquipmentSystem
 var player_animation_system: PlayerAnimationSystem
 var player_weapon_visual_system: PlayerWeaponVisualSystem
+var player_interaction_system: PlayerInteractionSystem
 
 var player_hitbox_manager: HitboxManagerBase
 
@@ -124,6 +125,7 @@ func _ready() -> void:
 	player_weapon_visual_system = PlayerWeaponVisualSystem.new($Visual/Weapon, visual)
 	player_equipment_system = PlayerEquipmentSystem.new(self)
 	player_animation_system = PlayerAnimationSystem.new(visual)
+	player_interaction_system = PlayerInteractionSystem.new(self)
 	
 	$Hurtbox._on_damage_received = _on_damage_received
 	$Hurtbox.knockback_received.connect(_on_knockback_received)
@@ -161,6 +163,7 @@ func _physics_process(delta: float) -> void:
 	player_movement_system.update(data, delta)
 	player_animation_system.update(data, player_attack_system.swing_progress())
 	player_weapon_visual_system.update(data, player_attack_system.swing_progress())
+	player_interaction_system.update(data)
 	
 ## Recomputes every equipment-affected value from base + the supplied total.
 ## Called whenever equipment changes; safe to call with an empty StatBonuses

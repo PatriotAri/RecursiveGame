@@ -33,6 +33,11 @@ func _input(event: InputEvent) -> void:
 			inventory_ui.close()
 			get_viewport().set_input_as_handled()
 			return
+		var shop_ui := get_tree().get_first_node_in_group(&"shop_ui")
+		if shop_ui and shop_ui.visible:
+			shop_ui.close()
+			get_viewport().set_input_as_handled()
+			return
 		if get_tree().paused:
 			resume()
 		else:

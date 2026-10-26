@@ -23,6 +23,7 @@ var facing_turn_speed:= 35.0
 var move_vector:= Vector2.ZERO
 var is_running:= false
 var attack_requested:= false
+var interact_requested:= false
 
 #read/written by StateMachine 
 var current_state: State = State.IDLE

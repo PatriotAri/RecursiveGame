@@ -13,6 +13,7 @@ metadata/_custom_type_script = "uid://dm505c8n2frk"
 
 [resource]
 script = ExtResource("2_glelh")
+value = 5
 use_sound = ExtResource("9_drink")
 effects = Array[ExtResource("1_34178")]([SubResource("Resource_ugcfn")])
 id = &"stamina_potion"

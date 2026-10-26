@@ -1,0 +1,41 @@
+[gd_scene format=4]
+
+[ext_resource type="Script" path="res://game/maps/airship/airship.gd" id="1_airship"]
+[ext_resource type="TileSet" path="res://game/maps/test_map/test_tileset.tres" id="2_tiles"]
+[ext_resource type="PackedScene" path="res://game/maps/props/vendor/vendor.tscn" id="3_vendor"]
+[ext_resource type="PackedScene" path="res://game/maps/props/ramp/ramp.tscn" id="4_ramp"]
+[ext_resource type="Resource" path="res://game/items/consumables/potions/health_potion/health_potion.tres" id="5_health"]
+[ext_resource type="Resource" path="res://game/items/consumables/potions/stamina_potion/stamina_potion.tres" id="6_stamina"]
+[ext_resource type="Resource" path="res://game/items/consumables/potions/mana_potion/mana_potion.tres" id="7_mana"]
+[ext_resource type="Resource" uid="uid://dllv20s1l4hsa" path="res://game/items/equipment/weapons/tier_1/iron_sword/iron_sword.tres" id="8_sword"]
+[ext_resource type="Resource" path="res://game/items/equipment/armor/tier_1/leather_cap/leather_cap.tres" id="9_cap"]
+[ext_resource type="Script" path="res://game/items/general/core/item.gd" id="10_item"]
+
+[node name="Airship" type="Node2D" node_paths=PackedStringArray("ramp_down", "arrival", "actors") unique_id=1508322869]
+script = ExtResource("1_airship")
+ramp_down = NodePath("Y-sorted/RampDown")
+arrival = NodePath("Arrival")
+actors = NodePath("Y-sorted")
+
+[node name="Deck" type="TileMapLayer" parent="." unique_id=1508330788]
+tile_map_data = PackedByteArray("AAAAAAAAAwAAAAAAAAAAAAEAAwAAAAAAAAAAAAIAAwAAAAAAAAAAAAMAAwAAAAAAAAAAAAQAAwAAAAAAAAAAAAUAAwAAAAAAAAAAAAYAAwAAAAAAAAABAAAAAwAAAAAAAAABAAEAAwAAAAAAAAABAAIAAwAAAAAAAAABAAMAAwAAAAAAAAABAAQAAwAAAAAAAAABAAUAAwAAAAAAAAABAAYAAwAAAAAAAAACAAAAAwAAAAAAAAACAAEAAwAAAAAAAAACAAIAAwAAAAAAAAACAAMAAwAAAAAAAAACAAQAAwAAAAAAAAACAAUAAwAAAAAAAAACAAYAAwAAAAAAAAADAAAAAwAAAAAAAAADAAEAAwAAAAAAAAADAAIAAwAAAAAAAAADAAMAAwAAAAAAAAADAAQAAwAAAAAAAAADAAUAAwAAAAAAAAADAAYAAwAAAAAAAAAEAAAAAwAAAAAAAAAEAAEAAwAAAAAAAAAEAAIAAwAAAAAAAAAEAAMAAwAAAAAAAAAEAAQAAwAAAAAAAAAEAAUAAwAAAAAAAAAEAAYAAwAAAAAAAAAFAAAAAwAAAAAAAAAFAAEAAwAAAAAAAAAFAAIAAwAAAAAAAAAFAAMAAwAAAAAAAAAFAAQAAwAAAAAAAAAFAAUAAwAAAAAAAAAFAAYAAwAAAAAAAAAGAAAAAwAAAAAAAAAGAAEAAwAAAAAAAAAGAAIAAwAAAAAAAAAGAAMAAwAAAAAAAAAGAAQAAwAAAAAAAAAGAAUAAwAAAAAAAAAGAAYAAwAAAAAAAAAHAAAAAwAAAAAAAAAHAAEAAwAAAAAAAAAHAAIAAwAAAAAAAAAHAAMAAwAAAAAAAAAHAAQAAwAAAAAAAAAHAAUAAwAAAAAAAAAHAAYAAwAAAAAAAAAIAAAAAwAAAAAAAAAIAAEAAwAAAAAAAAAIAAIAAwAAAAAAAAAIAAMAAwAAAAAAAAAIAAQAAwAAAAAAAAAIAAUAAwAAAAAAAAAIAAYAAwAAAAAAAAA=")
+tile_set = ExtResource("2_tiles")
+
+[node name="Rails" type="TileMapLayer" parent="." unique_id=1508338707]
+tile_map_data = PackedByteArray("AAAAAAAAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAAQAAgAAAAAAAAAAAAUAAgAAAAAAAAAAAAYAAgAAAAAAAAABAAAAAgAAAAAAAAABAAYAAgAAAAAAAAACAAAAAgAAAAAAAAACAAYAAgAAAAAAAAADAAAAAgAAAAAAAAADAAYAAgAAAAAAAAAEAAAAAgAAAAAAAAAFAAAAAgAAAAAAAAAFAAYAAgAAAAAAAAAGAAAAAgAAAAAAAAAGAAYAAgAAAAAAAAAHAAAAAgAAAAAAAAAHAAYAAgAAAAAAAAAIAAAAAgAAAAAAAAAIAAEAAgAAAAAAAAAIAAIAAgAAAAAAAAAIAAMAAgAAAAAAAAAIAAQAAgAAAAAAAAAIAAUAAgAAAAAAAAAIAAYAAgAAAAAAAAA=")
+tile_set = ExtResource("2_tiles")
+
+[node name="Arrival" type="Marker2D" parent="." unique_id=1508346626]
+position = Vector2(288, 296)
+
+[node name="Y-sorted" type="Node2D" parent="." unique_id=1508354545]
+z_index = 2
+y_sort_enabled = true
+
+[node name="Vendor" parent="Y-sorted" unique_id=1508362464 instance=ExtResource("3_vendor")]
+position = Vector2(288, 144)
+stock = Array[ExtResource("10_item")]([ExtResource("5_health"), ExtResource("6_stamina"), ExtResource("7_mana"), ExtResource("8_sword"), ExtResource("9_cap")])
+
+[node name="RampDown" parent="Y-sorted" unique_id=1508370383 instance=ExtResource("4_ramp")]
+position = Vector2(288, 416)
+prompt_text = "Leave airship"

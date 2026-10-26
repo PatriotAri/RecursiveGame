@@ -9,3 +9,5 @@ func update(data: PlayerData) -> void:
 	data.is_running = Input.is_action_pressed("player_run")
 	
 	data.attack_requested = Input.is_action_just_pressed("player_attack")
+	
+	data.interact_requested = Input.is_action_just_pressed("interact")

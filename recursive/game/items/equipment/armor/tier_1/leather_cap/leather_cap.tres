@@ -12,6 +12,7 @@ metadata/_custom_type_script = "uid://v162jjr58mo1"
 
 [resource]
 script = ExtResource("1_item")
+value = 15
 slot = 2
 bonuses = SubResource("Resource_bonus")
 overlays = Dictionary[int, SpriteFrames]({

@@ -1,0 +1,90 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/ui/shop/shop_ui.gd" id="1_shop"]
+[ext_resource type="PackedScene" uid="uid://bjtbcxf7ndhqb" path="res://game/ui/hud/counters/gold_counter/gold_counter.tscn" id="2_gold"]
+
+[node name="ShopUi" type="CanvasLayer"]
+layer = 7
+script = ExtResource("1_shop")
+
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.85)
+
+[node name="Root" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 64
+theme_override_constants/margin_bottom = 40
+
+[node name="VBox" type="VBoxContainer" parent="Root"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TopBar" type="HBoxContainer" parent="Root/VBox"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Root/VBox/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 22
+text = "SHOP"
+
+[node name="GoldCounter" parent="Root/VBox/TopBar" instance=ExtResource("2_gold")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Columns" type="HBoxContainer" parent="Root/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 32
+
+[node name="Buy" type="VBoxContainer" parent="Root/VBox/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Header" type="Label" parent="Root/VBox/Columns/Buy"]
+layout_mode = 2
+text = "Buy"
+
+[node name="Scroll" type="ScrollContainer" parent="Root/VBox/Columns/Buy"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BuyRows" type="VBoxContainer" parent="Root/VBox/Columns/Buy/Scroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Sell" type="VBoxContainer" parent="Root/VBox/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Header" type="Label" parent="Root/VBox/Columns/Sell"]
+layout_mode = 2
+text = "Sell (half value)"
+
+[node name="Scroll" type="ScrollContainer" parent="Root/VBox/Columns/Sell"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SellRows" type="VBoxContainer" parent="Root/VBox/Columns/Sell/Scroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BackButton" type="Button" parent="Root/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Back"

@@ -9,6 +9,10 @@ extends CharacterBody2D
 ## _create_* methods to plug in different systems. Nothing here should need
 ## copying into a type.
 
+## Emitted the moment health runs out, before the death animation plays and
+## the body is freed. Areas use it to know when they're cleared.
+signal died
+
 #type casts DetectionArea as DetectionSystem, allows script to send signals
 @onready var detection_system: EnemyDetectionSystem = $DetectionArea as EnemyDetectionSystem
 @onready var sprite: AnimatedSprite2D = $Sprite
@@ -182,6 +186,7 @@ func _flash_damage() -> void:
 
 func _on_health_emptied() -> void:
 	data.is_dead = true
+	died.emit()
 
 func _on_knockback_received(direction: Vector2, strength: float, decay: float) -> void:
 	var knockback := MovementModifier.create_impulse(&"knockback", direction, strength, decay)

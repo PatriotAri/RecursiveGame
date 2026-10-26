@@ -31,6 +31,7 @@ metadata/_custom_type_script = "uid://v162jjr58mo1"
 
 [resource]
 script = ExtResource("1_y2l73")
+value = 30
 attack = SubResource("Resource_jkgb8")
 bonuses = SubResource("Resource_ml6gl")
 animation_prefix = "onehand"

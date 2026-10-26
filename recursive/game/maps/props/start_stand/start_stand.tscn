@@ -1,0 +1,29 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/components/interaction/interactable.gd" id="1_int"]
+[ext_resource type="Texture2D" path="res://game/maps/props/start_stand/start_stand.png" id="2_tex"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_reach"]
+radius = 40.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(22, 10)
+
+[node name="StartStand" type="Area2D"]
+script = ExtResource("1_int")
+prompt_text = "Start round"
+prompt_offset = Vector2(0, -46)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_tex")
+offset = Vector2(0, -20)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_reach")
+
+[node name="Body" type="StaticBody2D" parent="." groups=["navigation_obstacles"]]
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body"]
+position = Vector2(0, -4)
+shape = SubResource("RectangleShape2D_body")

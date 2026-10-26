@@ -1,0 +1,25 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/maps/props/door/door.gd" id="1_door"]
+[ext_resource type="Texture2D" path="res://game/maps/props/door/door.png" id="2_tex"]
+[ext_resource type="Resource" path="res://game/maps/props/door/audio/door_open.tres" id="3_open"]
+[ext_resource type="Resource" path="res://game/maps/props/door/audio/door_close.tres" id="4_close"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_door"]
+resource_local_to_scene = true
+size = Vector2(64, 128)
+
+[node name="Door" type="StaticBody2D"]
+collision_mask = 0
+script = ExtResource("1_door")
+open_sound = ExtResource("3_open")
+close_sound = ExtResource("4_close")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_door")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_repeat = 2
+texture = ExtResource("2_tex")
+region_enabled = true
+region_rect = Rect2(0, 0, 64, 128)
