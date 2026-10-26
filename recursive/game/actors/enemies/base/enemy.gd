@@ -39,6 +39,14 @@ var primary_attack: StringName = &"melee"
 @export_group("Stat Tuning")
 @export var max_health: int = 10
 
+@export_group("Movement Tuning")
+@export var walk_speed:= 65.0
+@export var patrol_speed:= 50.0
+## How fast it runs away, for a type that flees.
+@export var flee_speed:= 90.0
+## How quickly it gets up to speed, in px/s².
+@export var acceleration:= 500.0
+
 @export_group("Combat Tuning")
 ## How long the enemy is locked in hitstun. Was implicitly the hurt
 ## animation's length; now independent of it.
@@ -83,6 +91,10 @@ func _ready() -> void:
 	stats.health.emptied.connect(_on_health_emptied)
 
 	data = EnemyData.new()
+	data.walk_speed = walk_speed
+	data.patrol_speed = patrol_speed
+	data.flee_speed = flee_speed
+	data.acceleration = acceleration
 
 	hitbox_manager = HitboxManagerBase.new(self, HitboxManagerBase.LAYER_PLAYER_HURTBOX, func(): return data.facing_dir)
 	_register_attacks()

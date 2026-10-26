@@ -13,6 +13,9 @@
 [ext_resource type="PackedScene" path="res://game/maps/props/stairs/stairs.tscn" id="11_stairs"]
 [ext_resource type="Resource" path="res://game/audio/sfx/round_start.tres" id="12_start"]
 [ext_resource type="Resource" path="res://game/audio/sfx/round_clear.tres" id="13_clear"]
+[ext_resource type="PackedScene" path="res://game/actors/enemies/types/normal/grunt/core/grunt.tscn" id="31_grunt"]
+[ext_resource type="PackedScene" path="res://game/actors/enemies/types/ranged/archer/core/archer.tscn" id="32_archer"]
+[ext_resource type="PackedScene" path="res://game/actors/enemies/types/flyer/bat/core/bat.tscn" id="33_bat"]
 
 [sub_resource type="Resource" id="Resource_spawn_0_0"]
 script = ExtResource("5_spawn")
@@ -20,6 +23,27 @@ enemy_scene = ExtResource("7_crawler")
 count = 4
 extra_per_round = 1
 max_count = 10
+
+[sub_resource type="Resource" id="Resource_spawn_0_1"]
+script = ExtResource("5_spawn")
+enemy_scene = ExtResource("31_grunt")
+count = 1
+extra_per_round = 1
+max_count = 3
+
+[sub_resource type="Resource" id="Resource_spawn_0_2"]
+script = ExtResource("5_spawn")
+enemy_scene = ExtResource("32_archer")
+count = 1
+extra_per_round = 1
+max_count = 3
+
+[sub_resource type="Resource" id="Resource_spawn_0_3"]
+script = ExtResource("5_spawn")
+enemy_scene = ExtResource("33_bat")
+count = 1
+extra_per_round = 1
+max_count = 3
 
 [node name="TestLevel02" type="Node2D" node_paths=PackedStringArray("areas", "start_stand", "ramp", "player_spawn", "ramp_arrival", "actors", "navigation") unique_id=1508212003]
 script = ExtResource("1_level")
@@ -66,7 +90,7 @@ position = Vector2(96, 352)
 [node name="Area1" type="Node2D" parent="Y-sorted" unique_id=1508291193]
 y_sort_enabled = true
 script = ExtResource("4_area")
-spawns = Array[ExtResource("5_spawn")]([SubResource("Resource_spawn_0_0")])
+spawns = Array[ExtResource("5_spawn")]([SubResource("Resource_spawn_0_0"), SubResource("Resource_spawn_0_1"), SubResource("Resource_spawn_0_2"), SubResource("Resource_spawn_0_3")])
 
 [node name="Spawner1" parent="Y-sorted/Area1" unique_id=1508299112 instance=ExtResource("6_spawner")]
 position = Vector2(672, 160)

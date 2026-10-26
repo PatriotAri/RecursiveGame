@@ -24,6 +24,10 @@
 [ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/throwing_dagger/throwing_dagger.tres" id="28_dagger"]
 [ext_resource type="Resource" path="res://game/items/equipment/weapons/tier_1/apprentice_staff/apprentice_staff.tres" id="29_staff"]
 [ext_resource type="Resource" path="res://game/items/tomes/tome_of_fireball/tome_of_fireball.tres" id="30_tome"]
+[ext_resource type="PackedScene" path="res://game/actors/enemies/types/normal/grunt/core/grunt.tscn" id="31_grunt"]
+[ext_resource type="PackedScene" path="res://game/actors/enemies/types/ranged/archer/core/archer.tscn" id="32_archer"]
+[ext_resource type="PackedScene" path="res://game/actors/enemies/types/flyer/bat/core/bat.tscn" id="33_bat"]
+[ext_resource type="PackedScene" path="res://game/maps/props/crate/crate.tscn" id="34_crate"]
 
 [sub_resource type="Resource" id="Resource_spawn_0_0"]
 script = ExtResource("5_spawn")
@@ -45,6 +49,34 @@ enemy_scene = ExtResource("7_crawler")
 count = 5
 extra_per_round = 1
 max_count = 10
+
+[sub_resource type="Resource" id="Resource_spawn_1_1"]
+script = ExtResource("5_spawn")
+enemy_scene = ExtResource("31_grunt")
+count = 1
+extra_per_round = 1
+max_count = 3
+
+[sub_resource type="Resource" id="Resource_spawn_1_2"]
+script = ExtResource("5_spawn")
+enemy_scene = ExtResource("32_archer")
+count = 1
+extra_per_round = 1
+max_count = 2
+
+[sub_resource type="Resource" id="Resource_spawn_2_1"]
+script = ExtResource("5_spawn")
+enemy_scene = ExtResource("33_bat")
+count = 2
+extra_per_round = 1
+max_count = 5
+
+[sub_resource type="Resource" id="Resource_spawn_2_2"]
+script = ExtResource("5_spawn")
+enemy_scene = ExtResource("32_archer")
+count = 1
+extra_per_round = 1
+max_count = 3
 
 [node name="TestLevel01" type="Node2D" node_paths=PackedStringArray("areas", "start_stand", "ramp", "player_spawn", "ramp_arrival", "actors", "navigation", "exit_door", "exit") unique_id=1507982352]
 script = ExtResource("1_level")
@@ -137,7 +169,7 @@ y_sort_enabled = true
 script = ExtResource("4_area")
 entry_door = NodePath("../../Doors/Area2Door")
 return_gate = NodePath("../../Doors/Area2Gate")
-spawns = Array[ExtResource("5_spawn")]([SubResource("Resource_spawn_1_0")])
+spawns = Array[ExtResource("5_spawn")]([SubResource("Resource_spawn_1_0"), SubResource("Resource_spawn_1_1"), SubResource("Resource_spawn_1_2")])
 
 [node name="Spawner1" parent="Y-sorted/Area2" unique_id=1508156570 instance=ExtResource("6_spawner")]
 position = Vector2(1504, 480)
@@ -153,7 +185,7 @@ y_sort_enabled = true
 script = ExtResource("4_area")
 entry_door = NodePath("../../Doors/Area3Door")
 return_gate = NodePath("../../Doors/Area3Gate")
-spawns = Array[ExtResource("5_spawn")]([SubResource("Resource_spawn_2_0")])
+spawns = Array[ExtResource("5_spawn")]([SubResource("Resource_spawn_2_0"), SubResource("Resource_spawn_2_1"), SubResource("Resource_spawn_2_2")])
 
 [node name="Spawner1" parent="Y-sorted/Area3" unique_id=1508188246 instance=ExtResource("6_spawner")]
 position = Vector2(2208, 800)
@@ -200,3 +232,21 @@ position = Vector2(412, 864)
 
 [node name="ManaPotion" parent="Y-sorted" unique_id=1507974433 instance=ExtResource("27_mana")]
 position = Vector2(440, 864)
+
+[node name="Crate1" parent="Y-sorted" unique_id=1507982500 instance=ExtResource("34_crate")]
+position = Vector2(1688, 704)
+
+[node name="Crate2" parent="Y-sorted" unique_id=1507982501 instance=ExtResource("34_crate")]
+position = Vector2(1720, 704)
+
+[node name="Crate3" parent="Y-sorted" unique_id=1507982502 instance=ExtResource("34_crate")]
+position = Vector2(1752, 704)
+
+[node name="Crate4" parent="Y-sorted" unique_id=1507982503 instance=ExtResource("34_crate")]
+position = Vector2(2456, 704)
+
+[node name="Crate5" parent="Y-sorted" unique_id=1507982504 instance=ExtResource("34_crate")]
+position = Vector2(2456, 736)
+
+[node name="Crate6" parent="Y-sorted" unique_id=1507982505 instance=ExtResource("34_crate")]
+position = Vector2(2456, 768)

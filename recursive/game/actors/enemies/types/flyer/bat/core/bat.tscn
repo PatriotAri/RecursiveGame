@@ -1,0 +1,48 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://game/actors/enemies/base/enemy.tscn" id="0_base"]
+[ext_resource type="Script" path="res://game/actors/enemies/types/flyer/bat/core/bat.gd" id="1_script"]
+[ext_resource type="SpriteFrames" path="res://game/actors/enemies/types/flyer/bat/assets/bat_frames.tres" id="2_frames"]
+[ext_resource type="PackedScene" path="res://game/actors/enemies/types/flyer/bat/hitboxes/bat_bite_hitbox.tscn" id="3_bite"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/flyer/bat/hitboxes/bat_bite_offsets.tres" id="4_offsets"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/flyer/bat/bat_drops.tres" id="5_drops"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/flyer/bat/assets/audio/bat_dive.tres" id="6_dive"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/flyer/bat/assets/audio/bat_bite.tres" id="7_bite"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/flyer/bat/assets/audio/bat_hurt.tres" id="8_hurt"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/flyer/bat/assets/audio/bat_death.tres" id="9_death"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/flyer/bat/assets/audio/bat_screech.tres" id="10_alert"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/flyer/bat/assets/audio/bat_flap.tres" id="11_flap"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_body"]
+radius = 10.0
+
+[node name="Bat" instance=ExtResource("0_base")]
+collision_mask = 7
+script = ExtResource("1_script")
+bite_hitbox = ExtResource("3_bite")
+bite_offsets = ExtResource("4_offsets")
+dive_sound = ExtResource("6_dive")
+bite_sound = ExtResource("7_bite")
+max_health = 8
+walk_speed = 110.0
+patrol_speed = 70.0
+flee_speed = 130.0
+acceleration = 1500.0
+attack_cooldown = 1.5
+drop_table = ExtResource("5_drops")
+hurt_sound = ExtResource("8_hurt")
+death_sound = ExtResource("9_death")
+alert_sound = ExtResource("10_alert")
+
+[node name="Sprite" parent="." index="0"]
+sprite_frames = ExtResource("2_frames")
+animation = &"idle_S"
+offset = Vector2(0, -24)
+
+[node name="CollisionShape2D" parent="Hurtbox" index="0"]
+position = Vector2(0, -24)
+rotation = 0.0
+shape = SubResource("CircleShape2D_body")
+
+[node name="Footsteps" parent="." index="5"]
+sound = ExtResource("11_flap")

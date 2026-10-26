@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="HitboxOffsetData" format=3]
+
+[ext_resource type="Script" path="res://game/components/hitbox/hitbox_offset_data.gd" id="1_off"]
+
+[resource]
+script = ExtResource("1_off")
+E_x = 12.0
+E_y = -24.0
+W_x = -12.0
+W_y = -24.0
+N_y = -40.0
+S_y = -10.0
+NE_x = 10.0
+NE_y = -36.0
+NW_x = -10.0
+NW_y = -36.0
+SE_x = 10.0
+SE_y = -14.0
+SW_x = -10.0
+SW_y = -14.0

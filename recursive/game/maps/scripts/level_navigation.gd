@@ -2,10 +2,20 @@ class_name LevelNavigation
 
 extends NavigationRegion2D
 
-## Builds and bakes the level's navigation map when the level loads: the
+## Builds and bakes the level's navigation maps when the level loads: the
 ## ground's painted area, minus a margin around everything on the blocking
-## physics layers. Baking at load keeps the map in step with the walls however
-## they're edited, so there's no manual bake step to forget.
+## physics layers. Baking at load keeps the maps in step with the walls
+## however they're edited, so there's no manual bake step to forget.
+##
+## Two maps. Walkers use the world's own map, from this region: around walls
+## and low obstacles. Flyers use a separate map, from a child region built
+## here: around walls only. Separate maps rather than navigation layers on one
+## map, because spawning and patrolling ask a map for its closest point with no
+## layer filter, and a walker must never be handed a spot only a flyer can
+## reach.
+
+## Low Obstacles, which flyers pass over.
+const LOW_OBSTACLES := 64
 
 ## The walkable area is this layer's painted cells.
 @export var ground: TileMapLayer
@@ -18,22 +28,43 @@ extends NavigationRegion2D
 ## walking enemy, so they don't scrape along corners.
 @export var agent_radius := 10.0
 
+## The flyers' map. A flyer's agent switches onto it when the flyer spawns.
+var flyer_map: RID
+
 var _rebake_queued := false
+var _flyer_region: NavigationRegion2D
 
 func _ready() -> void:
+	add_to_group(&"level_navigation")
 	if ground == null or ground.tile_set == null:
 		push_error("%s: no ground layer to build navigation from." % name)
 		return
+	navigation_polygon = _make_polygon(blocking_layers)
+	flyer_map = NavigationServer2D.map_create()
+	NavigationServer2D.map_set_active(flyer_map, true)
+	_flyer_region = NavigationRegion2D.new()
+	_flyer_region.name = "FlyerNavigation"
+	_flyer_region.navigation_polygon = _make_polygon(blocking_layers & ~LOW_OBSTACLES)
+	add_child(_flyer_region)
+	_flyer_region.set_navigation_map(flyer_map)
+	# Not on a thread: enemies spawned this frame should find a map waiting.
+	bake_navigation_polygon(false)
+	_flyer_region.bake_navigation_polygon(false)
+
+## The flyer map isn't the world's, so nothing else frees it.
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PREDELETE and flyer_map.is_valid():
+		NavigationServer2D.free_rid(flyer_map)
+
+func _make_polygon(blocked_by: int) -> NavigationPolygon:
 	var polygon := NavigationPolygon.new()
 	polygon.add_outline(_ground_outline())
 	polygon.parsed_geometry_type = NavigationPolygon.PARSED_GEOMETRY_STATIC_COLLIDERS
-	polygon.parsed_collision_mask = blocking_layers
+	polygon.parsed_collision_mask = blocked_by
 	polygon.source_geometry_mode = NavigationPolygon.SOURCE_GEOMETRY_GROUPS_EXPLICIT
 	polygon.source_geometry_group_name = obstacle_group
 	polygon.agent_radius = agent_radius
-	navigation_polygon = polygon
-	# Not on a thread: enemies spawned this frame should find a map waiting.
-	bake_navigation_polygon(false)
+	return polygon
 
 ## Bakes again from the current obstacles — after a door opens or closes.
 ## Several requests in one frame become a single bake.
@@ -50,6 +81,7 @@ func _rebake() -> void:
 			tree_entered.connect(rebake, CONNECT_ONE_SHOT)
 		return
 	bake_navigation_polygon(false)
+	_flyer_region.bake_navigation_polygon(false)
 
 ## The painted ground's bounding rectangle, in this node's space.
 func _ground_outline() -> PackedVector2Array:

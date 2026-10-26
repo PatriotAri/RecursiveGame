@@ -17,6 +17,8 @@ var search_progress_distance:= 16.0
 var _search_anchor:= Vector2.ZERO
 var max_attempts:= 10
 var arrival_threshold:= 5.0
+## How far ahead of itself a fleeing enemy aims, away from the player.
+var flee_reach:= 96.0
 #pathfinding
 var agent: NavigationAgent2D
 ## How far the target has to move before the path is worked out again.
@@ -71,6 +73,14 @@ func update(delta: float) -> void:
 			attack(delta)
 		EnemyData.State.ATTACK_COOLDOWN:
 			attack_cooldown(delta)
+		EnemyData.State.FLEE:
+			flee(delta)
+		EnemyData.State.REPOSITION:
+			reposition(delta)
+		EnemyData.State.CIRCLE:
+			circle(delta)
+		EnemyData.State.RETREAT:
+			retreat(delta)
 		_:
 			idle(delta)
 
@@ -183,6 +193,30 @@ func attack_cooldown(delta: float) -> void:
 	# Tracks while waiting — only the swing itself is committed.
 	if data.player_detected:
 		data.facing_dir = (data.player_pos - body.global_position).normalized()
+	idle(delta)
+
+## Runs from the player, along the navigation path towards a point well
+## away from them, so a cornered enemy slides along the wall instead of
+## pressing into it.
+func flee(delta: float) -> void:
+	var away:= body.global_position - data.player_pos
+	if away.length() < 1.0:
+		away = Vector2.RIGHT
+	var direction:= _direction_to(body.global_position + away.normalized() * flee_reach)
+	data.facing_dir = direction
+	var target_velocity:= direction * data.flee_speed * data.modifiers.get_speed_scale()
+	locomotion = locomotion.move_toward(target_velocity, data.acceleration * delta)
+	_commit()
+
+# States only some types use. Standing still is the safe default; the types
+# that enter them override these.
+func reposition(delta: float) -> void:
+	idle(delta)
+
+func circle(delta: float) -> void:
+	idle(delta)
+
+func retreat(delta: float) -> void:
 	idle(delta)
 
 ## Which way to walk to reach `target`: along the navigation path when the

@@ -1,0 +1,50 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://game/actors/enemies/base/enemy.tscn" id="0_base"]
+[ext_resource type="Script" path="res://game/actors/enemies/types/ranged/archer/core/archer.gd" id="1_script"]
+[ext_resource type="SpriteFrames" path="res://game/actors/enemies/types/ranged/archer/assets/archer_frames.tres" id="2_frames"]
+[ext_resource type="PackedScene" path="res://game/actors/enemies/types/ranged/archer/arrow_projectile.tscn" id="3_arrow"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/ranged/archer/archer_drops.tres" id="5_drops"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/ranged/archer/assets/audio/bow_draw.tres" id="6_draw"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/ranged/archer/assets/audio/arrow_hit.tres" id="7_hit"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/ranged/archer/assets/audio/archer_hurt.tres" id="8_hurt"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/ranged/archer/assets/audio/archer_death.tres" id="9_death"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/ranged/archer/assets/audio/archer_alert.tres" id="10_alert"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/ranged/archer/assets/audio/archer_step.tres" id="11_step"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_standing"]
+radius = 13.0
+height = 56.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_sight"]
+radius = 260.0
+
+[node name="Archer" instance=ExtResource("0_base")]
+script = ExtResource("1_script")
+arrow_scene = ExtResource("3_arrow")
+draw_sound = ExtResource("6_draw")
+arrow_hit_sound = ExtResource("7_hit")
+max_health = 12
+walk_speed = 70.0
+patrol_speed = 50.0
+flee_speed = 90.0
+attack_cooldown = 1.8
+drop_table = ExtResource("5_drops")
+hurt_sound = ExtResource("8_hurt")
+death_sound = ExtResource("9_death")
+alert_sound = ExtResource("10_alert")
+
+[node name="Sprite" parent="." index="0"]
+sprite_frames = ExtResource("2_frames")
+animation = &"idle_S"
+
+[node name="CollisionShape2D" parent="Hurtbox" index="0"]
+position = Vector2(0, -28)
+rotation = 0.0
+shape = SubResource("CapsuleShape2D_standing")
+
+[node name="CollisionShape2D" parent="DetectionArea" index="0"]
+shape = SubResource("CircleShape2D_sight")
+
+[node name="Footsteps" parent="." index="5"]
+sound = ExtResource("11_step")

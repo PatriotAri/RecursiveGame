@@ -11,6 +11,9 @@ func update(data: EnemyData, delta: float) -> void:
 	# away — and being hit mid-swing is the normal case, not the edge case.
 	if data.attack_cooldown_timer > 0.0:
 		data.attack_cooldown_timer -= delta
+	data.flee_left = maxf(data.flee_left - delta, 0.0)
+	data.reposition_left = maxf(data.reposition_left - delta, 0.0)
+	data.retreat_left = maxf(data.retreat_left - delta, 0.0)
 
 	var new_state := _resolve_state(data)
 
@@ -36,8 +39,19 @@ func _resolve_state(data: EnemyData) -> EnemyData.State:
 	if data.current_state == EnemyData.State.ATTACK and data.attack_finished:
 		data.attack_finished = false
 		data.attack_cooldown_timer = attack_cooldown_duration
-		return EnemyData.State.ATTACK_COOLDOWN
+		return _after_attack(data)
 
+	return _resolve_behaviour(data)
+
+## What follows a finished attack. Holding ground by default; a type that
+## moves after attacking (an archer repositioning, a flyer pulling back)
+## overrides it.
+func _after_attack(_data: EnemyData) -> EnemyData.State:
+	return EnemyData.State.ATTACK_COOLDOWN
+
+## What the enemy does when it isn't dead, staggered or finishing an attack.
+## This is where types differ: override it to fight another way.
+func _resolve_behaviour(data: EnemyData) -> EnemyData.State:
 	# In range but still cooling: hold position instead of walking in.
 	if data.attack_cooldown_timer > 0.0 and data.player_detected and data.in_attack_range:
 		return EnemyData.State.ATTACK_COOLDOWN

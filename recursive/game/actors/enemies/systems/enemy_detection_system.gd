@@ -2,6 +2,9 @@ class_name EnemyDetectionSystem
 
 extends Area2D
 
+## Walls and closed doors block sight; low obstacles don't.
+const SIGHT_BLOCKERS := 1
+
 #data injected from Enemy._ready()
 var data: EnemyData
 var body: Enemy
@@ -62,6 +65,7 @@ func update(delta: float) -> void:
 	
 	data.player_pos = player.global_position
 	data.player_anchor = _player_anchor()
+	data.has_line_of_sight = _can_see(data.player_anchor)
 	update_attack_range()
 
 # Parameter renamed from `body` — the original shadowed the member above it,
@@ -93,11 +97,16 @@ func clear_target() -> void:
 	_player_inside = false
 	data.player_detected = false
 	data.in_attack_range = false
+	data.has_line_of_sight = false
 
 func update_attack_range() -> void:
 	# Anchor to anchor. Measuring our torso against the player's feet made the
 	# 31px shape offset eat most of the range budget on the horizontal axis.
 	data.in_attack_range = detection_anchor().distance_squared_to(data.player_anchor) <= max_range_sq
+
+func _can_see(point: Vector2) -> bool:
+	var query := PhysicsRayQueryParameters2D.create(detection_anchor(), point, SIGHT_BLOCKERS)
+	return get_world_2d().direct_space_state.intersect_ray(query).is_empty()
 
 func _player_anchor() -> Vector2:
 	if player.has_method("combat_anchor"):

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="SoundEffect" format=3]
+
+[ext_resource type="Script" path="res://game/audio/sound_effect.gd" id="1_sfx"]
+[ext_resource type="AudioStream" path="res://game/actors/enemies/types/flyer/bat/assets/audio/bat_hurt_1.wav" id="2_take"]
+[ext_resource type="AudioStream" path="res://game/actors/enemies/types/flyer/bat/assets/audio/bat_hurt_2.wav" id="3_take"]
+
+[resource]
+script = ExtResource("1_sfx")
+streams = Array[AudioStream]([ExtResource("2_take"), ExtResource("3_take")])
+volume_db = -11.0
+pitch_variation = 0.06
+bus = &"SFX"
+max_voices = 3

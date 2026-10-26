@@ -1,0 +1,50 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://game/actors/enemies/base/enemy.tscn" id="0_base"]
+[ext_resource type="Script" path="res://game/actors/enemies/types/normal/grunt/core/grunt.gd" id="1_script"]
+[ext_resource type="SpriteFrames" path="res://game/actors/enemies/types/normal/grunt/assets/grunt_frames.tres" id="2_frames"]
+[ext_resource type="PackedScene" path="res://game/actors/enemies/types/normal/grunt/hitboxes/grunt_melee_hitbox.tscn" id="3_hitbox"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/normal/grunt/hitboxes/grunt_melee_offsets.tres" id="4_offsets"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/normal/grunt/grunt_drops.tres" id="5_drops"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/normal/grunt/assets/audio/grunt_swing.tres" id="6_swing"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/normal/grunt/assets/audio/grunt_hit.tres" id="7_hit"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/normal/grunt/assets/audio/grunt_hurt.tres" id="8_hurt"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/normal/grunt/assets/audio/grunt_death.tres" id="9_death"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/normal/grunt/assets/audio/grunt_alert.tres" id="10_alert"]
+[ext_resource type="Resource" path="res://game/actors/enemies/types/normal/grunt/assets/audio/grunt_step.tres" id="11_step"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_standing"]
+radius = 13.0
+height = 56.0
+
+[node name="Grunt" instance=ExtResource("0_base")]
+script = ExtResource("1_script")
+melee_hitbox = ExtResource("3_hitbox")
+melee_offsets = ExtResource("4_offsets")
+windup_time = 0.35
+lifetime = 0.2
+damage = 3.0
+reach_radius = 14.0
+knockback_strength = 70.0
+max_health = 20
+walk_speed = 90.0
+patrol_speed = 60.0
+attack_cooldown = 1.2
+drop_table = ExtResource("5_drops")
+melee_swing_sound = ExtResource("6_swing")
+melee_hit_sound = ExtResource("7_hit")
+hurt_sound = ExtResource("8_hurt")
+death_sound = ExtResource("9_death")
+alert_sound = ExtResource("10_alert")
+
+[node name="Sprite" parent="." index="0"]
+sprite_frames = ExtResource("2_frames")
+animation = &"idle_S"
+
+[node name="CollisionShape2D" parent="Hurtbox" index="0"]
+position = Vector2(0, -28)
+rotation = 0.0
+shape = SubResource("CapsuleShape2D_standing")
+
+[node name="Footsteps" parent="." index="5"]
+sound = ExtResource("11_step")
