@@ -8,6 +8,7 @@ enum State {
 	ATTACK_COOLDOWN,
 	HURT,
 	DIED,
+	SEARCH, #always append, never insert in middle
 }
 
 var is_hurt:= false
@@ -24,6 +25,10 @@ var in_attack_range:= false
 var player_pos:= Vector2.ZERO
 #the middle of the player's hurtbox — used for range checks
 var player_anchor:= Vector2.ZERO
+#where the player was last known to be. Kept after aggro drops so the enemy
+#can go and look (SEARCH); cleared when it finds the player or gives up
+var has_last_seen:= false
+var last_seen_pos:= Vector2.ZERO
 
 #read/written by state machine
 var current_state: State = State.IDLE

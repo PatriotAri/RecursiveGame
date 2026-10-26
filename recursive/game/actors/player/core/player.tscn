@@ -20,7 +20,7 @@ size = Vector2(32, 62)
 
 [node name="Player" type="CharacterBody2D" unique_id=1781926894 groups=["player"]]
 collision_layer = 2
-collision_mask = 5
+collision_mask = 69
 script = ExtResource("1_oul6g")
 stamina_regen_per_second = 5.0
 stamina_regen_delay = 0.3

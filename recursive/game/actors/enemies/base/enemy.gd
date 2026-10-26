@@ -12,6 +12,9 @@ extends CharacterBody2D
 #type casts DetectionArea as DetectionSystem, allows script to send signals
 @onready var detection_system: EnemyDetectionSystem = $DetectionArea as EnemyDetectionSystem
 @onready var sprite: AnimatedSprite2D = $Sprite
+## Pathfinding and crowd avoidance. Optional: without one, the enemy walks
+## straight at its targets.
+@onready var navigation_agent: NavigationAgent2D = get_node_or_null("NavigationAgent")
 var state_machine: EnemyStateMachine
 var movement_system: EnemyMovementSystem
 var attack_system: EnemyAttackSystem
@@ -43,6 +46,10 @@ var primary_attack: StringName = &"melee"
 ## Grace period after the player leaves the detection shape before aggro drops.
 ## Stops a target walking the boundary from flickering CHASE/PATROL every frame.
 @export var target_forget_delay:= 1.0
+## After losing the player, the enemy heads for where it last saw them. This
+## is how long it can go without making headway (stuck in a crowd, say)
+## before it gives up and goes back to patrolling.
+@export var search_timeout:= 3.0
 
 ## Derived in _ready() from the primary attack's own geometry.
 var attack_range:= 0.0

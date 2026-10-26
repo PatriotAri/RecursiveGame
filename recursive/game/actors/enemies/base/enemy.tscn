@@ -20,7 +20,7 @@ size = Vector2(300, 275)
 
 [node name="Enemy" type="CharacterBody2D" unique_id=442968874 groups=["enemy"]]
 collision_layer = 4
-collision_mask = 7
+collision_mask = 71
 platform_floor_layers = 0
 script = ExtResource("1_enemy")
 
@@ -55,6 +55,14 @@ script = ExtResource("3_detection")
 position = Vector2(0, -31)
 shape = SubResource("CircleShape2D_detection")
 debug_color = Color(0, 0.85882354, 0, 0.41960785)
+
+[node name="NavigationAgent" type="NavigationAgent2D" parent="." unique_id=1735062519]
+path_desired_distance = 6.0
+target_desired_distance = 6.0
+avoidance_enabled = true
+radius = 12.0
+neighbor_distance = 60.0
+max_speed = 130.0
 
 [node name="PatrolZone" type="Area2D" parent="." unique_id=215373219]
 visible = false

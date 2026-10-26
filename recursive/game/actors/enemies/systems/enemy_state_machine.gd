@@ -47,5 +47,7 @@ func _resolve_state(data: EnemyData) -> EnemyData.State:
 		return EnemyData.State.ATTACK
 	elif data.player_detected:
 		return EnemyData.State.CHASE
+	elif data.has_last_seen:
+		return EnemyData.State.SEARCH
 	else:
 		return EnemyData.State.PATROL

@@ -66,6 +66,8 @@ inventory={
 2d_physics/layer_4="Pickups"
 2d_physics/layer_5="Player Hurtbox"
 2d_physics/layer_6="Enemy Hurtbox"
+2d_physics/layer_7="Low Obstacles"
+2d_physics/layer_8="Projectiles"
 
 [physics]
 

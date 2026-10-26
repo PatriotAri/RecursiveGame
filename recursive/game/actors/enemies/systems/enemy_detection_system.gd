@@ -72,6 +72,7 @@ func _on_body_entered(entered: Node) -> void:
 		player = entered as CharacterBody2D
 		_player_inside = true
 		data.player_detected = true
+		data.has_last_seen = false
 
 func _on_body_exited(exited: Node) -> void:
 	#if player leaves the detection area, start forgetting
@@ -83,6 +84,11 @@ func has_player() -> bool:
 	return is_instance_valid(player)
 
 func clear_target() -> void:
+	# Losing the player leaves behind where they were last known to be, so
+	# the enemy goes to look instead of forgetting on the spot.
+	if is_instance_valid(player) and data.player_detected:
+		data.has_last_seen = true
+		data.last_seen_pos = data.player_pos
 	player = null
 	_player_inside = false
 	data.player_detected = false
